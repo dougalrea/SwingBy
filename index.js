@@ -1,4 +1,4 @@
 function whatever() {
-  console.log('updated test')
+  console.log('updated updated test')
 }
 whatever()
