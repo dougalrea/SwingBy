@@ -4,7 +4,6 @@ import connectToDatabase from './lib/connectToDB.js'
 import logger from './logger.js'
 import router from './config/router.js'
 import errorHandler from './lib/errorHandler.js'
-
 const app = express()
 
 

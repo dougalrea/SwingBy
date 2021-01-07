@@ -1,34 +1,22 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
-import { BrowserRouter, Switch, Route, Link, useLocation } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-import Home from './components/common/Home'
-import FPShow from './components/fictionalprimates/FPShow'
-import FPIndex from './components/fictionalprimates/FPIndex'
-import FPAdd from './components/fictionalprimates/FPAdd'
-import FPEdit from './components/fictionalprimates/FPEdit'
+
+import SignUpLogIn from './components/common/SignUpLogIn'
+import PeopleIndex from './components/people/PeopleIndex'
+import ProfileShow from './components/people/ProfileShow'
+import EventsIndex from './components/events/EventsIndex'
+import EventShow from './components/events/EventShow'
 
 function App() {
-
   return (
     <BrowserRouter>
-      <nav className="navbar is-success">
-        <div className="container">
-          <div className="navbar-menu">
-            <div className="navbar-start">
-              <Link to="/" className="navbar-item">Home</Link>
-              <Link to="/fictionalprimates" className="navbar-item">Browse Fictional Primates</Link>
-              <Link to="/fictionalprimates/new" className="navbar-item">Add Another</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/fictionalprimates/new" component={FPAdd} />
-        <Route path="/fictionalprimates/:id/edit" component={FPEdit} />
-        <Route path="/fictionalprimates/:id" component={FPShow} />
-        <Route path="/fictionalprimates" component={FPIndex} />
+        <Route exact path="/" component={SignUpLogIn} />
+        <Route path="/people/:id" component={ProfileShow} />
+        <Route path="/people" component={PeopleIndex} />
+        <Route path="/events/:id" component={EventShow} />
+        <Route path="/events" component={EventsIndex} />
       </Switch>
     </BrowserRouter>
   )
