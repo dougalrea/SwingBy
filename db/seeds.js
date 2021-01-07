@@ -1,44 +1,33 @@
 import mongoose from 'mongoose'
 import connectToDatabase from '../lib/connectToDB.js'
-import FictionalPrimate from '../models/fictionalPrimate.js'
-import User from '../models/user.js'
-import primateData from './data/primates.js'
-import userData from './data/users.js'
+import Event from '../models/event.js'
+import eventSeeds from './data/eventSeeds.js'
 
 
 async function seedDatabase() {
   try {
     await connectToDatabase()
 
-    console.log('🤖 Database has connected')
+    console.log('Database connected')
 
     await mongoose.connection.db.dropDatabase()
 
-    console.log('🤖 Database dropped')
+    console.log('Database dropped')
 
-    const users = await User.create(userData)
+    const events = await Event.create(eventSeeds)
 
-    console.log((`🤖 ${users.length} users created`))
-
-    const primateDataWithOwners = primateData.map(primate => {
-      primate.owner = users[0]._id
-      return primate
-    })
-
-    const fictionalPrimates = await FictionalPrimate.create(primateDataWithOwners)
-
-    console.log(`🤖 ${fictionalPrimates.length} primates created`)
+    console.log(events.length, ' events created')
 
     await mongoose.connection.close()
 
-    console.log('🤖 Goodbye')
+    console.log('Bye!')
 
   } catch (err) {
-    console.log('🤖 Something went wrong')
+    console.log('Something went wrong with seeding')
     console.log(err)
 
     await mongoose.connection.close()
-    console.log('🤖 Goodbye')
+    console.log('Bye!')
   }
 }
 
