@@ -21,5 +21,5 @@ async function eventsCreate(req, res, next) {
 
 export default {
   index: eventsIndex,
-  create: eventsCreate
+  create: eventsCreate,
 }
