@@ -1,7 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-
 import SignUpLogIn from './components/common/SignUpLogIn'
 import PeopleIndex from './components/people/PeopleIndex'
 import ProfileShow from './components/people/ProfileShow'
