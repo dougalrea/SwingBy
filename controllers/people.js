@@ -12,5 +12,5 @@ async function peopleAddNew(req, res, next) {
 
 export default {
   // index: peopleShowAll,
-  register: peopleAddNew
+  register: peopleAddNew,
 }

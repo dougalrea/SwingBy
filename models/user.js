@@ -6,7 +6,7 @@ const userRatingsSchema = new mongoose.Schema({
   rating: { type: Number, required: true, min: 1, max: 5 },
   mutualEvent: { type: mongoose.Schema.ObjectId, ref: 'Event', required: true }
 }, {
-  timestamps: true
+  timestamps: true,
 })
 
 const userSchema = new mongoose.Schema({
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   foodPreferences: [{ type: String }],
   rating: { type: Number, required: true, min: 1, max: 5 },
   events: { type: mongoose.Schema.ObjectId, ref: 'Event' },
-  ratings: [userRatingsSchema]
+  ratings: [userRatingsSchema],
 })
 
 
@@ -43,22 +43,6 @@ userSchema.pre('validate', function(next) {
   next()
 })
 
-<<<<<<< HEAD
-userSchema.pre('save', function(next) {
-  if (this.isModified('password')) {
-    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync())
-  }
-  next()
-}) 
-
-userSchema.methods.validatePassword = function(password) {
-  return bcrypt.compareSync(password, this.password)
-}
-
-userSchema.plugin(uniqueValidator)
-
-export default mongoose.model('User', userSchema)
-=======
 userSchema.virtual('avgRating').get(function () {
   if (!this.ratings.length) return 'Not Rated Yet'
 
@@ -75,4 +59,3 @@ userSchema.plugin(uniqueValidator)
 
 export default mongoose.model('User', userSchema)
 
->>>>>>> b29721a16c2abe3ae064c454e971e0c3c011614c
