@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import connectToDatabase from '../lib/connectToDB.js'
 import Event from '../models/event.js'
 import eventSeeds from './data/eventSeeds.js'
+import User from '../models/user.js'
+import userSeeds from './data/userSeeds.js'
 
 
 async function seedDatabase() {
@@ -14,7 +16,16 @@ async function seedDatabase() {
 
     console.log('Database dropped')
 
-    const events = await Event.create(eventSeeds)
+    const users = await User.create(userSeeds)
+
+    console.log(users.length, ' users created')
+
+    const eventSeedsWithOwners = eventSeeds.map(event => {
+      event.owner = users[Math.floor(Math.random() * users.length)]._id
+      return event
+    })
+
+    const events = await Event.create(eventSeedsWithOwners)
 
     console.log(events.length, ' events created')
 

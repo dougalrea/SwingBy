@@ -17,18 +17,23 @@ const eventsSchema = new mongoose.Schema({
   duration: { type: Number, required: false },
   types: [{ type: String }],
   description: { type: String, required: false, maxlength: 500 },
-  attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+  // attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: false  },
   comments: [commentSchema]
 })
-
-
 
 eventsSchema.virtual('hasExpired').get(function () {
   return this.startDateTime < new Date().getTime() ? true : false
 })
 
-eventsSchema.set('toJSON', { virtuals: true })
+eventsSchema.set('toJSON', {
+  virtuals: true,
+  transform(_doc, json) {
+    delete json.id
+    return json
+  }
+})
+
 eventsSchema.plugin(uniqueValidator)
 
 export default mongoose.model('Event', eventsSchema)
