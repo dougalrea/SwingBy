@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
   smoker: { type: Boolean },
   interests: [{ type: String }],
   foodPreferences: [{ type: String }],
-  rating: { type: Number, required: true, min: 1, max: 5 },
   events: { type: mongoose.Schema.ObjectId, ref: 'Event' },
   ratings: [userRatingsSchema],
 })
