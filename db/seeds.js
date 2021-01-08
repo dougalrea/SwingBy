@@ -22,6 +22,15 @@ async function seedDatabase() {
 
     const eventSeedsWithOwners = eventSeeds.map(event => {
       event.owner = users[Math.floor(Math.random() * users.length)]._id
+      event.attendees.push(event.owner)
+      for (let i = 0; i < (event.maxCapacity - (2 * Math.random() * event.maxCapacity / 3) - 1); i++) {
+        const potentialNewUser = users[Math.floor(Math.random() * users.length)]
+        if (!event.attendees.some(attendee => attendee === potentialNewUser)) {
+          event.attendees.push(potentialNewUser)
+        } else {
+          i--
+        }
+      }
       return event
     })
 
