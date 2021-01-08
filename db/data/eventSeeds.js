@@ -9,32 +9,44 @@ console.log(newDate(60))
 export default [
   {
     name: 'test event 1',
-    location: 'a postcode',
-    date: newDate(14)
+    longitude: -0.064,
+    latitude: 51.507,
+    startDateTime: newDate(14),
+    attendees: []
   },
   {
     name: 'test event 2',
-    location: 'a postcode',
-    date: newDate(21)
+    longitude: -0.213640, 
+    latitude: 51.475230,
+    startDateTime: newDate(21),
+    attendees: []
   },
   {
     name: 'test event 3',
-    location: 'a postcode',
-    date: newDate(-7)
+    longitude: -0.143240,
+    latitude: 51.537740,
+    startDateTime: newDate(-7),
+    attendees: []
   },
   {
     name: 'test event 4',
-    location: 'a postcode',
-    date: newDate(2)
+    longitude: -0.209670,
+    latitude: 51.510720,
+    startDateTime: newDate(2),
+    attendees: []
   },
   {
     name: 'test event 5',
-    location: 'a postcode',
-    date: newDate(-1)
+    longitude: 0.005540,
+    latitude: 51.509240,
+    startDateTime: newDate(-1),
+    attendees: []
   },
   {
     name: 'test event 6',
-    location: 'a postcode',
-    date: newDate(60)
+    longitude: -0.042340,
+    latitude: 51.472599,
+    startDateTime: newDate(60),
+    attendees: []
   }
 ]

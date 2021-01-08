@@ -1,16 +1,34 @@
 import mongoose from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
+
+const commentSchema = new mongoose.Schema({
+  text: { type: String, required: true, maxlength: 65 },
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
+}, {
+  timestamps: true,
+})
 
 const eventsSchema = new mongoose.Schema({
   name: { type: String, required: true, maxlength: 25 },
-  imageURL: { type: String, required: true },
-  location: { type: String, required: true },
-  date: { type: Date, required: true },
+  imageURL: { type: String, required: false },
+  latitude: { type: String, required: true },
+  longitude: { type: String, required: true },
+  startDateTime: { type: String, required: true },
+  duration: { type: Number, required: false },
   types: [{ type: String }],
-  description: { type: String, required: true, maxlength: 500 },
-  attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
+  description: { type: String, required: false, maxlength: 500 },
+  attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: false  },
+  comments: [commentSchema]
 })
 
-const today = new Date()
-console.log(today.toLocaleDateString(''))
+
+
+eventsSchema.virtual('hasExpired').get(function () {
+  return this.startDateTime < new Date().getTime() ? true : false
+})
+
+eventsSchema.set('toJSON', { virtuals: true })
+eventsSchema.plugin(uniqueValidator)
 
 export default mongoose.model('Event', eventsSchema)
