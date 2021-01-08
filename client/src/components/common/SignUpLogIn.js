@@ -1,12 +1,19 @@
 import React from 'react'
 
+const handleChange = (e) => {
+  const now = new Date(e.target.value)
+  console.log(e.target.value, now.getTime())
+}
+
 function SignUpLogIn() {
   return (
     <>
       <h1>This is the sign up / log in page</h1>
 
       <section className="logIn">
-        <form>
+        <form 
+        
+        >
           <label>Log in
             <input
               className="input emailField"
@@ -18,7 +25,29 @@ function SignUpLogIn() {
               type="password"
               placeholder="password"
             />
+            <label>
+            Start time
+              <input
+                className="input start-time"
+                type="datetime-local"
+                placeholder={Date.now()}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+            Duration
+              <input
+                className="input end-time"
+                type="time"
+                placeholder="hours"
+                onChange={handleChange}
+              />
+            </label>
+            
           </label>
+          <button type="submit">
+            Submit
+          </button>
         </form>
         <form>
           <label>Sign up
