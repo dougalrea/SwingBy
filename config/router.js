@@ -7,10 +7,14 @@ import secureRoute from '../lib/secureRoute.js'
 
 const router = express.Router()
 
-// events: SHOW one, EDIT, DELETE
 router.route('/events')
   .get(events.index)
   .post(secureRoute, events.create)
+  
+router.route('/events/:id')
+  .get(events.show)
+  .delete(secureRoute, events.delete)
+  .put(secureRoute, events.update)
 
 // event comments: DELETE
 router.route('/events/:id/comments')
