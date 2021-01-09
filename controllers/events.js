@@ -87,7 +87,7 @@ async function eventCommentDelete(req, res, next) {
     if (!commentToDelete.owner.equals(req.currentUser._id)) throw new Error(forbidden)
     await commentToDelete.remove()
     await event.save()
-    return res.sendStatus(204)
+    return res.sendStatus(204).json(event)
   } catch (err) {
     next(err)
   }
