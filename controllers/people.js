@@ -1,9 +1,11 @@
 import User from '../models/user.js'
 import { notFound } from '../lib/errorHandler.js'
 
-async function peopleShowAll(req, res, next) {
+async function peopleShowAll(_req, res, next) {
   try {
-    const people = await User.find().populate('events')
+    const people = await User.find()
+      .populate('eventsHostOf')
+      .populate('eventsAttendeeOf')
     return res.status(200).json(people)
   } catch (err) {
     next(err)
@@ -13,7 +15,10 @@ async function peopleShowAll(req, res, next) {
 async function peopleShowOne(req, res, next) {
   const { id } = req.params
   try {
-    const person = await User.findById(id).populate('events')
+    const person = await User.findById(id)
+      .populate('eventsHostOf')
+      .populate('eventsAttendeeOf')
+      .populate('reviewsSubmitted')
     if (!person) throw new Error(notFound)
     return res.status(200).json(person)
   } catch (err) {

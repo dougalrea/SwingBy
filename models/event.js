@@ -4,9 +4,7 @@ import uniqueValidator from 'mongoose-unique-validator'
 const commentSchema = new mongoose.Schema({
   text: { type: String, required: true, maxlength: 65 },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
-}, {
-  timestamps: true,
-})
+}, { timestamps: true })
 
 const eventsSchema = new mongoose.Schema({
   name: { type: String, required: true, maxlength: 25 },
@@ -24,7 +22,7 @@ const eventsSchema = new mongoose.Schema({
 })
 
 eventsSchema.virtual('hasExpired').get(function () {
-  return this.startDateTime < new Date().getTime() ? true : false
+  return new Date(this.startDateTime).getTime() < new Date().getTime()
 })
 
 eventsSchema.set('toJSON', {

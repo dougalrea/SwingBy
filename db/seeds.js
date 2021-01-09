@@ -20,7 +20,7 @@ async function seedDatabase() {
 
     console.log(users.length, ' users created')
 
-    // Math.floor(Math.random() * users.length)
+    Math.floor(Math.random() * users.length)
     const eventSeedsWithOwners = eventSeeds.map(event => {
       event.owner = users[0]._id
       event.attendees.push(event.owner)

@@ -16,6 +16,11 @@ router.route('/events/:id')
   .delete(secureRoute, events.delete)
   .put(secureRoute, events.update)
 
+
+router.route('/events/:id/attend')
+  .post(secureRoute, events.attend)
+
+
 // event comments: DELETE
 router.route('/events/:id/comments')
   .post(secureRoute, events.createComment)

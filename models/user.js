@@ -2,13 +2,12 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import uniqueValidator from 'mongoose-unique-validator'
 
-const userReviewsSchema = new mongoose.Schema({
+const userReviewSchema = new mongoose.Schema({
   text: { type: String, required: true, maxlength: 65 },
   rating: { type: Number, required: true, min: 1, max: 5 },
-  mutualEvent: { type: mongoose.Schema.ObjectId, ref: 'Event', required: false },
-}, {
-  timestamps: true,
-})
+  // mutualEvent: { type: mongoose.Schema.ObjectId, ref: 'Event', required: false },
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
+}, { timestamps: true })
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -26,15 +25,20 @@ const userSchema = new mongoose.Schema({
   smoker: { type: Boolean },
   interests: [{ type: String }],
   foodPreferences: [{ type: String }],
-  events: [{ type: mongoose.Schema.ObjectId, ref: 'Event' }],
-  reviews: [userReviewsSchema],
+  reviews: [userReviewSchema],
 })
 
-// userSchema.virtual('events', {
-//   ref: 'Event',
-//   localField: '_id',
-//   foreignField: 'owner'
-// })
+userSchema.virtual('eventsHostOf', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'owner'
+})
+
+userSchema.virtual('eventsAttendeeOf', {
+  ref: 'Event',
+  localField: '_id',
+  foreignField: 'attendees'
+})
 
 userSchema.virtual('passwordConfirmation')
   .set(function(passwordConfirmation) {
@@ -43,7 +47,7 @@ userSchema.virtual('passwordConfirmation')
 
 userSchema.pre('validate', function(next) {
   if (this.isModified('password') && this.password !== this._passwordConfirmation) {
-    this.invalidate('passwordConfirmation', 'does not match')
+    this.invalidate('passwordConfirmation', 'Password does not match')
   }
   next()
 })
@@ -61,22 +65,19 @@ userSchema.methods.validatePassword = function(password) {
 
 userSchema.virtual('avgRating').get(function () {
   if (!this.reviews.length) return 'Not Rated Yet'
-
-  const avg = this.reviews.reduce((sum, curr) => {
-    return sum + curr.rating
-  }, 0)
+  const avg = this.reviews.reduce((sum, curr) => sum + curr.rating, 0)
   return avg / this.reviews.length
 })
 
 userSchema.set('toJSON', {
   virtuals: true,
   transform(_doc, json) {
+    delete json.password
     delete json.id
     return json
   },
 })
 
 userSchema.plugin(uniqueValidator)
-
 
 export default mongoose.model('User', userSchema)

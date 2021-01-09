@@ -1,5 +1,4 @@
 import Event from '../models/event.js'
-import User from '../models/user.js'
 
 import { notFound, forbidden } from '../lib/errorHandler.js'
 
@@ -15,11 +14,7 @@ async function eventsIndex(_req, res, next){
 async function eventsCreate(req, res, next) {
   try {
     const newEventData = { ...req.body, owner: req.currentUser._id }
-    const creator = await User.findById(req.currentUser._id)
-    console.log(creator)
     const newEvent = await Event.create(newEventData)
-    creator.events.push(newEvent)
-    await creator.save()
     return res.status(201).json(newEvent)
   } catch (err) {
     next(err)
@@ -77,6 +72,18 @@ async function eventUpdate(req, res, next){
   }
 }
 
+async function eventAttend(req, res, next) {
+  const { id } = req.params
+  try {
+    const eventToAttend = await Event.findById(id)
+    eventToAttend.attendees.push(req.currentUser._id)
+    await eventToAttend.save()
+    return res.status(202).json(eventToAttend)
+  } catch (err) {
+    next(err)
+  }
+}
+
 // async function filmCommentDelete(req, res, next) {
 //   const { id, commentId } = req.params
 //   try {
@@ -100,4 +107,5 @@ export default {
   show: eventShow,
   update: eventUpdate,
   delete: eventDelete,
+  attend: eventAttend
 }
