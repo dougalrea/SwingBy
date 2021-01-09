@@ -35,4 +35,5 @@ eventsSchema.set('toJSON', {
 
 eventsSchema.plugin(uniqueValidator)
 
-export default mongoose.model('Event', eventsSchema)
+
+export default mongoose.model('Event', eventsSchema, 'EventComment', commentSchema)
