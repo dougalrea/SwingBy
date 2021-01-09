@@ -26,26 +26,12 @@ async function eventsCreate(req, res, next) {
   }
 }
 
-async function eventShow(req, res, next) {
+async function eventShowOne(req, res, next) {
   const { id } = req.params
   try {
     const event = await Event.findById(id).populate('owner')
     if (!event) throw new Error(notFound)
     return res.status(200).json(event)
-  } catch (err) {
-    next(err)
-  }
-}
-
-async function eventCommentCreate(req, res, next) {
-  const { id } = req.params
-  try {
-    const event = await Event.findById(id)
-    if (!event) throw new Error(notFound)
-    const newComment = { ...req.body, owner: req.currentUser._id }
-    event.comments.push(newComment)
-    await event.save()
-    return res.status(201).json(event)
   } catch (err) {
     next(err)
   }
@@ -77,27 +63,43 @@ async function eventUpdate(req, res, next){
   }
 }
 
-// async function filmCommentDelete(req, res, next) {
-//   const { id, commentId } = req.params
-//   try {
-//     const film = await Film.findById(id)
-//     if (!film) throw new Error(notFound)
-//     const commentToDelete = film.comments.id(commentId)
-//     if (!commentToDelete) throw new Error(notFound)
-//     if (!commentToDelete.owner.equals(req.currentUser._id)) throw new Error(forbidden)
-//     await commentToDelete.remove()
-//     await film.save()
-//     return res.sendStatus(204)
-//   } catch (err) {
-//     next(err)
-//   }
-// }
+async function eventCommentCreate(req, res, next) {
+  const { id } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    const newComment = { ...req.body, owner: req.currentUser._id }
+    event.comments.push(newComment)
+    await event.save()
+    return res.status(201).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function eventCommentDelete(req, res, next) {
+  const { id , commentId } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    const commentToDelete = event.comments.id(commentId) 
+    if (!commentToDelete) throw new Error(notFound)
+    if (!commentToDelete.owner.equals(req.currentUser._id)) throw new Error(forbidden)
+    await commentToDelete.remove()
+    await event.save()
+    return res.sendStatus(204)
+  } catch (err) {
+    next(err)
+  }
+}
+
 
 export default {
   index: eventsIndex,
   create: eventsCreate,
-  createComment: eventCommentCreate,
-  show: eventShow,
+  show: eventShowOne,
   update: eventUpdate,
   delete: eventDelete,
+  createComment: eventCommentCreate,
+  deleteComment: eventCommentDelete,
 }
