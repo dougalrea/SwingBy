@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 import uniqueValidator from 'mongoose-unique-validator'
 
 const userReviewsSchema = new mongoose.Schema({
@@ -47,8 +48,15 @@ userSchema.pre('validate', function(next) {
   next()
 })
 
+userSchema.pre('save', function(next) {
+  if (this.isModified('password')) {
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync())
+  }
+  next()
+})
+
 userSchema.methods.validatePassword = function(password) {
-  return password
+  return bcrypt.compareSync(password, this.password)
 }
 
 userSchema.virtual('avgRating').get(function () {
