@@ -17,7 +17,8 @@ export default [
     latitude: 51.507,
     startDateTime: newDate(14),
     maxCapacity: randomCapacity(),
-    attendees: []
+    attendees: [],
+    comments: []
   },
   {
     name: 'test event 2',
@@ -25,7 +26,8 @@ export default [
     latitude: 51.475230,
     startDateTime: newDate(21),
     maxCapacity: randomCapacity(),
-    attendees: []
+    attendees: [],
+    comments: []
   },
   {
     name: 'test event 3',
@@ -33,7 +35,8 @@ export default [
     latitude: 51.537740,
     startDateTime: newDate(-7),
     maxCapacity: randomCapacity(),
-    attendees: []
+    attendees: [],
+    comments: []
   },
   {
     name: 'test event 4',
@@ -41,7 +44,8 @@ export default [
     latitude: 51.510720,
     startDateTime: newDate(2),
     maxCapacity: randomCapacity(),
-    attendees: []
+    attendees: [],
+    comments: []
   },
   {
     name: 'test event 5',
@@ -49,7 +53,8 @@ export default [
     latitude: 51.509240,
     startDateTime: newDate(-1),
     maxCapacity: randomCapacity(),
-    attendees: []
+    attendees: [],
+    comments: []
   },
   {
     name: 'test event 6',
@@ -57,6 +62,7 @@ export default [
     latitude: 51.472599,
     startDateTime: newDate(60),
     maxCapacity: randomCapacity(),
-    attendees: []
+    attendees: [],
+    comments: []
   }
 ]

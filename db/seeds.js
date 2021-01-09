@@ -4,6 +4,7 @@ import Event from '../models/event.js'
 import eventSeeds from './data/eventSeeds.js'
 import User from '../models/user.js'
 import userSeeds from './data/userSeeds.js'
+import eventCommentSeeds from './data/eventCommentSeeds.js'
 
 
 async function seedDatabase() {
@@ -20,8 +21,7 @@ async function seedDatabase() {
 
     console.log(users.length, ' users created')
 
-    // Math.floor(Math.random() * users.length)
-    const eventSeedsWithOwners = eventSeeds.map(event => {
+    const eventSeedsWithOwnersAndAttendees = eventSeeds.map(event => {
       event.owner = users[0]._id
       event.attendees.push(event.owner)
       for (let i = 0; i < (event.maxCapacity - (2 * Math.random() * event.maxCapacity / 3) - 1); i++) {
@@ -35,9 +35,18 @@ async function seedDatabase() {
       return event
     })
 
-    const events = await Event.create(eventSeedsWithOwners)
+    const eventCommentsWithOwners = eventCommentSeeds.map(eventComment => {
+      eventComment.owner = users[Math.floor(Math.random() * users.length)]._id
+      return eventComment
+    })
 
-    console.log(events.length, ' events created')
+    eventCommentsWithOwners.forEach(comment => {
+      eventSeedsWithOwnersAndAttendees[Math.floor(Math.random() * eventSeedsWithOwnersAndAttendees.length)].comments.push(comment)
+    })
+
+    const events = await Event.create(eventSeedsWithOwnersAndAttendees)
+
+    console.log(events.length, ' events created and ', eventCommentsWithOwners.length, ' comments created')
 
     await mongoose.connection.close()
 
