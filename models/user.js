@@ -17,14 +17,14 @@ const userSchema = new mongoose.Schema({
   alias: { type: String },
   profilePicture: { type: String },
   age: { type: Number },
-  sex: { type: String },
+  gender: { type: String },
   sexualOrientation: { type: String },
   height: { type: String },
   politics: { type: String },
   isOpenToDrugs: { type: Boolean },
-  smoker: { type: Boolean },
+  isSmoker: { type: Boolean },
   interests: [{ type: String }],
-  foodPreferences: [{ type: String }],
+  foodPreferences: { type: String },
   reviews: [userReviewSchema],
 })
 
