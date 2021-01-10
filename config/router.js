@@ -1,8 +1,8 @@
 import express from 'express'
 
-import auth from '../controllers/auth.js'
 import events from '../controllers/events.js'
 import users from '../controllers/people.js'
+import auth from '../controllers/auth.js'
 import secureRoute from '../lib/secureRoute.js'
 
 const router = express.Router()
@@ -24,6 +24,7 @@ router.route('/events/:id/comments')
 
 router.route('/events/:id/comments/:commentId')
   .delete(secureRoute, events.deleteComment)
+  .put(secureRoute, events.editComment)
 
 router.route('/people')
   .get(users.index)
@@ -33,12 +34,12 @@ router.route('/people/:id')
   .put(secureRoute, users.update)
   .delete(secureRoute, users.delete)
 
-// user reviews: DELETE
 router.route('/people/:id/reviews')
   .post(secureRoute, users.createReview)
 
 router.route('/people/:id/reviews/:reviewId')
   .delete(secureRoute, users.deleteReview)
+  .put(secureRoute, users.editReview)
 
 router.route('/register')
   .post(auth.registerUser)

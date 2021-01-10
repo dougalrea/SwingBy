@@ -18,7 +18,6 @@ async function personShowOne(req, res, next) {
     const person = await User.findById(id)
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
-      .populate('reviewsSubmitted')
     if (!person) throw new Error(notFound)
     return res.status(200).json(person)
   } catch (err) {
@@ -65,7 +64,6 @@ async function personCreateReview(req, res, next) {
   }
 }
 
-//Needs looking at as getting message not found in insomina when testing
 async function personDeleteReview(req, res, next) {
   const { id, reviewId } = req.params
   try {
@@ -82,6 +80,22 @@ async function personDeleteReview(req, res, next) {
   }
 }
 
+async function personEditReview(req, res, next) {
+  const { id, reviewId } = req.params
+  try {
+    const person = await User.findById(id)
+    if (!person) throw new Error(notFound)
+    const reviewToEdit = person.reviews.id(reviewId)
+    if (!reviewToEdit) throw new Error(notFound)
+    if (!reviewToEdit.owner.equals(req.currentUser._id)) throw new Error(forbidden)
+    Object.assign(reviewToEdit, req.body)
+    await person.save()
+    return res.status(202).json(person)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export default {
   index: peopleShowAll,
   show: personShowOne,
@@ -89,4 +103,5 @@ export default {
   delete: personDelete,
   createReview: personCreateReview,
   deleteReview: personDeleteReview,
+  editReview: personEditReview
 }

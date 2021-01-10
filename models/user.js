@@ -40,6 +40,12 @@ userSchema.virtual('eventsAttendeeOf', {
   foreignField: 'attendees'
 })
 
+userSchema.virtual('avgRating').get(function () {
+  if (!this.reviews.length) return 'Not Rated Yet'
+  const avg = this.reviews.reduce((sum, curr) => sum + curr.rating, 0)
+  return avg / this.reviews.length
+})
+
 userSchema.virtual('passwordConfirmation')
   .set(function(passwordConfirmation) {
     this._passwordConfirmation = passwordConfirmation
@@ -62,12 +68,6 @@ userSchema.pre('save', function(next) {
 userSchema.methods.validatePassword = function(password) {
   return bcrypt.compareSync(password, this.password)
 }
-
-userSchema.virtual('avgRating').get(function () {
-  if (!this.reviews.length) return 'Not Rated Yet'
-  const avg = this.reviews.reduce((sum, curr) => sum + curr.rating, 0)
-  return avg / this.reviews.length
-})
 
 userSchema.set('toJSON', {
   virtuals: true,

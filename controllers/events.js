@@ -1,5 +1,4 @@
 import Event from '../models/event.js'
-
 import { notFound, forbidden } from '../lib/errorHandler.js'
 
 async function eventsIndex(_req, res, next){
@@ -100,6 +99,22 @@ async function eventCommentDelete(req, res, next) {
   }
 }
 
+async function eventEditComment(req, res, next) {
+  const { id, commentId } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    const commentToEdit = event.comments.id(commentId)
+    if (!commentToEdit) throw new Error(notFound)
+    if (!commentToEdit.owner.equals(req.currentUser._id)) throw new Error(forbidden)
+    Object.assign(commentToEdit, req.body)
+    await event.save()
+    return res.status(202).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export default {
   index: eventsIndex,
   create: eventsCreate,
@@ -109,4 +124,5 @@ export default {
   attend: eventAttend,
   createComment: eventCommentCreate,
   deleteComment: eventCommentDelete,
+  editComment: eventEditComment
 }

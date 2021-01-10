@@ -2,6 +2,7 @@
 import faker from 'faker'
 
 const genderArray = ['Female', 'Male', 'Trans man', 'Trans woman', 'Intersex', 'Prefer not to say']
+
 function genderCalc() {
   const number = Math.random() * 100
   if (number < 45) {
@@ -18,9 +19,13 @@ function genderCalc() {
     return 5
   }
 }
+
 const sexualOrientationArray = ['Men', 'Women', 'Everyone']
+
 const politicsArray = ['Liberal', 'Conservative', 'Fascist', 'Socialist', 'Anarchist', 'Doesn\'t vote', 'Communist']
+
 const interestsArray = ['Cooking', 'Blogging', 'Book restoration', 'Photography', 'Reading', 'Traveling', 'Music', 'Yoga', 'Volunteering', 'Freestyle rapping', 'Bowling', 'Singing', 'Astrology', 'Card games', 'Ceramics', 'Welding', 'Poetry', 'Dark humour', 'Karate', 'Taxidermy', 'Sewing', 'Alcohol', 'Meditation', 'Origami', 'Chiromancy', 'Camping', 'Hunting', 'Lacrosse', 'Skateboarding', 'Birdwatching', 'Gardening', 'Shopping', 'Sand art', 'Parkour', 'Polo', 'Hiking', 'Rock climbing', 'DIY', 'Video games', 'Magnets']
+
 function assignInterests() {
   const numberOfInterests = Math.floor(Math.random() * 5) + 1
   const interestList = []
@@ -30,6 +35,7 @@ function assignInterests() {
   }
   return interestList
 }
+
 const foodPreferencesArray = ['Vegetarian', 'Gluten free', 'Dairy free', 'Omnivore', 'Nut allergy', 'Pescatarian', 'Vegan', 'Macrobiotic']
 
 function generateUsers() {
@@ -44,44 +50,39 @@ function generateUsers() {
     const alias = faker.internet.userName()
     const age = Math.floor(Math.random() * 52) + 18
     const gender = faker.name.gender()
-    const sexualOrientation = sexualOrientationArray[Math.floor(Math.random() * 3)]
-    const politics = politicsArray[Math.floor(Math.random() * 7)]
+    const sexualOrientation = sexualOrientationArray[Math.floor(Math.random() * sexualOrientationArray.length)]
+    const politics = politicsArray[Math.floor(Math.random() * politicsArray.length)]
     const height = Math.floor(Math.random() * 44) + 154
     const isSmoker = Math.random() < 0.3
     const interests = assignInterests()
     const isOpenToDrugs = Math.random() < 0.5
-    const foodPreferences = foodPreferencesArray[Math.floor(Math.random() * 8)]
+    const foodPreferences = foodPreferencesArray[Math.floor(Math.random() * foodPreferencesArray.length)]
 
-    users.push(
-      {
-        'firstName': firstName,
-        'surname': surname,
-        'email': email,
-        'password': password,
-        'passwordConfirmation': password,
-        'profilePicture': profilePicture,
-        'alias': alias,
-        'age': age,
-        'gender': gender,
-        'sexualOrientation': sexualOrientation,
-        'politics': politics,
-        'height': height,
-        'isSmoker': isSmoker,
-        'interests': interests,
-        'isOpenToDrugs': isOpenToDrugs,
-        'foodPreferences': foodPreferences,
-      }
-    )
+    users.push({
+      firstName,
+      surname,
+      email,
+      password,
+      'passwordConfirmation': password,
+      profilePicture,
+      alias,
+      age,
+      gender,
+      sexualOrientation,
+      politics,
+      height,
+      isSmoker,
+      interests,
+      isOpenToDrugs,
+      foodPreferences
+    })
   }
   return users
 }
 
+const usersData = generateUsers()
 
-const usersDataObj = generateUsers()
-
-export default usersDataObj
-
-
+export default usersData
 
 // export default [
 //   {

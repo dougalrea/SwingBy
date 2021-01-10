@@ -15,7 +15,7 @@ const eventsSchema = new mongoose.Schema({
   duration: { type: Number, required: false },
   types: [{ type: String }],
   description: { type: String, required: false, maxlength: 500 },
-  maxCapacity: { type: Number, required: true },
+  capacity: { type: Number, required: true },
   attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: false  },
   comments: [commentSchema]
@@ -34,6 +34,5 @@ eventsSchema.set('toJSON', {
 })
 
 eventsSchema.plugin(uniqueValidator)
-
 
 export default mongoose.model('Event', eventsSchema, 'EventComment', commentSchema)

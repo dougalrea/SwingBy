@@ -1,50 +1,61 @@
-/* eslint-disable no-unused-vars */
 import faker from 'faker'
 
+function realisticStartDateTime(date) {
+  date.setMinutes(15 * Math.round(date.getMinutes() / 15), 0, 0)
+  if (date.getDay() === 6 || date.getDay() === 0) {
+    if (date.getHours() < 9) {
+      date.setHours(9 + Math.floor(Math.random() * (24 - 9)))
+    }
+  } else {
+    if (date.getHours() < 17) {
+      date.setHours(17 + Math.floor(Math.random() * (24 - 17)))
+    }
+  }
+  return date
+}
 
 function randomCapacity() {
   return Math.floor(Math.random() * 18) + 2
 }
-
-const typesArray = []
-
 
 function generateEvents() {
   const events = []
 
   for (let i = 1; i <= 60; i++) {
     const name = faker.internet.domainWord()
-    const imageUrl = faker.image.nightlife()
+    const imageURL = faker.image.nightlife()
     const latitude = Math.random() * -0.515339 + 0.149425
     const longitude = Math.random() * 0.235503 + 51.386897
-    const startDateTime = Math.random() < 0.5 ? faker.date.recent(60) : faker.date.soon(60)
+    const startDateTime = Math.random() < 0.5 ?
+      realisticStartDateTime(faker.date.recent(60))
+      :
+      realisticStartDateTime(faker.date.soon(60)) 
     const duration = Math.floor(Math.random() * 5) + 1
     const types = faker.lorem.words(4)
     const description = faker.lorem.sentences(5)
-    const maxCapacity = randomCapacity()
+    const capacity = randomCapacity()
   
-    events.push(
-      {
-        'name': name,
-        'imageURL': imageUrl,
-        'latitude': latitude,
-        longitude: longitude,
-        'startDateTime': startDateTime,
-        'duration': duration,
-        'types': types,
-        'description': description,
-        'maxCapacity': maxCapacity,
-        'attendees': [],
-        'comments': []
-      }
-    )
+    events.push({
+      name,
+      imageURL,
+      latitude,
+      longitude,
+      startDateTime,
+      duration,
+      types,
+      description,
+      capacity,
+      attendees: [],
+      comments: []
+    })
   }
+  
   return events
 }
 
-const eventsDataObj = generateEvents()
-console.log(eventsDataObj)
-export default eventsDataObj
+const eventsData = generateEvents()
+
+export default eventsData
 
 // export default [
 //   {
