@@ -22,7 +22,7 @@ async function seedDatabase() {
     console.log(users.length, ' users created')
 
     const eventSeedsWithOwnersAndAttendees = eventSeeds.map(event => {
-      event.owner = users[0]._id
+      event.owner = users[Math.floor(Math.random() * users.length)]._id
       event.attendees.push(event.owner)
       for (let i = 0; i < (event.maxCapacity - (2 * Math.random() * event.maxCapacity / 3) - 1); i++) {
         const potentialNewUser = users[Math.floor(Math.random() * users.length)]

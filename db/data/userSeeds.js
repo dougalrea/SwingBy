@@ -69,7 +69,7 @@ function generateUsers() {
         'isSmoker': isSmoker,
         'interests': interests,
         'isOpenToDrugs': isOpenToDrugs,
-        'foodPreferences': foodPreferences
+        'foodPreferences': foodPreferences,
       }
     )
   }
