@@ -22,8 +22,8 @@ function PeopleIndex() {
     <>
       <Heading align='center'as='h1'size='4xl'>Profile Index</Heading>
       {people ?
-        <Box>
-          <Wrap>
+        <Box m={50}>
+          <Wrap justify='center'>
             {people.map(person => (
               <Box
                 w='300px' 
@@ -35,8 +35,8 @@ function PeopleIndex() {
                 <Image roundedTop='20px' src={person.profilePicture} alt={person.firstName} />
                 <Box p={5}>
                   <Stack isInline align='baseline'>
-                    <Badge variant='solid' variantColor='white' rounded='full' px={2}>New Profile</Badge>
-                    <Badge m={1} variant='solid' variantColor='white' rounded='full' px={2}>Hosting Event</Badge>
+                    <Badge variant='solid' variantColor='white.200' rounded='full' px={2}>New Profile</Badge>
+                    <Badge m={1} variant='solid' variantColor='white.200' rounded='full' px={2}>Hosting Event</Badge>
                   </Stack>
                   <Text as='h2'fontSize='lg' fontWeight='bold' letterSpacing='wide'>{person.firstName} {person.surname}</Text>
                   <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>Hello gents – thanks for stopping by.<br /> I’m a creative, fun-loving, energetic <br />and active girl whose favourite words – in any language – are ‘Please proceed to your gate for departure’. I’ve been bitten HARD by the travel bug and have been lucky enough to visit every continent (well, I’m working on Antarctica). I love going out, meeting new people and generally getting the most out of life – whether that’s trying new bars and restaurants or picking up a new sport (I once joined in a game of pick-up basketball with a group of kids in Zimbabwe – it was great!) You should shoot me a message if you’re fun-loving, fit, and up for anything – I am.
@@ -47,7 +47,7 @@ function PeopleIndex() {
                       .map((_, i)=> (
                         <StarIcon key={i} />
                       ))}
-                    <StarIcon color='white'/>
+                    <StarIcon color='white.200'/>
                     <Text as='h3' 
                       fontSize='lg' 
                       fontWeight='semiobold'
