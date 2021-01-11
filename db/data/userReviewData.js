@@ -2,23 +2,17 @@ import faker from 'faker'
 
 function generateUserReviews() {
   const userReviews = []
-  for (let i = 1; i <= 300; i++) {
+  for (let i = 0; i < 300; i++) {
     const text = faker.lorem.sentences(1)
     const rating = Math.floor(Math.random() * 5) + 1
-    userReviews.push(
-      {
-        text,
-        rating
-      })
+    userReviews.push({ text, rating })
   }
   return userReviews
 }
 
-const userReviewsData = generateUserReviews()
+const userReviewData = generateUserReviews()
 
-export default userReviewsData
-
-
+export default userReviewData
 
 // export default [
 //   {
