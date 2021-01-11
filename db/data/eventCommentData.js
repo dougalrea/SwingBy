@@ -2,20 +2,16 @@ import faker from 'faker'
 
 function generateEventComments() {
   const eventComments = []
-  for (let i = 1; i <= 240; i++) {
+  for (let i = 1; i <= 250; i++) {
     const text = faker.lorem.sentences(2)
-    eventComments.push(
-      {
-        text
-      })
+    eventComments.push({ text })
   }
   return eventComments
 }
 
-const eventsCommentsData = generateEventComments()
+const eventCommentData = generateEventComments()
 
-export default eventsCommentsData
-
+export default eventCommentData
 
 // export default [
 //   {

@@ -15,13 +15,13 @@ function realisticStartDateTime(date) {
 }
 
 function randomCapacity() {
-  return Math.floor(Math.random() * 18) + 2
+  return Math.floor(Math.random() * 10) + 2
 }
 
 function generateEvents() {
   const events = []
 
-  for (let i = 1; i <= 60; i++) {
+  for (let i = 0; i < 60; i++) {
     const name = faker.internet.domainWord()
     const imageURL = faker.image.nightlife()
     const latitude = Math.random() * -0.515339 + 0.149425
@@ -53,9 +53,9 @@ function generateEvents() {
   return events
 }
 
-const eventsData = generateEvents()
+const eventData = generateEvents()
 
-export default eventsData
+export default eventData
 
 // export default [
 //   {
