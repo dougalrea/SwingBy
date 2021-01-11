@@ -63,7 +63,7 @@ function generateUsers() {
       surname,
       email,
       password,
-      'passwordConfirmation': password,
+      passwordConfirmation: password,
       profilePicture,
       alias,
       age,
@@ -74,7 +74,8 @@ function generateUsers() {
       isSmoker,
       interests,
       isOpenToDrugs,
-      foodPreferences
+      foodPreferences,
+      reviews: []
     })
   }
   return users

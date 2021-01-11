@@ -15,7 +15,7 @@ function realisticStartDateTime(date) {
 }
 
 function randomCapacity() {
-  return Math.floor(Math.random() * 18) + 2
+  return Math.floor(Math.random() * 3) + 2
 }
 
 function generateEvents() {
