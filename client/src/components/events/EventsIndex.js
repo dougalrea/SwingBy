@@ -24,7 +24,12 @@ function EventsIndex() {
         <Box m={50}>
           <Wrap justify='center'>
             {events.map(event => (
-              <Box w='300px' m={5} rounded='20px' boxShadow='sm' bg='gray.200' key={event._id}>
+              <Box 
+                w='300px' 
+                m={50} rounded='20px' 
+                boxShadow='sm' 
+                bg='gray.200' 
+                key={event._id}>
                 <Image m='2px' src='https://thumbor.thedailymeal.com/vf6fiMOka04qTngQRwtRwKL9bGQ=/870x565/https://www.thedailymeal.com/sites/default/files/2016/04/04/00_Intro_Slide.jpg' alt={event.name} />
                 <Box p={5}>
                   <Stack isInline align='baseline'>
