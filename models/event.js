@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
 
 const commentSchema = new mongoose.Schema({
-  text: { type: String, required: true, maxlength: 65 },
+  text: { type: String, required: true, maxlength: 200 },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
 }, { timestamps: true })
 

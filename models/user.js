@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import uniqueValidator from 'mongoose-unique-validator'
 
 const userReviewSchema = new mongoose.Schema({
-  text: { type: String, required: true, maxlength: 65 },
+  text: { type: String, required: true, maxlength: 150 },
   rating: { type: Number, required: true, min: 1, max: 5 },
   // mutualEvent: { type: mongoose.Schema.ObjectId, ref: 'Event', required: false },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }

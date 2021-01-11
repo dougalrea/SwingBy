@@ -19,6 +19,7 @@ async function personShowOne(req, res, next) {
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
     if (!person) throw new Error(notFound)
+    console.log(person)
     return res.status(200).json(person)
   } catch (err) {
     next(err)
