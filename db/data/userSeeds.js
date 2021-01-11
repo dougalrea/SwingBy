@@ -44,7 +44,8 @@ function generateUsers() {
   for (let i = 1; i <= 100; i++) {
     const firstName = faker.name.firstName()
     const surname = faker.name.lastName()
-    const email = faker.internet.email()
+    const emailProvider = faker.internet.email().split('@')
+    const email = `${firstName}.${surname}@${emailProvider[1]}`
     const password = 'test'
     const profilePicture = faker.image.people()
     const alias = faker.internet.userName()

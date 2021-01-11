@@ -27,7 +27,6 @@ async function seedDatabase() {
         if (!event.attendees.some(attendee => attendee === potentialNewUser)) {
           event.attendees.push(potentialNewUser)
         } else i--
-        console.log(event.attendees.length)
       }
       return event
     })
@@ -49,7 +48,7 @@ async function seedDatabase() {
       return userReview
     })
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 300; i++) {
       const review = userReviewsWithOwners[i]
       const owner = users.find(user => {
         return user._id === review.owner
@@ -58,20 +57,20 @@ async function seedDatabase() {
         return event.attendees.includes(owner._id)
       })
       const event = potentialEvents[Math.floor(Math.random() * potentialEvents.length)]
-      if (!event) {
-        return
+      if (event) {
+        const potentialReviewees = event.attendees.filter(attendee => {
+          return attendee !== owner._id
+        })
+        const revieweeId = potentialReviewees[Math.floor(Math.random() * potentialReviewees.length)]
+        const reviewee = users.find(user => {
+          return user._id === revieweeId
+        })
+        if (reviewee) {
+          reviewee.reviews.push(review)
+          await reviewee.save()
+          console.log('saved review number ', i)
+        }
       }
-      const potentialReviewees = event.attendees.filter(attendee => {
-        return attendee !== owner._id
-      })
-      const revieweeId = potentialReviewees[Math.floor(Math.random() * potentialReviewees.length)]
-      const reviewee = users.find(user => {
-        return user._id === revieweeId
-      })
-
-      reviewee.reviews.push(review)
-      await reviewee.save()
-      console.log('saved one review')
     }
 
     await mongoose.connection.close()
