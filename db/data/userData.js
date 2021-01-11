@@ -1,6 +1,10 @@
 /* eslint-disable no-unused-vars */
 import faker from 'faker'
 
+function arrayItemAtRandomIndex(array) {
+  return array[Math.floor(Math.random() * array.length)]
+}
+
 const genderArray = ['Female', 'Male', 'Trans man', 'Trans woman', 'Intersex', 'Prefer not to say']
 
 function genderCalc() {
@@ -15,7 +19,7 @@ function genderCalc() {
     return 3
   } else if (number < 97.5) {
     return 4
-  } else if (number <= 100) {
+  } else {
     return 5
   }
 }
@@ -29,8 +33,8 @@ const interestsArray = ['Cooking', 'Blogging', 'Book restoration', 'Photography'
 function assignInterests() {
   const numberOfInterests = Math.floor(Math.random() * 5) + 1
   const interestList = []
-  for (let i = 1; i <= numberOfInterests; i++) {
-    const randomInterest = interestsArray[Math.floor(Math.random() * interestsArray.length)]
+  for (let i = 0; i < numberOfInterests; i++) {
+    const randomInterest = arrayItemAtRandomIndex(interestsArray)
     interestList.push(randomInterest)
   }
   return interestList
@@ -41,26 +45,26 @@ const foodPreferencesArray = ['Vegetarian', 'Gluten free', 'Dairy free', 'Omnivo
 function generateUsers() {
   const users = []
 
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 0; i < 100; i++) {
     const firstName = faker.name.firstName()
-    const surname = faker.name.lastName()
-    const email = faker.internet.email()
+    const lastName = faker.name.lastName()
+    const email = `${firstName}.${lastName}@${faker.internet.email().split('@')[1]}`
     const password = 'test'
     const profilePicture = faker.image.people()
     const alias = faker.internet.userName()
     const age = Math.floor(Math.random() * 52) + 18
     const gender = faker.name.gender()
-    const sexualOrientation = sexualOrientationArray[Math.floor(Math.random() * sexualOrientationArray.length)]
-    const politics = politicsArray[Math.floor(Math.random() * politicsArray.length)]
+    const sexualOrientation = arrayItemAtRandomIndex(sexualOrientationArray)
+    const politics = arrayItemAtRandomIndex(politicsArray)
     const height = Math.floor(Math.random() * 44) + 154
     const isSmoker = Math.random() < 0.3
     const interests = assignInterests()
     const isOpenToDrugs = Math.random() < 0.5
-    const foodPreferences = foodPreferencesArray[Math.floor(Math.random() * foodPreferencesArray.length)]
+    const foodPreferences = arrayItemAtRandomIndex(foodPreferencesArray)
 
     users.push({
       firstName,
-      surname,
+      lastName,
       email,
       password,
       passwordConfirmation: password,
