@@ -7,7 +7,7 @@ export function getToken() {
 }
 
 export function logoutUser() {
-  return window.localStorage.removeItem('token')
+  window.localStorage.removeItem('token')
 }
 
 function getPayload() {
