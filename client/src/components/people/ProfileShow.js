@@ -4,7 +4,7 @@ import React from 'react'
 import { getOnePerson } from '../../lib/api'
 import { useParams } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Button, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center } from '@chakra-ui/react'
+  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, AvatarBadge, Wrap, WrapItem, Grid, GridItem } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
 
@@ -44,43 +44,30 @@ function ProfileShow() {
                 <Heading m='5' as='h1'size='xl'>{person.firstName} {person.surname}</Heading>
               </Box>
               <Spacer />
-              <box>
-                <Button bg='pink.800' color='white' m={5}>Like</Button>
-                <Button bg='pink.800' color='white' m={5}>Follow</Button>
-              </box>
             </Flex>
+            <Box ml={5} mr={5}>
+              <Center height="50px">
+                <Divider orientation="horizontal" />
+              </Center>
+            </Box >
             <Flex>
               <Box
                 w='350px'
                 rounded='20px'
-                boxShadow='sm'
                 key={person._id}>
-                <Image p={5} align='left'rounded='20px'src={person.profilePicture} />
+                <Image boxShadow='lg' m={2} p={5} align='left'rounded='40px'src={person.profilePicture} />
               </Box>
-              <Box direction='column'm={5} p={5}>
-                <Text>Age: {person.age}</Text>
-                <Text>Gender: {person.gender}</Text>
-                <Text>Sexual Orientation: {person.sexualOrientation}</Text>
-                <Text>Politics: {person.politics}</Text>
-                <Text>Height: {person.height}</Text>
-                <Text>Smoker: {person.isSmoker}</Text>
-                <Text>Open to drugs: {person.isOpenToDrugs}</Text>
-                <Text>Food Preferences: {person.foodPreferences}</Text>
-              </Box>
-              <Box>
-                <Text>Reviews go here</Text>
+              <Box border='5px' direction='column'm={5} p={5}>
+                <Heading size='20px'>Age: {person.age}</Heading>
+                <Heading size='20px'>Gender: {person.gender}</Heading>
+                <Heading size='20px'>Sexual Orientation: {person.sexualOrientation}</Heading>
+                <Heading size='20px'>Politics: {person.politics}</Heading>
+                <Heading size='20px'>Height: {person.height}</Heading>
+                <Heading size='20px'>Smoker: {person.isSmoker}</Heading>
+                <Heading size='20px'>Open to drugs: {person.isOpenToDrugs}</Heading>
+                <Heading size='20px'>Food Preferences: {person.foodPreferences}</Heading>
               </Box>
             </Flex>
-            <Stack isInline align='baseline'>
-              <Box ml={5} justify='space-around'>
-                <Badge variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>New Profile</Badge>
-                <Badge m={1} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>Hosting Dinner</Badge>
-                <Badge m={1} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[0]}</Badge>
-                <Badge m={1} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[1]}</Badge>
-                <Badge m={1} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[2]}</Badge>
-                <Badge m={1} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[3]}</Badge>
-              </Box>
-            </Stack>
             <Box ml={5} mr={5}>
               <Center height="50px">
                 <Divider orientation="horizontal" />
@@ -96,19 +83,34 @@ function ProfileShow() {
               <Center height="50px">
                 <Divider orientation="horizontal" />
               </Center>
+            </Box >
+            <Box m={5}>
+              <Heading>Interests</Heading>
+            </Box>
+            <Stack isInline align='baseline'>
+              <Box ml={5} justify='space-around'>
+                <Badge m={1} p={2} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[0]}</Badge>
+                <Badge m={1} p={2} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[1]}</Badge>
+                <Badge m={1} p={2} variant='solid' bg='pink.800' variantColor='white' rounded='full' px={2}>{person.interests[2]}</Badge>
+              </Box>
+            </Stack>
+            <Box ml={5} mr={5}>
+              <Center height="50px">
+                <Divider orientation="horizontal" />
+              </Center>
             </Box>
             <Box ml={5} mr={5}>
               <Heading>Photo Gallery</Heading>
             </Box>
             <Flex>
               <Box m={5}>
-                <Image src='https://cdn.thegentlemansjournal.com/wp-content/uploads/2014/06/DINNER-TGJ-00-900x600-c-center.jpg' />
+                <Image src={person.eventsHostOf[0].imageURL} />
               </Box>
               <Box m={5}>
-                <Image src='https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dinner-party-1558090194.jpg?crop=1.00xw:0.753xh;0,0.249xh&resize=1200:*' />
+                <Image src={person.eventsHostOf[0].imageURL} />
               </Box>
               <Box m={5}>
-                <Image src='https://www.expatica.com/app/uploads/sites/5/2020/03/Boeuf-bourguignon.jpg' />
+                <Image src={person.eventsHostOf[0].imageURL} />
               </Box>
             </Flex>
             <Box ml={5} mr={5}>
@@ -116,19 +118,7 @@ function ProfileShow() {
                 <Divider orientation="horizontal" />
               </Center>
             </Box>
-            <Flex justify='space-around'>
-              <box flexGrow='1'>
-                <Button bg='pink.800' color='white' m={5}>Book Event</Button>
-              </box>
-              <box flexGrow='1'>
-                <Button bg='pink.800' color='white' m={5}>Send a request</Button>
-              </box>
-              <box flexGrow='1'>
-                <Button bg='pink.800' color='white' m={5}>Follow</Button>
-              </box>
-
-            </Flex>
-            <Box m={5}>
+            <Box w='600px'm={5}>
               <FormControl id="email">
                 <FormLabel>Contact {person.firstName}</FormLabel>
                 <Input type="email" />
@@ -136,6 +126,11 @@ function ProfileShow() {
               </FormControl>
             </Box>
           </Flex>
+          <Box ml={5} mr={5}>
+            <Center height="50px">
+              <Divider orientation="horizontal" />
+            </Center>
+          </Box >
         </Box>
         :
         <Text>...loading</Text>
