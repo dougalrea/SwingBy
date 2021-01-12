@@ -13,11 +13,8 @@ router.route('/events')
   
 router.route('/events/:id')
   .get(events.show)
-  .put(secureRoute, events.update)
+  .put(secureRoute, events.edit)
   .delete(secureRoute, events.delete)
-
-router.route('/events/:id/attend')
-  .post(secureRoute, events.attend)
 
 router.route('/events/:id/comments')
   .post(secureRoute, events.createComment)
@@ -26,12 +23,22 @@ router.route('/events/:id/comments/:commentId')
   .delete(secureRoute, events.deleteComment)
   .put(secureRoute, events.editComment)
 
+router.route('/events/:id/requests')
+  .post(secureRoute, events.createRequest)
+  .delete(secureRoute, events.deleteRequest)
+
+router.route('/events/:id/requests/:personId')
+  .put(secureRoute, events.acceptRequest)
+
+router.route('/events/:id/attendees/:personId')
+  .delete(secureRoute, events.deleteAttendee)
+
 router.route('/people')
   .get(users.index)
 
 router.route('/people/:id')
   .get(users.show)
-  .put(secureRoute, users.update)
+  .put(secureRoute, users.edit)
   .delete(secureRoute, users.delete)
 
 router.route('/people/:id/reviews')

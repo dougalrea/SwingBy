@@ -5,7 +5,6 @@ import uniqueValidator from 'mongoose-unique-validator'
 const userReviewSchema = new mongoose.Schema({
   text: { type: String, required: true, maxlength: 150 },
   rating: { type: Number, required: true, min: 1, max: 5 },
-  // mutualEvent: { type: mongoose.Schema.ObjectId, ref: 'Event', required: false },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
 }, { timestamps: true })
 
@@ -26,6 +25,7 @@ const userSchema = new mongoose.Schema({
   interests: [{ type: String }],
   foodPreferences: { type: String },
   reviews: [userReviewSchema],
+  following: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
 })
 
 userSchema.virtual('eventsHostOf', {
@@ -38,6 +38,12 @@ userSchema.virtual('eventsAttendeeOf', {
   ref: 'Event',
   localField: '_id',
   foreignField: 'attendees'
+})
+
+userSchema.virtual('followedBy', {
+  ref: 'User',
+  localField: '_id',
+  foreignField: 'following'
 })
 
 userSchema.virtual('avgRating').get(function () {
