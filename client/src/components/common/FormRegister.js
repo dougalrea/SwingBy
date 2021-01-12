@@ -4,8 +4,6 @@
 import React from 'react'
 import { 
   Input, 
-  InputLeftAddon, 
-  Icon, 
   InputGroup, 
   InputLeftElement, 
   Stack, 
@@ -14,44 +12,41 @@ import {
   Divider,
   FormHelperText
 } from '@chakra-ui/react'
-import { useHistory } from 'react-router-dom'
 import { EmailIcon, LockIcon } from '@chakra-ui/icons'
-
+import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
-import { loginUser } from '../../lib/api'
-import { setToken } from '../../lib/auth'
+import { registerUser } from '../../lib/api'
 
-function FormLogIn() {
 
+function FormRegister() {
   const history = useHistory()
   const [error, setError] = React.useState(false)
-  const { formdata, handleChange } = useForm(
-    {
-      email: '',
-      password: ''
-    }
-  )
+  const { formdata, handleChange } = useForm({
+    email: '',
+    password: '',
+    passwordConfirmation: ''
+  })
 
-  const handleLogIn = async event => {
+  const handleRegister = async event => {
     event.preventDefault()
     try {
-      const { data } = await loginUser(formdata)
-      setToken(data.token)
+      await registerUser(formdata)
       history.push('/events')
     } catch (err) {
       setError(true)
     }
   }
+
   const handleFocus = () => {
     setError(false)
   }
 
   return (
-    <form action='submit' onSubmit={handleLogIn}>
+    <form action='submit' onSubmit={handleRegister}>
       <Stack spacing={2}>
         <FormControl isRequired>
           <FormHelperText textAlign='center'>
-          Already have an account? Log in!
+          New to SwingBy? Sign up!
             <br />
             <br />
           </FormHelperText>
@@ -60,11 +55,12 @@ function FormLogIn() {
             <Input 
               type='email'
               name='email'
-              onChange={handleChange}
               onFocus={handleFocus}
+              onChange={handleChange}
               value={formdata.email}
-              placeholder='demo@account.com' 
-              aria-label='Email' />
+              placeholder='Email' 
+              aria-label='Email' 
+            />
           </InputGroup>
         </FormControl>
         <FormControl isRequired>
@@ -73,29 +69,46 @@ function FormLogIn() {
             <Input 
               type='password'
               name='password'
-              onChange={handleChange}
               onFocus={handleFocus}
+              onChange={handleChange}
               value={formdata.password}
-              placeholder='GetMeInvolved' 
+              placeholder='Password' 
               aria-label='Password' />
           </InputGroup>
-          
-          {error ? <FormHelperText textAlign='center' paddingTop='15px' paddingBottom='16px' color='red.500'>Sorry, the username or password is incorrect</FormHelperText> : <FormHelperText textAlign='center' paddingTop='7px' paddingBottom='7px'>Alternatively, use the demo account details provided to experience full site features</FormHelperText>}
-          
+        </FormControl>
+        <FormControl isRequired>
+          <InputGroup>
+            <InputLeftElement children={<LockIcon />} />
+            <Input 
+              type='password'
+              name='passwordConfirmation'
+              onFocus={handleFocus}
+              onChange={handleChange}
+              value={formdata.passwordConfirmation}
+              placeholder='Confirm Password' 
+              aria-label='Password Confirmation' />
+          </InputGroup>
+          {error ? <FormHelperText textAlign='center' color='red.500'>
+            Your passwords do not match!
+          </FormHelperText> : <FormHelperText textAlign='center'>
+            We will never share your data
+          </FormHelperText>}
         </FormControl>
         <Divider />
-        <Button 
+        <Button
           type='submit' 
           variant='solid' 
           bg='pink.800'
           color='white'
           boxShadow='sm'
-          _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
-            Log in
+          _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+        >
+            Sign Up!
         </Button>
       </Stack>
     </form>
+
   )
 }
 
-export default FormLogIn
+export default FormRegister
