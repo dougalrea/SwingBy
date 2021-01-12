@@ -13,3 +13,7 @@ export function getOnePerson(id) {
 export function getAllEvents() {
   return axios.get(`${baseUrl}/events`)
 }
+
+export function getOneEvent(id) {
+  return axios.get(`${baseUrl}/events/${id}`)
+}
