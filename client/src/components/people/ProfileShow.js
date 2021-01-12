@@ -1,3 +1,4 @@
+
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { getOnePerson } from '../../lib/api'
@@ -85,3 +86,4 @@ function ProfileShow() {
 }
 
 export default ProfileShow
+ 

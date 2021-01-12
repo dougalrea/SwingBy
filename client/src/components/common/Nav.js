@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Link } from 'react-router-dom'
 import {
@@ -45,9 +44,9 @@ function Nav() {
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>Header</DrawerHeader>
+            <DrawerHeader>Username</DrawerHeader>
             <DrawerBody>
-              <Accordion defaultIndex={[1]} allowMultiple allowToggle>
+              <Accordion defaultIndex={[0,1]} allowMultiple allowToggle>
                 <AccordionItem>
                   <AccordionButton>
                     <Box flex="1" textAlign="left">
@@ -66,6 +65,18 @@ function Nav() {
                         pl="0"
                       >
                         Profile
+                      </Button>
+                    </Link>
+                    <Link>
+                      <Button
+                        variant="ghost"
+                        isFullWidth
+                        height="26px"
+                        justifyContent="flex-start"
+                        borderRadius="0"
+                        pl="0"
+                      >
+                        Create Event
                       </Button>
                     </Link>
                     <Link>
