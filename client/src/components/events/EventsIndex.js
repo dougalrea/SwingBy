@@ -1,7 +1,9 @@
 import React from 'react'
 import { getAllEvents } from '../../lib/api'
-import { Box, Heading, Wrap, Image, Stack, Badge, Text } from '@chakra-ui/react'
-import { StarIcon, InfoIcon, EmailIcon, DeleteIcon } from '@chakra-ui/icons'
+import { Box, Heading, Wrap, Image, Stack, Badge, Text, ChakraProvider, Spacer, Button } from '@chakra-ui/react'
+import { StarIcon } from '@chakra-ui/icons'
+import { extendTheme } from '@chakra-ui/react'
+import Fonts from '../../styles/Fonts'
 
 function EventsIndex() {
   const [events, setEvents] = React.useState(null)
@@ -17,44 +19,56 @@ function EventsIndex() {
     }
     getData()
   }, [])
+
+  const theme = extendTheme({
+    fonts: {
+      heading: 'Dancing Script',
+      body: 'Raleway'
+    }
+  })
+
   return (
-    <>
-      <Heading align='center' as='h1' size='4xl'>Event Index</Heading>
+    <ChakraProvider theme={theme}>
+      <Fonts />
+      <Heading align='center' m={5} as='h1' fontSize='96px' color='pink.800'>SwingBy</Heading>
       {events ? 
         <Box m={50}>
           <Wrap justify='center'>
             {events.map(event => (
               <Box 
                 w='300px' 
-                m={50} rounded='20px' 
-                boxShadow='sm' 
-                bg='gray.200' 
+                m={50} rounded='20px'  
+                color='white'
+                bg='pink.800' 
                 key={event._id}>
-                <Image m='2px' src='https://thumbor.thedailymeal.com/vf6fiMOka04qTngQRwtRwKL9bGQ=/870x565/https://www.thedailymeal.com/sites/default/files/2016/04/04/00_Intro_Slide.jpg' alt={event.name} />
+                <Image border='1px' roundedTop='20px' borderColor='pink.800' p={5} bg='white' src='https://thumbor.thedailymeal.com/vf6fiMOka04qTngQRwtRwKL9bGQ=/870x565/https://www.thedailymeal.com/sites/default/files/2016/04/04/00_Intro_Slide.jpg' alt={event.name} />
                 <Box p={5}>
                   <Stack isInline align='baseline'>
-                    <Badge variant='solid' rounded='full' px={2}> 
-                      {event.startDateTime}
+                    <Badge colorScheme='purple' rounded='full' px={2}> 
+                      {event.startDateTime.slice(0, 21)}
                     </Badge>
-                    <Badge variant='solid' rounded='full' ps={2}>New Event</Badge>
+                    <Badge colorScheme='green' rounded='full' ps={2}>New Event</Badge>
                   </Stack>
-                  <Text isTruncated>{event.types[0]}</Text>
-                  <Box as='span'>
-                    {Array(2)
-                      .fill('')
-                      .map((_, i) => (
-                        <StarIcon key={i} />
-                      ))}
-                    <StarIcon color='white.200' />
-                    <Text as='h3' fontSize='lg' fontWeight='semibold' p={1}>5 Reviews</Text>
+                  <Heading as='h2' fontSize='36px' m={2} fontWeight='bold' letterSpacing='wide'>{event.name.toUpperCase()}</Heading>
+                  <Box justify='space-around' as='span'>
+                    <Stack isInline align='center'>
+                      {Array(3)
+                        .fill('')
+                        .map((_, i)=> (
+                          <StarIcon color='gold' key={i} />
+                        ))}
+                      <StarIcon color='white'/>
+                      <Spacer />
+                      <Text m={1}>{event.attendees.length} Attending</Text>
+                    </Stack>
                   </Box>
-                  <Stack m='auto' isInline justify='space-between'>
-                    <Box>
-                      <InfoIcon m={4}/>
-                      <EmailIcon />
-                    </Box>
-                    <DeleteIcon />
-                  </Stack>
+                  <Box>
+                    <Stack isInline align='center'>
+                      <Button m={1} color='black'>Book</Button>
+                      <Spacer />
+                      <Text m={1}>Duration: {event.duration} Hours</Text>
+                    </Stack>
+                  </Box>
                 </Box>
               </Box>
             ))}
@@ -63,7 +77,7 @@ function EventsIndex() {
         :
         <h2>...loading</h2>
       }
-    </>
+    </ChakraProvider>
   )
 }
 
