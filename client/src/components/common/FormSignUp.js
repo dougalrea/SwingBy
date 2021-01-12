@@ -11,15 +11,23 @@ import {
   Stack, 
   Button,
   FormControl,
-  Divider
+  Divider,
+  FormHelperText,
+  StylesProvider
 } from '@chakra-ui/react'
 import { EmailIcon, LockIcon } from '@chakra-ui/icons'
 
-function Form() {
+
+function FormSignUp() {
   return (
     <form action='submit'>
       <Stack spacing={2}>
         <FormControl isRequired>
+          <FormHelperText textAlign='center'>
+          New to SwingBy? Sign up!
+            <br />
+            <br />
+          </FormHelperText>
           <InputGroup>
             <InputLeftElement children={<EmailIcon />} />
             <Input type='email' placeholder='Email' aria-label='Email' />
@@ -36,9 +44,19 @@ function Form() {
             <InputLeftElement children={<LockIcon />} />
             <Input type='password' placeholder='Confirm Password' aria-label='Password Confirmation' />
           </InputGroup>
+          <FormHelperText textAlign='center'>
+            We will never share your data
+          </FormHelperText>
         </FormControl>
         <Divider />
-        <Button type='submit' variant='solid' variantcolour='blue'>
+        <Button
+          type='submit' 
+          variant='solid' 
+          bg='pink.800'
+          color='white'
+          boxShadow='sm'
+          _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+        >
             Sign Up!
         </Button>
       </Stack>
@@ -47,4 +65,4 @@ function Form() {
   )
 }
 
-export default Form
+export default FormSignUp
