@@ -24,6 +24,19 @@ async function seedDatabase() {
     const users = await User.create(userData)
     console.log(users.length, 'users created')
 
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i]
+      const numberFollowing = Math.floor(Math.random() * 15) + 5
+      for (let i = 0; i < numberFollowing; i++) {
+        let potentialFollow = arrayItemAtRandomIndex(users)._id
+        while (user.following.includes(potentialFollow) || user._id === potentialFollow) {
+          potentialFollow = arrayItemAtRandomIndex(users)._id
+        }
+        user.following.push(potentialFollow)
+      }
+      await user.save()
+    }
+
     const eventSeeds = eventData.map(event => {
       event.owner = arrayItemAtRandomIndex(users)._id
       event.attendees.push(event.owner)
@@ -66,7 +79,7 @@ async function seedDatabase() {
       review.owner = owner._id
       reviewee.reviews.push(review)
       await reviewee.save()
-      console.log('saved review number ', i)
+      console.log('Saved user review number ', i)
     }
 
     await mongoose.connection.close()

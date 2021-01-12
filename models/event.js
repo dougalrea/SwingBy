@@ -16,8 +16,9 @@ const eventsSchema = new mongoose.Schema({
   types: [{ type: String }],
   description: { type: String, required: false, maxlength: 500 },
   capacity: { type: Number, required: true },
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true  },
   attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
-  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: false  },
+  attendeeRequests: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   comments: [commentSchema]
 })
 

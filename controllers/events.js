@@ -23,9 +23,25 @@ async function eventsCreate(req, res, next) {
 async function eventShowOne(req, res, next) {
   const { id } = req.params
   try {
-    const event = await Event.findById(id).populate('owner')
+    const event = await Event.findById(id)
+      .populate('owner')
+      .populate('attendees')
     if (!event) throw new Error(notFound)
     return res.status(200).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function eventEdit(req, res, next){
+  const { id } = req.params
+  try {
+    const eventToEdit = await Event.findById(id)
+    if (!eventToEdit) throw new Error(notFound)
+    if (!eventToEdit.owner.equals(req.currentUser._id)) throw new Error(forbidden)
+    Object.assign(eventToEdit, req.body)
+    await eventToEdit.save()
+    return res.status(202).json(eventToEdit)
   } catch (err) {
     next(err)
   }
@@ -39,31 +55,6 @@ async function eventDelete(req, res, next) {
     if (!eventToDelete.owner.equals(req.currentUser._id)) throw new Error(forbidden)
     await eventToDelete.remove()
     return res.sendStatus(204)
-  } catch (err) {
-    next(err)
-  }
-}
-
-async function eventUpdate(req, res, next){
-  const { id } = req.params
-  try {
-    const eventToUpdate = await Event.findById(id)
-    if (!eventToUpdate) throw new Error(notFound)
-    Object.assign(eventToUpdate, req.body)
-    await eventToUpdate.save()
-    return res.status(202).json(eventToUpdate)
-  } catch (err) {
-    next(err)
-  }
-}
-
-async function eventAttend(req, res, next) {
-  const { id } = req.params
-  try {
-    const eventToAttend = await Event.findById(id)
-    eventToAttend.attendees.push(req.currentUser._id)
-    await eventToAttend.save()
-    return res.status(202).json(eventToAttend)
   } catch (err) {
     next(err)
   }
@@ -99,7 +90,7 @@ async function eventCommentDelete(req, res, next) {
   }
 }
 
-async function eventEditComment(req, res, next) {
+async function eventCommentEdit(req, res, next) {
   const { id, commentId } = req.params
   try {
     const event = await Event.findById(id)
@@ -115,14 +106,74 @@ async function eventEditComment(req, res, next) {
   }
 }
 
+async function eventCreateRequest(req, res, next) {
+  const { id } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    event.attendeeRequests.addToSet(req.currentUser._id)
+    await event.save()
+    return res.status(202).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function eventDeleteRequest(req, res, next) {
+  const { id } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    event.attendeeRequests.pull(req.currentUser._id)
+    await event.save()
+    return res.status(202).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function eventAcceptRequest(req, res, next) {
+  const { id, personId } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    if (!event.owner.equals(req.currentUser._id)) throw new Error(forbidden)
+    event.attendeeRequests.pull(personId)
+    event.attendees.addToSet(personId)
+    await event.save()
+    return res.status(202).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function eventDeleteAttendee(req, res, next) {
+  const { id, personId } = req.params
+  try {
+    const event = await Event.findById(id)
+    if (!event) throw new Error(notFound)
+    if (!event.owner.equals(req.currentUser._id) === !req.currentUser._id.equals(personId)) {
+      throw new Error(forbidden)
+    }
+    event.attendees.pull(personId)
+    await event.save()
+    return res.status(202).json(event)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export default {
   index: eventsIndex,
   create: eventsCreate,
   show: eventShowOne,
-  update: eventUpdate,
+  edit: eventEdit,
   delete: eventDelete,
-  attend: eventAttend,
   createComment: eventCommentCreate,
   deleteComment: eventCommentDelete,
-  editComment: eventEditComment
+  editComment: eventCommentEdit,
+  createRequest: eventCreateRequest,
+  deleteRequest: eventDeleteRequest,
+  acceptRequest: eventAcceptRequest,
+  deleteAttendee: eventDeleteAttendee,
 }
