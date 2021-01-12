@@ -48,9 +48,10 @@ function generateUsers() {
   for (let i = 0; i < 100; i++) {
     const firstName = faker.name.firstName()
     const lastName = faker.name.lastName()
-    const email = `${firstName}.${lastName}@${faker.internet.email().split('@')[1]}`
-    const password = 'test'
-    const profilePicture = faker.image.people()
+    const emailDomain = faker.internet.email().split('@')[1]
+    const email = `${firstName.toLowerCase()}_${lastName.toLowerCase()}@${emailDomain}`
+    const password = 'pass'
+    const profilePicture = `${faker.image.people()}?random=${Math.round(Math.random() * 1000)}`
     const alias = faker.internet.userName()
     const age = Math.floor(Math.random() * 52) + 18
     const gender = faker.name.gender()
@@ -79,7 +80,8 @@ function generateUsers() {
       interests,
       isOpenToDrugs,
       foodPreferences,
-      reviews: []
+      reviews: [],
+      following: []
     })
   }
   return users
