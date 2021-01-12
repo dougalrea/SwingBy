@@ -13,3 +13,12 @@ export function getOnePerson(id) {
 export function getAllEvents() {
   return axios.get(`${baseUrl}/events`)
 }
+
+export function loginUser(formdata) {
+  return axios.post(`${baseUrl}/login`, formdata)
+}
+
+export function registerUser(formdata) {
+  console.log(formdata)
+  return axios.post(`${baseUrl}/register`, formdata)
+}

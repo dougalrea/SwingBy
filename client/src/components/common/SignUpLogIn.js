@@ -23,7 +23,7 @@ const theme = extendTheme({
   }
 })
 
-import FormSignUp from './FormSignUp'
+import FormRegister from './FormRegister'
 import FormLogIn from './FormLogIn'
 
 function SignUpLogIn() {
@@ -48,7 +48,12 @@ function SignUpLogIn() {
           >
             <GridItem rowSpan={2} colSpan={10} >
               <AspectRatio maxH='100%' ratio={5 / 14} borderRadius='lg' overflow='hidden'>
-                <Image src="https://media.istockphoto.com/photos/young-adults-socialising-at-a-party-at-home-elevated-view-picture-id684006654?k=6&m=684006654&s=612x612&w=0&h=NVK58_xE9qT0PFWvO7IugUbrVvfIZgTeKghZtzq7aZY=" alt="naruto" objectFit="fill" />
+                <Image 
+                  src="https://www.wtso.com/blog/wp-content/uploads/2018/07/shutterstock_492006757.jpg" 
+                  alt="dinner party photo" 
+                  objectFit="fill"
+                  align='left'
+                />
               </AspectRatio>
             </GridItem>
             <GridItem colSpan={14} >
@@ -68,7 +73,7 @@ function SignUpLogIn() {
             </GridItem>
             <GridItem colSpan={7}>
               <Box>
-                <FormSignUp />
+                <FormRegister />
               </Box>
             </GridItem>
 
