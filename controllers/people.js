@@ -18,9 +18,24 @@ async function personShowOne(req, res, next) {
     const person = await User.findById(id)
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
+      .populate('followedBy')
     if (!person) throw new Error(notFound)
     console.log(person)
     return res.status(200).json(person)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function personEdit(req, res, next){
+  const { id } = req.params
+  try {
+    const personToUpdate = await User.findById(id)
+    if (!personToUpdate) throw new Error(notFound)
+    if (!req.currentUser._id.equals(id)) throw new Error(forbidden)
+    Object.assign(personToUpdate, req.body)
+    await personToUpdate.save()
+    return res.status(202).json(personToUpdate)
   } catch (err) {
     next(err)
   }
@@ -31,21 +46,9 @@ async function personDelete(req, res, next) {
   try {
     const personToDelete = await User.findById(id)
     if (!personToDelete) throw new Error(notFound)
+    if (!req.currentUser._id.equals(id)) throw new Error(forbidden)
     await personToDelete.remove()
     return res.sendStatus(204)
-  } catch (err) {
-    next(err)
-  }
-}
-
-async function personUpdate(req, res, next){
-  const { id } = req.params
-  try {
-    const personToUpdate = await User.findById(id)
-    if (!personToUpdate) throw new Error(notFound)
-    Object.assign(personToUpdate, req.body)
-    await personToUpdate.save()
-    return res.status(202).json(personToUpdate)
   } catch (err) {
     next(err)
   }
@@ -56,6 +59,7 @@ async function personCreateReview(req, res, next) {
   try {
     const person = await User.findById(id)
     if (!person) throw new Error(notFound)
+    if (req.currentUser._id.equals(id)) throw new Error(forbidden)
     const newReview = { ...req.body, owner: req.currentUser._id }
     person.reviews.push(newReview)
     await person.save()
@@ -100,7 +104,7 @@ async function personEditReview(req, res, next) {
 export default {
   index: peopleShowAll,
   show: personShowOne,
-  update: personUpdate,
+  edit: personEdit,
   delete: personDelete,
   createReview: personCreateReview,
   deleteReview: personDeleteReview,
