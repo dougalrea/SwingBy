@@ -3,15 +3,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { 
-  Input, 
-  InputLeftAddon, 
-  Icon, 
-  InputGroup, 
-  InputLeftElement, 
-  Stack, 
-  Button,
-  FormControl,
-  Divider,
   Container,
   Box,
   Grid,
@@ -32,7 +23,8 @@ const theme = extendTheme({
   }
 })
 
-import Form from './Form'
+import FormSignUp from './FormSignUp'
+import FormLogIn from './FormLogIn'
 
 function SignUpLogIn() {
   return (
@@ -71,12 +63,12 @@ function SignUpLogIn() {
             </GridItem>
             <GridItem colSpan={7}>
               <Box>
-                <Form />
+                <FormLogIn />
               </Box>
             </GridItem>
             <GridItem colSpan={7}>
               <Box>
-                <Form />
+                <FormSignUp />
               </Box>
             </GridItem>
 
