@@ -60,14 +60,13 @@ async function seedDatabase() {
         potentialEvents = events.filter(event => event.attendees.includes(owner._id))
       }
       const event = arrayItemAtRandomIndex(potentialEvents)
-      console.log(event.attendees)
       const otherAttendees = event.attendees.filter(attendee => attendee !== owner._id)
-      console.log(otherAttendees)
       const revieweeId = arrayItemAtRandomIndex(otherAttendees)
       const reviewee = await User.findById(revieweeId)
       review.owner = owner._id
       reviewee.reviews.push(review)
       await reviewee.save()
+      console.log('saved review number ', i)
     }
 
     await mongoose.connection.close()
