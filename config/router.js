@@ -10,7 +10,7 @@ const router = express.Router()
 router.route('/events')
   .get(events.index)
   .post(secureRoute, events.create)
-  
+
 router.route('/events/:id')
   .get(events.show)
   .put(secureRoute, events.edit)
