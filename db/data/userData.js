@@ -62,6 +62,7 @@ function generateUsers() {
     const interests = assignInterests()
     const isOpenToDrugs = Math.random() < 0.5
     const foodPreferences = arrayItemAtRandomIndex(foodPreferencesArray)
+    const bio = faker.lorem.sentences(6)
 
     users.push({
       firstName,
@@ -75,6 +76,7 @@ function generateUsers() {
       gender,
       sexualOrientation,
       politics,
+      bio,
       height,
       isSmoker,
       interests,
