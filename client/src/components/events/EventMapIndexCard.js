@@ -20,8 +20,6 @@ function EventMapIndexCard() {
     }
   })
 
-  console.log(viewport)
-
   return (
     <ChakraProvider theme={theme}>
       <Fonts />
