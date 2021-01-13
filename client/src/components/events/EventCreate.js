@@ -5,10 +5,10 @@ import React from 'react'
 import { createEvent, getOneEvent } from '../../lib/api'
 import { useParams } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, LockIcon, InputGroup, InputLeftElement, TabList, Tab } from '@chakra-ui/react'
+  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, LockIcon, InputGroup, InputLeftElement, TabList, Tab, InputRightAddon, Textarea } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon } from '@chakra-ui/icons'
+import { CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
 import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
@@ -48,9 +48,7 @@ function EventCreate() {
     setError(false)
   }
 
-  const now = new Date().toISOString()
-  console.log(now)
-
+  const now = new Date().toISOString().split(':').slice(0, 2).join(':')
 
   return (
     <ChakraProvider theme={theme}>
@@ -77,7 +75,7 @@ function EventCreate() {
               templateColumns="repeat(12, 1fr)"
               gap={6}
             >
-              <GridItem rowSpan={8} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                 {formdata.imageURL ? <Image 
                   src={formdata.imageURL} 
                   alt="event photo" 
@@ -91,9 +89,9 @@ function EventCreate() {
                 /> }
                 
               </GridItem>
-              <GridItem rowSpan={4} colSpan={6} borderRadius='lg' borderColor='red.500' >
+              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' borderWidth='1px'>
                 <Stack>
-                  <Heading color='pink.800' as='h2'>Provide details for your event</Heading>
+                  <Heading size='lg' color='pink.800' as='h3'>Provide details for your event</Heading>
                   <FormControl isRequired>
                     <InputGroup>
                       <InputLeftElement children={<AddIcon />} />
@@ -122,9 +120,9 @@ function EventCreate() {
                       />
                     </InputGroup>
                   </FormControl>
-                  <FormControl >
+                  <FormControl isRequired>
                     <InputGroup>
-                      <InputLeftElement children={<ViewIcon />} />
+                      <InputLeftElement children={<CalendarIcon />} />
                       <Input 
                         type='datetime-local'
                         name='startDateTime'
@@ -136,8 +134,57 @@ function EventCreate() {
                       />
                     </InputGroup>
                   </FormControl>
-                </Stack>
-                        
+                  <FormControl isRequired>
+                    <InputGroup>
+                      <InputLeftElement children={<TimeIcon />} />
+                      <Input 
+                        type='number'
+                        name='duration'
+                        onFocus={handleFocus}
+                        onChange={handleChange}
+                        value={formdata.duration}
+                        placeholder='Duration'
+                        aria-label='duration' 
+                      />
+                      <InputRightAddon children='hours' />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl isRequired>
+                    <InputGroup>
+                      <InputLeftElement children={<SettingsIcon />} />
+                      <Input 
+                        type='number'
+                        name='capacity'
+                        onFocus={handleFocus}
+                        onChange={handleChange}
+                        value={formdata.capacity}
+                        placeholder='Capacity'
+                        aria-label='capacity' 
+                      />
+                      <InputRightAddon children='attendees' />
+                    </InputGroup>
+                  </FormControl>
+                </Stack>    
+              </GridItem>
+              <GridItem rowSpan={3} colSpan={8} borderRadius='lg' borderColor='red.500' borderWidth='1px'>
+                <FormControl isRequired>
+                  <Heading size='lg' ml={4} color='pink.800' as='h3'>Event description</Heading>
+                  <InputGroup>
+                    <InputLeftElement  />
+                    <Textarea 
+                      type='text'
+                      children={<ChatIcon />}
+                      isFullWidth
+                      size='lg'
+                      name='description'
+                      onFocus={handleFocus}
+                      onChange={handleChange}
+                      value={formdata.capacity}
+                      placeholder='Make it sound appealing!'
+                      aria-label='description' 
+                    />
+                  </InputGroup>
+                </FormControl>
               </GridItem>
             </Grid>
           </form>
