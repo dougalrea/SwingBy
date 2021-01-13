@@ -23,7 +23,10 @@ async function eventsCreate(req, res, next) {
 async function eventShowOne(req, res, next) {
   const { id } = req.params
   try {
-    const event = await Event.findById(id).populate('owner').populate('attendees').populate('comments.owner')
+    const event = await Event.findById(id)
+      .populate('owner')
+      .populate('attendees')
+      .populate('comments.owner')
     if (!event) throw new Error(notFound)
     return res.status(200).json(event)
   } catch (err) {
@@ -104,61 +107,30 @@ async function eventCommentEdit(req, res, next) {
   }
 }
 
-async function eventCreateRequest(req, res, next) {
+async function eventAttend(req, res, next) {
   const { id } = req.params
   try {
-    const event = await Event.findById(id)
-    if (!event) throw new Error(notFound)
-    event.attendeeRequests.addToSet(req.currentUser._id)
-    await event.save()
-    return res.status(202).json(event)
+    const eventToAttend = await Event.findById(id)
+    if (!eventToAttend) throw new Error(notFound)
+    eventToAttend.attendees.addToSet(req.currentUser._id)
+    await eventToAttend.save()
+    return res.status(202).json(eventToAttend)
   } catch (err) {
     next(err)
   }
 }
 
-async function eventDeleteRequest(req, res, next) {
+async function eventUnattend(req, res, next) {
   const { id } = req.params
   try {
-    const event = await Event.findById(id)
-    if (!event) throw new Error(notFound)
-    event.attendeeRequests.pull(req.currentUser._id)
-    await event.save()
-    return res.status(202).json(event)
+    const eventToUnattend = await Event.findById(id)
+    if (!eventToUnattend) throw new Error(notFound)
+    eventToUnattend.attendees.pull(req.currentUser._id)
+    await eventToUnattend.save()
+    return res.status(202).json(eventToUnattend)
   } catch (err) {
     next(err)
-  }
-}
-
-async function eventAcceptRequest(req, res, next) {
-  const { id, personId } = req.params
-  try {
-    const event = await Event.findById(id)
-    if (!event) throw new Error(notFound)
-    if (!event.owner.equals(req.currentUser._id)) throw new Error(forbidden)
-    event.attendeeRequests.pull(personId)
-    event.attendees.addToSet(personId)
-    await event.save()
-    return res.status(202).json(event)
-  } catch (err) {
-    next(err)
-  }
-}
-
-async function eventDeleteAttendee(req, res, next) {
-  const { id, personId } = req.params
-  try {
-    const event = await Event.findById(id)
-    if (!event) throw new Error(notFound)
-    if (!event.owner.equals(req.currentUser._id) === !req.currentUser._id.equals(personId)) {
-      throw new Error(forbidden)
-    }
-    event.attendees.pull(personId)
-    await event.save()
-    return res.status(202).json(event)
-  } catch (err) {
-    next(err)
-  }
+  } 
 }
 
 export default {
@@ -170,8 +142,6 @@ export default {
   createComment: eventCommentCreate,
   deleteComment: eventCommentDelete,
   editComment: eventCommentEdit,
-  createRequest: eventCreateRequest,
-  deleteRequest: eventDeleteRequest,
-  acceptRequest: eventAcceptRequest,
-  deleteAttendee: eventDeleteAttendee,
+  attend: eventAttend,
+  unattend: eventUnattend
 }

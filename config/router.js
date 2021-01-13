@@ -23,15 +23,9 @@ router.route('/events/:id/comments/:commentId')
   .delete(secureRoute, events.deleteComment)
   .put(secureRoute, events.editComment)
 
-router.route('/events/:id/requests')
-  .post(secureRoute, events.createRequest)
-  .delete(secureRoute, events.deleteRequest)
-
-router.route('/events/:id/requests/:personId')
-  .put(secureRoute, events.acceptRequest)
-
-router.route('/events/:id/attendees/:personId')
-  .delete(secureRoute, events.deleteAttendee)
+router.route('/events/:id/attendees')
+  .post(secureRoute, events.attend)
+  .delete(secureRoute, events.unattend)
 
 router.route('/people')
   .get(users.index)
@@ -47,6 +41,10 @@ router.route('/people/:id/reviews')
 router.route('/people/:id/reviews/:reviewId')
   .delete(secureRoute, users.deleteReview)
   .put(secureRoute, users.editReview)
+
+router.route('/people/:id/followers')
+  .post(secureRoute, events.follow)
+  .delete(secureRoute, events.unfollow)
 
 router.route('/register')
   .post(auth.registerUser)

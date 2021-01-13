@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
   interests: [{ type: String }],
   foodPreferences: { type: String },
   reviews: [userReviewSchema],
-  following: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
+  followedBy: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
 })
 
 userSchema.virtual('eventsHostOf', {
@@ -40,10 +40,10 @@ userSchema.virtual('eventsAttendeeOf', {
   foreignField: 'attendees'
 })
 
-userSchema.virtual('followedBy', {
+userSchema.virtual('following', {
   ref: 'User',
   localField: '_id',
-  foreignField: 'following'
+  foreignField: 'followedBy'
 })
 
 userSchema.virtual('avgRating').get(function () {

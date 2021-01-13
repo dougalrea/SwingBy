@@ -18,7 +18,7 @@ async function personShowOne(req, res, next) {
     const person = await User.findById(id)
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
-      .populate('followedBy')
+      .populate('following')
     if (!person) throw new Error(notFound)
     console.log(person)
     return res.status(200).json(person)
@@ -101,6 +101,31 @@ async function personEditReview(req, res, next) {
   }
 }
 
+async function personFollow(req, res, next) {
+  const { id } = req.params
+  try {
+    const personToFollow = await User.findById(id)
+    if (!personToFollow) throw new Error(notFound)
+    personToFollow.followedBy.addToSet(id)
+    await personToFollow.save()
+    return res.status(202).json(personToFollow)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function personUnfollow(req, res, next) {
+  const { id } = req.params
+  try {
+    const personToUnfollow = await User.findById(id)
+    personToUnfollow.followedBy.pull(id)
+    await personToUnfollow.save()
+    return res.status(202).json(personToUnfollow)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export default {
   index: peopleShowAll,
   show: personShowOne,
@@ -108,5 +133,7 @@ export default {
   delete: personDelete,
   createReview: personCreateReview,
   deleteReview: personDeleteReview,
-  editReview: personEditReview
+  editReview: personEditReview,
+  follow: personFollow,
+  unfollow: personUnfollow
 }

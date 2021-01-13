@@ -24,8 +24,8 @@ function generateEvents() {
   for (let i = 0; i < 60; i++) {
     const name = faker.internet.domainWord()
     const imageURL = faker.image.nightlife()
-    const latitude = Math.random() * -0.515339 + 0.149425
-    const longitude = Math.random() * 0.235503 + 51.386897
+    const latitude = Math.random() * 0.235503 + 51.386897
+    const longitude = Math.random() * -0.515339 + 0.149425
     const startDateTime = Math.random() < 0.5 ?
       realisticStartDateTime(faker.date.recent(60))
       :
@@ -38,8 +38,8 @@ function generateEvents() {
     events.push({
       name,
       imageURL,
-      latitude,
-      longitude,
+      latitude: latitude.toFixed(6),
+      longitude: longitude.toFixed(6),
       startDateTime,
       duration,
       types,

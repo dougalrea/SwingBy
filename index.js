@@ -1,5 +1,6 @@
 import express from 'express'
 import { port } from './config/environment.js'
+
 import connectToDatabase from './lib/connectToDB.js'
 import logger from './logger.js'
 import router from './config/router.js'
