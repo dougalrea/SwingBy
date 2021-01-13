@@ -19,6 +19,8 @@ async function personShowOne(req, res, next) {
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
       .populate('following')
+      .populate('reviews.owner')
+      .populate('followedBy')
     if (!person) throw new Error(notFound)
     console.log(person)
     return res.status(200).json(person)

@@ -5,10 +5,10 @@ import React from 'react'
 import { createEvent, getOneEvent } from '../../lib/api'
 import { useParams } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, LockIcon, InputGroup, InputLeftElement, TabList, Tab, InputRightAddon, Textarea } from '@chakra-ui/react'
+  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, InputGroup, InputLeftElement, TabList, Tab, InputRightAddon, Textarea } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon } from '@chakra-ui/icons'
+import { CalendarIcon, ChatIcon, CheckCircleIcon, ArrowUpIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
 import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
@@ -48,11 +48,35 @@ function EventCreate() {
     setError(false)
   }
 
+  const [viewport, setViewport] = React.useState({
+    latitude: 51.2,
+    longitude: -0.6,
+    zoom: 8
+  })
+
+  let i = 1
+
+  const findMyLocation = () => {
+    i++
+  }
+
+  React.useEffect(() => {
+    window.navigator.geolocation.getCurrentPosition(position => {
+      const { coords: { latitude, longitude } } = position
+      setViewport({ latitude, longitude, 'zoom': 15 })
+      console.log(i)
+    })
+  }, [formdata.latitude, formdata.longitude])
+
+  console.log(viewport)
+
+
+
   const now = new Date().toISOString().split(':').slice(0, 2).join(':')
 
   return (
     <ChakraProvider theme={theme}>
-      <Container maxW='85vw' maxH='110vh' borderRadius='lg' borderWidth='1px' borderColor='red.500'>
+      <Container maxW='85vw' maxH='110vh' >
         <Box 
           mt={5}
           align='left'
@@ -78,7 +102,7 @@ function EventCreate() {
               <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                 {formdata.imageURL ? <Image 
                   src={formdata.imageURL} 
-                  alt="event photo" 
+                  alt="invalid url" 
                   objectFit="contain"
                   align='left'
                 /> : <Image 
@@ -89,7 +113,7 @@ function EventCreate() {
                 /> }
                 
               </GridItem>
-              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' borderWidth='1px'>
+              <GridItem rowSpan={5} colSpan={4} >
                 <Stack>
                   <Heading size='lg' color='pink.800' as='h3'>Provide details for your event</Heading>
                   <FormControl isRequired>
@@ -166,25 +190,89 @@ function EventCreate() {
                   </FormControl>
                 </Stack>    
               </GridItem>
-              <GridItem rowSpan={3} colSpan={8} borderRadius='lg' borderColor='red.500' borderWidth='1px'>
+              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='gray.500' borderWidth='1px'>
+                {viewport ?
+                  <ReactMapGL
+                    mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                    height="100%"
+                    width="100%"
+                    mapStyle='mapbox://styles/mapbox/streets-v11'
+                    latitude={viewport.latitude}
+                    longitude={viewport.longitude}
+                    zoom={5}
+                  >
+                    <Marker latitude={viewport.latitude} longitude={viewport.longitude}>🎯
+                    </Marker>
+                  </ReactMapGL>
+                  :
+                  <h1>Finding your location...</h1>
+                }
+              </GridItem>
+              <GridItem rowSpan={2} colSpan={8} >
                 <FormControl isRequired>
-                  <Heading size='lg' ml={4} color='pink.800' as='h3'>Event description</Heading>
+                  <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Event description</Heading>
                   <InputGroup>
                     <InputLeftElement  />
                     <Textarea 
                       type='text'
                       children={<ChatIcon />}
-                      isFullWidth
                       size='lg'
                       name='description'
                       onFocus={handleFocus}
                       onChange={handleChange}
-                      value={formdata.capacity}
+                      value={formdata.description}
                       placeholder='Make it sound appealing!'
                       aria-label='description' 
                     />
                   </InputGroup>
                 </FormControl>
+              </GridItem>
+              <GridItem rowSpan={2} colSpan={4} >
+                <Button onClick={findMyLocation}>
+                Find My Location
+                </Button>
+                <FormControl isRequired>
+                  <InputGroup>
+                    <InputLeftElement children={<ArrowForwardIcon />} />
+                    <Input 
+                      type='number'
+                      name='latitude'
+                      onFocus={handleFocus}
+                      onChange={handleChange}
+                      value={formdata.latitude}
+                      placeholder='Latitude'
+                      aria-label='latitude' 
+                    />
+                  </InputGroup>
+                </FormControl>
+                <FormControl isRequired>
+                  <InputGroup>
+                    <InputLeftElement children={<ArrowUpIcon />} />
+                    <Input 
+                      type='number'
+                      name='longitude'
+                      onFocus={handleFocus}
+                      onChange={handleChange}
+                      value={formdata.longitude}
+                      placeholder='Longitude'
+                      aria-label='longitude' 
+                    />
+                  </InputGroup>
+                </FormControl>
+              </GridItem>
+              <GridItem rowSpan={3} colSpan={8}>
+              </GridItem>
+              <GridItem>
+                <Button
+                  type='submit' 
+                  variant='solid' 
+                  bg='pink.800'
+                  color='white'
+                  boxShadow='sm'
+                  _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                >
+            Submit
+                </Button>
               </GridItem>
             </Grid>
           </form>
