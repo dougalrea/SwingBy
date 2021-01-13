@@ -55,7 +55,7 @@ function Nav() {
                     <AccordionIcon />
                   </AccordionButton>
                   <AccordionPanel>
-                    <Link>
+                    <Link to='/people/:id'>
                       <Button
                         variant="ghost"
                         isFullWidth
@@ -67,7 +67,7 @@ function Nav() {
                         Profile
                       </Button>
                     </Link>
-                    <Link>
+                    <Link to='/events/create'>
                       <Button
                         variant="ghost"
                         isFullWidth
@@ -79,7 +79,7 @@ function Nav() {
                         Create Event
                       </Button>
                     </Link>
-                    <Link>
+                    <Link to='/events/:id'>
                       <Button
                         variant="ghost"
                         isFullWidth
@@ -113,7 +113,7 @@ function Nav() {
                     <AccordionIcon />
                   </AccordionButton>
                   <AccordionPanel>
-                    <Link>
+                    <Link to='/events'>
                       <Button
                         variant="ghost"
                         isFullWidth
@@ -125,7 +125,7 @@ function Nav() {
                         Events
                       </Button>
                     </Link>
-                    <Link>
+                    <Link to='/people'>
                       <Button
                         variant="ghost"
                         isFullWidth
