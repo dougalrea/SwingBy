@@ -24,7 +24,7 @@ function EventCard({ _id, owner, startDateTime, name, capacity, duration, attend
         <Link to={`/events/${_id}`}>
                   
           <Box m={2}>
-            <Heading>Host <Link to={`/people/${owner}`}> <Avatar src={owner.profilePicture}></Avatar></Link></Heading>
+            <Heading>Host <Link to={`/people/${owner._id}`}> <Avatar src={owner.profilePicture}></Avatar></Link></Heading>
           </Box>
           <Image rounded='20px' borderColor='pink.800' p={5} bg='white' src={imageURL} alt={name} />
           <Box p={5}>

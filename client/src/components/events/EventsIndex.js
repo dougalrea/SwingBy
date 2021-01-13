@@ -1,6 +1,6 @@
 import React from 'react'
 import { getAllEvents } from '../../lib/api'
-import { ChakraProvider, Heading, Wrap, Box, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { ChakraProvider, Heading, Wrap, Box, Tabs, TabList, TabPanels, Tab, TabPanel, Spinner } from '@chakra-ui/react'
 import EventCard from '../../components/events/EventCard'
 import EventMapIndexCard from '../../components/events/EventMapIndexCard'
 import Fonts from '../../styles/Fonts'
@@ -55,7 +55,10 @@ function EventsIndex() {
           </Tabs>
         </Box>
         :
-        <h2>...loading</h2>
+        <Box m={40} align='center'>
+          <Spinner size='xl' color='pink.800' />
+          <Heading color='black'>Loading...</Heading>
+        </Box>
       }
     </ChakraProvider>
   )
