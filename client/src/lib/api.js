@@ -76,6 +76,14 @@ export function editPersonReview(id, reviewId, formdata) {
   return axios.put(`${baseUrl}/people/${id}/reviews/${reviewId}`, formdata, headers())
 }
 
+export function followPerson(id) {
+  return axios.post(`${baseUrl}/people/${id}/follow`, {}, headers())
+}
+
+export function unfollowPerson(id) {
+  return axios.delete(`${baseUrl}/people/${id}/unfollow`, headers())
+}
+
 export function editUser(id) {
   return axios.put(`${baseUrl}/people/${id}`, headers())
 }
