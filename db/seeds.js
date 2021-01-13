@@ -7,7 +7,6 @@ import eventCommentData from './data/eventCommentData.js'
 import User from '../models/user.js'
 import userData from './data/userData.js'
 import userReviewData from './data/userReviewData.js'
-// import user from '../models/user.js'
 
 function arrayItemAtRandomIndex(array) {
   return array[Math.floor(Math.random() * array.length)]
@@ -26,13 +25,13 @@ async function seedDatabase() {
 
     for (let i = 0; i < users.length; i++) {
       const user = users[i]
-      const numberFollowing = Math.floor(Math.random() * 15) + 5
-      for (let i = 0; i < numberFollowing; i++) {
-        let potentialFollow = arrayItemAtRandomIndex(users)._id
-        while (user.following.includes(potentialFollow) || user._id === potentialFollow) {
-          potentialFollow = arrayItemAtRandomIndex(users)._id
+      const numberFollowedBy = Math.floor(Math.random() * 15) + 5
+      for (let i = 0; i < numberFollowedBy; i++) {
+        let potentialFollower = arrayItemAtRandomIndex(users)._id
+        while (user.followedBy.includes(potentialFollower) || user._id === potentialFollower) {
+          potentialFollower = arrayItemAtRandomIndex(users)._id
         }
-        user.following.push(potentialFollow)
+        user.followedBy.push(potentialFollower)
       }
       await user.save()
     }

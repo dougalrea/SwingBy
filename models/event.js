@@ -18,7 +18,6 @@ const eventsSchema = new mongoose.Schema({
   capacity: { type: Number, required: true },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true  },
   attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
-  attendeeRequests: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   comments: [commentSchema]
 })
 

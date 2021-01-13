@@ -40,20 +40,12 @@ export function editEventComment(id, commentId, formdata) {
   return axios.put(`${baseUrl}/events/${id}/comments/${commentId}`, formdata, headers())
 }
 
-export function createRequestToAttendEvent(id) {
-  return axios.post(`${baseUrl}/events/${id}/requests`, {}, headers())
+export function attendEvent(id) {
+  return axios.post(`${baseUrl}/events/${id}/attendees`, {}, headers())
 }
 
-export function deleteRequestToAttendEvent(id) {
-  return axios.delete(`${baseUrl}/events/${id}/requests`, headers())
-}
-
-export function acceptRequestToAttendEvent(id, personId) {
-  return axios.put(`${baseUrl}/events/${id}/requests/${personId}`, {}, headers())
-}
-
-export function deleteAttendee(id, personId) {
-  return axios.delete(`${baseUrl}/events/${id}/attendees/${personId}`, headers())
+export function unattendEvent(id) {
+  return axios.delete(`${baseUrl}/events/${id}/attendees`, headers())
 }
 
 export function getAllPeople() {
@@ -77,11 +69,11 @@ export function editPersonReview(id, reviewId, formdata) {
 }
 
 export function followPerson(id) {
-  return axios.post(`${baseUrl}/people/${id}/follow`, {}, headers())
+  return axios.post(`${baseUrl}/people/${id}/followers`, {}, headers())
 }
 
 export function unfollowPerson(id) {
-  return axios.delete(`${baseUrl}/people/${id}/unfollow`, headers())
+  return axios.delete(`${baseUrl}/people/${id}/followers`, headers())
 }
 
 export function editUser(id) {
