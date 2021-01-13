@@ -116,7 +116,12 @@ async function eventAttend(req, res, next) {
     if (!eventToAttend) throw new Error(notFound)
     eventToAttend.attendees.addToSet(req.currentUser._id)
     await eventToAttend.save()
-    return res.status(202).json(eventToAttend)
+    eventToAttend.populate('attendees')
+    const populatedEvent = await Event.findById(eventToAttend._id)
+      .populate('owner')
+      .populate('attendees')
+      .populate('comments.owner')
+    return res.status(202).json(populatedEvent)
   } catch (err) {
     next(err)
   }
@@ -129,7 +134,11 @@ async function eventUnattend(req, res, next) {
     if (!eventToUnattend) throw new Error(notFound)
     eventToUnattend.attendees.pull(req.currentUser._id)
     await eventToUnattend.save()
-    return res.status(202).json(eventToUnattend)
+    const populatedEvent = await Event.findById(eventToUnattend._id)
+      .populate('owner')
+      .populate('attendees')
+      .populate('comments.owner')
+    return res.status(202).json(populatedEvent)
   } catch (err) {
     next(err)
   } 
