@@ -23,7 +23,7 @@ function generateEvents() {
 
   for (let i = 0; i < 60; i++) {
     const name = faker.internet.domainWord()
-    const imageURL = faker.image.nightlife()
+    const imageURL = `${faker.image.nightlife()}?random=${Math.round(Math.random() * 1000)}`
     const latitude = Math.random() * 0.235503 + 51.386897
     const longitude = Math.random() * -0.515339 + 0.149425
     const startDateTime = Math.random() < 0.5 ?
