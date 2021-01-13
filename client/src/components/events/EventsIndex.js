@@ -1,9 +1,10 @@
 import React from 'react'
 import { getAllEvents } from '../../lib/api'
-import { Box, Heading, Wrap, Image, Stack, Badge, Text, ChakraProvider, Spacer, Button } from '@chakra-ui/react'
+import { Box, Heading, Wrap, Image, Stack, Badge, Text, ChakraProvider, Spacer, Avatar } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
+import { Link } from 'react-router-dom'
 
 function EventsIndex() {
   const [events, setEvents] = React.useState(null)
@@ -41,35 +42,39 @@ function EventsIndex() {
                 color='white'
                 bg='pink.800' 
                 key={event._id}>
-                <Image border='1px' roundedTop='20px' borderColor='pink.800' p={5} bg='white' src='https://thumbor.thedailymeal.com/vf6fiMOka04qTngQRwtRwKL9bGQ=/870x565/https://www.thedailymeal.com/sites/default/files/2016/04/04/00_Intro_Slide.jpg' alt={event.name} />
-                <Box p={5}>
-                  <Stack isInline align='baseline'>
-                    <Badge colorScheme='purple' rounded='full' px={2}> 
-                      {event.startDateTime.slice(0, 21)}
-                    </Badge>
-                    <Badge colorScheme='green' rounded='full' ps={2}>New Event</Badge>
-                  </Stack>
-                  <Heading as='h2' fontSize='36px' m={2} fontWeight='bold' letterSpacing='wide'>{event.name.toUpperCase()}</Heading>
-                  <Box justify='space-around' as='span'>
-                    <Stack isInline align='center'>
-                      {Array(3)
-                        .fill('')
-                        .map((_, i)=> (
-                          <StarIcon color='gold' key={i} />
-                        ))}
-                      <StarIcon color='white'/>
-                      <Spacer />
-                      <Text m={1}>{event.attendees.length} Attending</Text>
-                    </Stack>
+                <Link to={`/events/${event._id}`}>
+                  <Box m={2}>
+                    <Heading>Host <Link to={`/people/${event.owner}`}> <Avatar src={event.owner.profilePicture}></Avatar></Link></Heading>
                   </Box>
-                  <Box>
-                    <Stack isInline align='center'>
-                      <Button m={1} color='black'>Book</Button>
-                      <Spacer />
-                      <Text m={1}>Duration: {event.duration} Hours</Text>
+                  <Image rounded='20px' borderColor='pink.800' p={5} bg='white' src={event.imageURL} alt={event.name} />
+                  <Box p={5}>
+                    <Stack isInline align='baseline'>
+                      <Badge colorScheme='purple' rounded='full' px={2}> 
+                        {event.startDateTime.slice(0, 10)}
+                      </Badge>
+                      <Badge colorScheme='green' rounded='full' ps={2}>{event.startDateTime.slice(15, 21) + ' pm'}</Badge>
                     </Stack>
+                    <Heading as='h2' fontSize='36px' mt={3} fontWeight='bold' letterSpacing='wide'>{event.name.toUpperCase()}</Heading>
+                    <Box justify='space-around' as='span'>
+                      <Stack isInline align='center'>
+                        {Array(3)
+                          .fill('')
+                          .map((_, i)=> (
+                            <StarIcon mt={1} color='gold' key={i} />
+                          ))}
+                        <StarIcon color='white'/>
+                        <Spacer />
+                        <Text m={1}>{event.capacity - event.attendees.length + 1} Tickets left</Text>
+                      </Stack>
+                    </Box>
+                    <Box>
+                      <Stack isInline align='center'>
+                        <Spacer />
+                        <Text m={1}>Duration: {event.duration} Hours</Text>
+                      </Stack>
+                    </Box>
                   </Box>
-                </Box>
+                </Link>
               </Box>
             ))}
           </Wrap>
