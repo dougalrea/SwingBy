@@ -4,6 +4,8 @@ import { notFound, forbidden } from '../lib/errorHandler.js'
 async function eventsIndex(_req, res, next){
   try {
     const events = await Event.find()
+      .populate('owner')
+      .populate('attendees')
     return res.status(200).json(events)
   } catch (err) {
     next(err)
