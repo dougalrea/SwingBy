@@ -3,3 +3,53 @@
 .overlays {
   position: inherit !important;
 }
+
+.chakra-tabs__tab-panel > div {
+  overflow: hidden !important;
+}
+
+div.mapboxgl-marker {
+  span {
+    cursor: pointer;
+  }
+}
+
+div.mapboxgl-popup-content {
+  padding: 10px;
+  button.mapboxgl-popup-close-button {
+    margin-right: 5px;
+  }
+  p.event-name {
+    font-weight: bold;
+    font-size: 14px;
+    a:hover {
+      text-decoration: underline;
+      &::after {
+        content: ' →'
+      }
+    }
+  }
+  p.event-types {
+    max-width: 120px;
+    font-style: italic;
+    font-size: 12px;
+  }
+  p.event-spaces {
+    font-size: 12px;
+  }
+  p.event-host {
+    font-size: 12px;
+    a:hover {
+      text-decoration: underline;
+      color: grey;
+      &::after {
+        content: ' →'
+      }
+    }
+  }
+}
+
+
+
+
+
