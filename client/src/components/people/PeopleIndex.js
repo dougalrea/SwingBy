@@ -1,6 +1,6 @@
 import React from 'react'
 import { getAllPeople } from '../../lib/api'
-import { Box, Image, Badge, Text, Wrap, Heading, Stack, ChakraProvider, Spacer } from '@chakra-ui/react'
+import { Box, Image, Badge, Text, Wrap, Heading, Stack, ChakraProvider, Spacer, Spinner } from '@chakra-ui/react'
 import { StarIcon } from '@chakra-ui/icons'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
@@ -78,7 +78,10 @@ function PeopleIndex() {
           
         </Box>
         :
-        <h2>...loading</h2>
+        <Box m={40} align='center'>
+          <Spinner size='xl' color='pink.800' />
+          <Heading color='black'>Loading...</Heading>
+        </Box>
       }
     </ChakraProvider>
   )
