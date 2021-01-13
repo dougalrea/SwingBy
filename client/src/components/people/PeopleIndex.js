@@ -48,20 +48,21 @@ function PeopleIndex() {
                   <Image border='1px' borderColor='pink.800' bg='white' p={5} roundedTop='20px' src={person.profilePicture} alt={person.firstName} />
                   <Box p={5}>
                     <Stack isInline align='baseline'>
-                      <Badge colorScheme='purple' rounded='full' px={2}>New Profile</Badge>
-                      <Badge m={1} colorScheme='green' rounded='full' px={2}>Hosting Event</Badge>
+                      <Badge colorScheme='purple' rounded='full' px={2}>{person.alias}</Badge>
+                      <Badge m={1} colorScheme='green' rounded='full' px={2}>Age: {person.age}</Badge>
                     </Stack>
-                    <Heading as='h2' fontSize='36px' m={2} fontWeight='bold' letterSpacing='wide'>{person.firstName.toUpperCase()}</Heading>
-                    <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>Hello gents – thanks for stopping by.<br /> I’m a creative, fun-loving, energetic <br />and active girl whose favourite words – in any language – are ‘Please proceed to your gate for departure’. I’ve been bitten HARD by the travel bug and have been lucky enough to visit every continent (well, I’m working on Antarctica). I love going out, meeting new people and generally getting the most out of life – whether that’s trying new bars and restaurants or picking up a new sport (I once joined in a game of pick-up basketball with a group of kids in Zimbabwe – it was great!) You should shoot me a message if you’re fun-loving, fit, and up for anything – I am.
+                    <Heading as='h2' fontSize='36px' my={2} fontWeight='bold' letterSpacing='wide'>{person.firstName.toUpperCase()}</Heading>
+                    <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>Bio: {person.bio}
                     </Text>
                     <Box justify='space-around' as='span'>
                       <Stack isInline align='center'>
-                        {Array(5)
-                          .fill('')
-                          .map((_, i)=> (
-                            <StarIcon color='gold' key={i} />
-                          ))}
-                        <StarIcon color='white'/>
+                        <Heading color='white' size='lg' mt={2}> {`${Number(person.avgRating) ?
+                          (person.avgRating.toPrecision(2)) : ' Not Rated'}`}
+                    
+                        {!!Number(person.avgRating) &&
+                                        <StarIcon mb={3} ml={1} color='gold'/>
+                        }
+                        </Heading>
                         <Spacer />
                         <Text as='h3' 
                           fontSize='lg' 

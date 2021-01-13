@@ -42,6 +42,7 @@ function ProfileShow() {
   return (
     <>
       <ChakraProvider theme={theme}>
+        <Fonts />
         {person ? 
           <Container maxW='85vw' maxH='110vh'>
             <Box 
