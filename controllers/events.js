@@ -4,6 +4,8 @@ import { notFound, forbidden } from '../lib/errorHandler.js'
 async function eventsIndex(_req, res, next){
   try {
     const events = await Event.find()
+      .populate('owner')
+      .populate('attendees')
     return res.status(200).json(events)
   } catch (err) {
     next(err)
@@ -23,7 +25,10 @@ async function eventsCreate(req, res, next) {
 async function eventShowOne(req, res, next) {
   const { id } = req.params
   try {
-    const event = await Event.findById(id).populate('owner').populate('attendees').populate('comments.owner')
+    const event = await Event.findById(id)
+      .populate('owner')
+      .populate('attendees')
+      .populate('comments.owner')
     if (!event) throw new Error(notFound)
     return res.status(200).json(event)
   } catch (err) {

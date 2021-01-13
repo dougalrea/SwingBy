@@ -101,6 +101,32 @@ async function personEditReview(req, res, next) {
   }
 }
 
+async function personFollow(req, res, next) {
+  const { id } = req.params
+  try {
+    const user = await User.findById(req.currentUser._id)
+    user.following.addToSet(id)
+    await user.save()
+    const person = await User.findById(id)
+    return res.status(202).json(person)
+  } catch (err) {
+    next(err)
+  }
+}
+
+async function personUnfollow(req, res, next) {
+  const { id } = req.params
+  try {
+    const user = await User.findById(req.currentUser._id)
+    user.following.pull(id)
+    await user.save()
+    const person = await User.findById(id)
+    return res.status(202).json(person)
+  } catch (err) {
+    next(err)
+  }
+}
+
 export default {
   index: peopleShowAll,
   show: personShowOne,
@@ -108,5 +134,7 @@ export default {
   delete: personDelete,
   createReview: personCreateReview,
   deleteReview: personDeleteReview,
-  editReview: personEditReview
+  editReview: personEditReview,
+  follow: personFollow,
+  unfollow: personUnfollow
 }

@@ -48,6 +48,12 @@ router.route('/people/:id/reviews/:reviewId')
   .delete(secureRoute, users.deleteReview)
   .put(secureRoute, users.editReview)
 
+router.route('/people/:id/follow')
+  .post(secureRoute, users.follow)
+
+router.route('/people/:id/unfollow')
+  .delete(secureRoute, users.unfollow)
+
 router.route('/register')
   .post(auth.registerUser)
 
