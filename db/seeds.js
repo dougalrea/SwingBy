@@ -76,11 +76,15 @@ async function seedDatabase() {
       const revieweeId = arrayItemAtRandomIndex(otherAttendees)
       const reviewee = await User.findById(revieweeId)
       review.owner = owner._id
-      reviewee.reviews.push(review)
-      await reviewee.save()
-      console.log('Saved user review number ', i)
+      if (reviewee.reviews.some(r => r.owner.equals(review.owner))) {
+        i--
+        console.log('Trying again')
+      } else {
+        reviewee.reviews.push(review)
+        await reviewee.save()
+        console.log('Saved user review number ', i)
+      }    
     }
-
     await mongoose.connection.close()
     console.log('Bye!')
   } catch (err) {

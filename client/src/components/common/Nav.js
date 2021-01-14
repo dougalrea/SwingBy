@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -17,21 +17,41 @@ import {
   AccordionPanel,
   AccordionIcon
 } from '@chakra-ui/react'
-import { HamburgerIcon } from '@chakra-ui/icons'
+import { HamburgerIcon, ArrowRightIcon } from '@chakra-ui/icons'
+
+import { useLocation } from 'react-router-dom'
+import { logoutUser, getPayload } from '../../lib/auth'
 
 function Nav() {
+  const [isVisible, setIsVisible] = React.useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef()
+  const { pathname } = useLocation()
+  const history = useHistory()
+
+  React.useEffect(() => {
+    setIsVisible(pathname !== '/')
+  }, [pathname])
+
+  const handleLogout = () => {
+    logoutUser()
+    history.push('/')
+  }
+
   return (
     <>
-      {window.location.pathname !== '/' &&
+      {isVisible &&
       <>
         <Button
           onClick={onOpen}
           pos="fixed"
           ref={btnRef}
-          m={1}
-          colorScheme="teal"
+          mt={3}
+          ml={10}
+          bg='pink.800'
+          color='white'
+          boxShadow='sm'
+          _hover={{ boxShadow: 'md', bg: 'pink.700' }}
         >
           <HamburgerIcon /> 
         </Button>
@@ -56,7 +76,7 @@ function Nav() {
                       <AccordionIcon />
                     </AccordionButton>
                     <AccordionPanel>
-                      <Link to='/people/:id'>
+                      <Link to={`/people/${getPayload().sub}`}>
                         <Button
                           variant="ghost"
                           isFullWidth
@@ -65,7 +85,7 @@ function Nav() {
                           borderRadius="0"
                           pl="0"
                         >
-                          Profile
+                          <ArrowRightIcon mr={3}/>Profile
                         </Button>
                       </Link>
                       <Link to='/events/create'>
@@ -77,7 +97,7 @@ function Nav() {
                           borderRadius="0"
                           pl="0"
                         >
-                          Create Event
+                          <ArrowRightIcon mr={3}/>Create Event
                         </Button>
                       </Link>
                       <Link to='/events/:id'>
@@ -89,7 +109,7 @@ function Nav() {
                           borderRadius="0"
                           pl="0"
                         >
-                          Events Hosting
+                          <ArrowRightIcon mr={3}/>Events Hosting
                         </Button>
                       </Link>
                       <Link>
@@ -101,7 +121,7 @@ function Nav() {
                           borderRadius="0"
                           pl="0"
                         >
-                          Events Attending
+                          <ArrowRightIcon mr={3}/>Events Attending
                         </Button>
                       </Link>
                     </AccordionPanel>
@@ -123,7 +143,7 @@ function Nav() {
                           borderRadius="0"
                           pl="0"
                         >
-                          Events
+                          <ArrowRightIcon mr={3}/>Events
                         </Button>
                       </Link>
                       <Link to='/people'>
@@ -135,7 +155,7 @@ function Nav() {
                           borderRadius="0"
                           pl="0"
                         >
-                          People
+                          <ArrowRightIcon mr={3}/>People
                         </Button>
                       </Link>
                     </AccordionPanel>
@@ -143,7 +163,7 @@ function Nav() {
                 </Accordion>
               </DrawerBody>
               <DrawerFooter>
-                <Button colorScheme="red">Log Out</Button>
+                <Button colorScheme="red" onClick={handleLogout}>Log Out</Button>
               </DrawerFooter>
             </DrawerContent>
           </DrawerOverlay>

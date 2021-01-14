@@ -62,9 +62,15 @@ async function personCreateReview(req, res, next) {
     if (!person) throw new Error(notFound)
     if (req.currentUser._id.equals(id)) throw new Error(forbidden)
     const newReview = { ...req.body, owner: req.currentUser._id }
-    person.reviews.push(newReview)
+    person.reviews.unshift(newReview)
     await person.save()
-    return res.status(201).json(person)
+    const populatedPerson = await User.findById(id)
+      .populate('eventsHostOf')
+      .populate('eventsAttendeeOf')
+      .populate('following')
+      .populate('reviews.owner')
+      .populate('followedBy')
+    return res.status(201).json(populatedPerson)
   } catch (err) {
     next(err)
   }
@@ -96,7 +102,13 @@ async function personEditReview(req, res, next) {
     if (!reviewToEdit.owner.equals(req.currentUser._id)) throw new Error(forbidden)
     Object.assign(reviewToEdit, req.body)
     await person.save()
-    return res.status(202).json(person)
+    const populatedPerson = await User.findById(id)
+      .populate('eventsHostOf')
+      .populate('eventsAttendeeOf')
+      .populate('following')
+      .populate('reviews.owner')
+      .populate('followedBy')
+    return res.status(202).json(populatedPerson)
   } catch (err) {
     next(err)
   }
@@ -106,17 +118,21 @@ async function personFollow(req, res, next) {
   const { id } = req.params
   try {
     const personToFollow = await User.findById(id)
+    if (!personToFollow) throw new Error(notFound)
+    personToFollow.followedBy.unshift(req.currentUser._id)
+    await personToFollow.save()
+    const populatedPerson = await User.findById(id)
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
       .populate('following')
-    if (!personToFollow) throw new Error(notFound)
-    personToFollow.followedBy.addToSet(req.currentUser._id)
-    await personToFollow.save()
-    return res.status(202).json(personToFollow)
+      .populate('reviews.owner')
+      .populate('followedBy')
+    return res.status(202).json(populatedPerson)
   } catch (err) {
     next(err)
   }
 }
+
 
 async function personUnfollow(req, res, next) {
   const { id } = req.params
@@ -125,6 +141,8 @@ async function personUnfollow(req, res, next) {
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
       .populate('following')
+      .populate('reviews.owner')
+      .populate('followedBy')
     personToUnfollow.followedBy.pull(req.currentUser._id)
     await personToUnfollow.save()
     return res.status(202).json(personToUnfollow)

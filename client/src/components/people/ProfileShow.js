@@ -1,14 +1,19 @@
-
+/* eslint-disable prefer-const */
+/* eslint-disable react/no-children-prop */
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { getOnePerson } from '../../lib/api'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Wrap, Button, Tabs, TabPanels, TabPanel, TabList, Tab } from '@chakra-ui/react'
+  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Wrap, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea, Radio, RadioGroup } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon } from '@chakra-ui/icons'
+import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon, EditIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
+
+import { followPerson, unfollowPerson, createPersonReview, editPersonReview } from '../../lib/api'
+import { getPayload } from '../../lib/auth'
+import useForm from '../utils/useForm'
 
 const theme = extendTheme({
   fonts: {
@@ -19,25 +24,103 @@ const theme = extendTheme({
 
 
 function ProfileShow() {
+  const [error, setError] = React.useState(false)
   const [person, setPerson] = React.useState(null)
-  const { id } = useParams()
+  const [hasReviewed, setHasReviewed] = React.useState(false)
 
-  const [following, setFollowing] = React.useState(false)
-  const handleFollow = () => {
-    setFollowing(true)
-  }
+  const { id } = useParams()
 
   React.useEffect(() => {
     const getData = async () => {
       try {
         const { data } = await getOnePerson(id)
         setPerson(data)
+        const profilePastEvents = data.eventsAttendeeOf.filter(event => {
+          return event.hasExpired
+        })
+        const allowedReviewers = []
+        profilePastEvents.forEach(event => {
+          event.attendees.forEach(attendee => {
+            allowedReviewers.push(attendee)
+          })
+        })
+        if (!allowedReviewers.includes(getPayload().sub)) {
+          setError(true)
+        }
+        if (data.reviews.some(review => {
+          return review.owner._id === getPayload().sub
+        })) {
+          setHasReviewed(true)
+        }
       } catch (err) {
         console.log(err)
       }
     }
     getData()
   }, [id])
+
+  const handleFollow = async () => {
+    try {
+      const { data } = await followPerson(id)
+      setPerson(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleUnFollow = async () => {
+    try {
+      const { data } = await unfollowPerson(id)
+      setPerson(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const isFollowing = person ? person.followedBy.some(follower => {
+    return follower._id === getPayload().sub
+  }) : null
+
+  let { formdata, handleChange, setFormdata } = useForm({
+    text: '',
+    rating: ''
+  })
+  
+  const handleReview = async (e) => {
+    e.preventDefault()
+    if (hasReviewed) {
+      try {
+        const reviewToEdit = person.reviews.find(review => {
+          return review.owner._id === getPayload().sub
+        })
+        const reviewId = reviewToEdit._id
+        const { data } = await editPersonReview(id, reviewId, formdata)
+        setPerson(data)
+        setFormdata({
+          text: '',
+          rating: ''
+        })
+        return
+      } catch (err) {
+        console.log(err)
+        return
+      }
+    }
+    try {
+      const { data } = await createPersonReview(id, formdata)
+      setPerson(data)
+      setHasReviewed(true)
+      setFormdata({
+        text: '',
+        rating: ''
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  console.log(hasReviewed)
+
 
   return (
     <>
@@ -63,9 +146,9 @@ function ProfileShow() {
                 h='90vh'
                 templateRows="repeat(12, 1fr)"
                 templateColumns="repeat(12, 1fr)"
-                gap={6}
+                gap={4}
               >
-                <GridItem rowSpan={6} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden' >
                   <Image 
                     src={person.profilePicture} 
                     alt="profile picture" 
@@ -74,7 +157,7 @@ function ProfileShow() {
                     borderRadius='3xl'
                   />
                 </GridItem>
-                <GridItem rowSpan={4} colSpan={4} borderRadius='lg' borderColor='red.500' >
+                <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500'>
                   <Flex>
                     <Heading as='h2' color='pink.800'>
                       {`${person.firstName} ${person.lastName}`}
@@ -83,13 +166,10 @@ function ProfileShow() {
                       (person.avgRating.toPrecision(2)) : ' Not Rated'}`}
                     
                     {!!Number(person.avgRating) &&
-                                        <StarIcon mb={3} ml={1} color='pink.800'/>
+                    <StarIcon mb={3} ml={1} color='pink.800'/>
                     }
                     </Heading>
                   </Flex>
-
-                  
-                
                   <List spacing={2}>
                     <ListItem mt={2}>
                       <Text>Age: {person.age}</Text>
@@ -136,7 +216,7 @@ function ProfileShow() {
                       
                     </ListItem>
                     <ListItem>
-                      <Text>Food Preferances: {person.foodPreferences}</Text>
+                      <Text>Food Preferences: {person.foodPreferences}</Text>
                     </ListItem>
                   </List>
                 </GridItem>
@@ -147,66 +227,177 @@ function ProfileShow() {
                   <List mt={5} spacing={5}>
                     {person.reviews.map(review => {
                       return (
+                        
                         <ListItem key={review._id} borderColor='gray.200' borderWidth='1px' borderRadius='lg' p={2}>
-                          <Flex>
-                            <Avatar size='lg' name={review.owner.firstName} src={review.owner.profilePicture} />
-                            <Flex flexDirection='column'  ml={3}>
-                              <Flex>
-                                <Heading as='h5' size='sm' ml={2}>
-                                  {`${review.owner.firstName} ${review.owner.lastName}`} 
-                                </Heading>
-                                <Spacer />
-                                <Heading as='h5' size='sm'>{`
+                          <Link to={`/people/${review.owner._id}`} >
+                            <Flex>
+                              <Avatar size='lg' name={review.owner.firstName} src={review.owner.profilePicture} />
+                              <Flex flexDirection='column'  ml={3}>
+                                <Flex>
+                                  <Heading as='h5' size='sm' ml={2}>
+                                    {`${review.owner.firstName} ${review.owner.lastName}`} 
+                                  </Heading>
+                                  <Spacer />
+                                  <Heading as='h5' size='sm'>{`
                                   ${Number(review.rating)}`}
-                                </Heading>
-                                {!!Number(review.owner.avgRating) &&
-                                        <StarIcon ml={1} color='pink.800'/>
-                                }
+                                  <StarIcon ml={1} mb={1} color='pink.800'/>
+                                  </Heading>
+                                </Flex>
+                                <Box w='18vw'>
+                                  <Text w='100%'>
+                                    {review.text}
+                                  </Text>
+                                </Box>
                               </Flex>
-                              <Box w='18vw'>
-                                <Text w='100%'>
-                                  {review.text}
-                                </Text>
-                              </Box>
-
                             </Flex>
-                          </Flex>
+                          </Link>
                         </ListItem>
                       )
                     })}
                   </List>
                 </GridItem>
-                <GridItem rowSpan={1} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
-                  <Flex>
-                    <Button
-                      onClick={handleFollow}
-                      alignSelf='center'
-                      align='right'
-                      variant='solid' 
-                      bg='pink.800'
-                      color='white'
-                      boxShadow='sm'
-                      _hover={{ boxShadow: 'md', bg: 'pink.700' }}
-                    >
-                      {following ? <CheckCircleIcon mr={3}/> : <PlusSquareIcon mr={3}/>} Follow
-                    </Button>
+                <GridItem rowSpan={2} colSpan={8} p={3} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                  <Heading as='h3' color='pink.800'>Followers</Heading>
+                  <Flex >
+                    {isFollowing ? 
+                      <Button
+                        onClick={handleUnFollow}
+                        alignSelf='center'
+                        align='right'
+                        variant='solid' 
+                        bg='pink.800'
+                        color='white'
+                        boxShadow='sm'
+                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                      >
+                        <CheckCircleIcon mr={3}/> Unfollow
+                      </Button> 
+                      :
+                      <Button
+                        onClick={handleFollow}
+                        alignSelf='center'
+                        align='right'
+                        variant='solid' 
+                        bg='pink.800'
+                        color='white'
+                        boxShadow='sm'
+                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                      >
+                        <PlusSquareIcon mr={3}/> Follow
+                      </Button> 
+                    }
                     <Stack align='center' ml={5} direction='row'>
-                      {person.followedBy.map(follower => {
-                        return (
-                          <Avatar size='sm' key={follower._id} src={follower.profilePicture} />
-                        )
-                      })}
-                      <Heading as='h3' color='pink.800'>Already Following</Heading>
+                      <Wrap>
+                        {person.followedBy.slice(0, 12).map(follower => {
+                          return (
+                            <WrapItem key={follower._id} >
+                              <Avatar size='sm' src={follower.profilePicture} />
+                            </WrapItem>
+                          )
+                        })}
+                        {person.followedBy.length > 12 && <Text>
+                              And {`${person.followedBy.length - 12} others`}
+                        </Text>}
+                      </Wrap>
                     </Stack>
                   </Flex>
                 </GridItem>
-                <GridItem p={3} rowSpan={4} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                <GridItem p={3} rowSpan={3} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
                   <Heading as='h3' color='pink.800'>
                     Bio
                   </Heading>
                   <Text fontSize='lg' lineHeight='base'>
                     {person.bio}
                   </Text>
+                </GridItem>
+                <GridItem rowSpan={3} colSpan={8} borderColor='gray.200' borderRadius='lg'>
+                  <form action='submit' onSubmit={handleReview} >
+                    <Flex>
+                      <Heading as='h3' ml={3} color='pink.800'>
+                  Review {person.firstName}
+                      </Heading>
+                      <Spacer />
+                      <RadioGroup 
+                        spacing={2} 
+                        mt={2} 
+                        name='rating' 
+                        value={formdata.rating}>
+                        <Stack direction="row">
+                          <Radio 
+                            isDisabled={error} 
+                            isRequired 
+                            isChecked={false} 
+                            name='rating' 
+                            value='1' 
+                            onChange={handleChange}
+                          >1<StarIcon mb={1} color='pink.800'/>
+                          </Radio>
+                          <Radio 
+                            isDisabled={error} 
+                            isChecked={false} 
+                            name='rating' value='2' 
+                            onChange={handleChange}
+                          >2<StarIcon mb={1} color='pink.800'/>
+                          </Radio>
+                          <Radio
+                            isDisabled={error} 
+                            isChecked={false} 
+                            name='rating' 
+                            value='3' 
+                            onChange={handleChange}
+                          >3<StarIcon mb={1} color='pink.800'/>
+                          </Radio>
+                          <Radio 
+                            isDisabled={error} 
+                            isChecked={false} 
+                            name='rating' 
+                            value='4' 
+                            onChange={handleChange}
+                          >4<StarIcon mb={1} color='pink.800'/>
+                          </Radio>
+                          <Radio 
+                            isDisabled={error} 
+                            isChecked={false} 
+                            name='rating' 
+                            value='5' 
+                            onChange={handleChange}
+                          >5<StarIcon mb={1} color='pink.800'/>
+                          </Radio>
+                        </Stack>
+                      </RadioGroup>
+                      <Spacer />
+                      <Button
+                        isDisabled={error}
+                        type='submit'
+                        alignSelf='center'
+                        align='right'
+                        variant='solid' 
+                        bg='pink.800'
+                        color='white'
+                        boxShadow='sm'
+                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                      >
+                        <EditIcon mr={3}/>Post
+                      </Button>                         
+                    </Flex>                                        
+                    <FormControl isRequired>
+                      <InputGroup>
+                        <InputLeftElement children={<ChatIcon />}/>
+                        <Textarea
+                          isDisabled={error}
+                          isRequired
+                          type='text'
+                          pl={8}
+                          size='lg'
+                          name='text'
+                          onChange={handleChange}
+                          value={error ? 'You must have already attended an event with this person in order to leave a review!' : formdata.text}
+                          placeholder={hasReviewed ? 'You can\'t review a person twice! Any changes you post will edit your existing review' : 'Think of something witty! Remember, you\'re being rated...'}
+                          aria-label='review text'
+                        />
+                      </InputGroup>
+                    </FormControl>
+                  </form>
                 </GridItem>
               </Grid>
             </Center>

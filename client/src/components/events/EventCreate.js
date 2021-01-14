@@ -16,7 +16,7 @@ import useForm from '../utils/useForm'
 const theme = extendTheme({
   fonts: {
     heading: 'Dancing Script',
-    body: 'Raleway'
+    body: 'system-ui, sans-serif'
   }
 })
 
@@ -38,46 +38,39 @@ function EventCreate() {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      await createEvent(formdata)
-      history.push('/events')
+      const objectToSave = { ...formdata, startDateTime: String(new Date(formdata.startDateTime)) }
+      const { data } = await createEvent(objectToSave)
+      history.push(`/events/${data._id}`)
     } catch (err) {
       setError(true)
     }
   }
+
   const handleFocus = () => {
     setError(false)
   }
 
   const [viewport, setViewport] = React.useState({
-    latitude: 51.2,
-    longitude: -0.6,
+    latitude: 51.504227,
+    longitude: -0.126563,
     zoom: 8
   })
 
-  let i = 1
-
-  const findMyLocation = () => {
-    i++
-  }
-
-  React.useEffect(() => {
+  const findLocation = () => {
     window.navigator.geolocation.getCurrentPosition(position => {
       const { coords: { latitude, longitude } } = position
+      formdata.latitude = latitude
+      formdata.longitude = longitude
       setViewport({ latitude, longitude, 'zoom': 15 })
-      console.log(i)
-    })
-  }, [formdata.latitude, formdata.longitude])
-
-  console.log(viewport)
-
-
+    }
+    )
+  }
 
   const now = new Date().toISOString().split(':').slice(0, 2).join(':')
-
   return (
     <ChakraProvider theme={theme}>
       <Container maxW='85vw' maxH='110vh' >
-        <Box 
+        <Box
           mt={5}
           align='left'
         >
@@ -85,12 +78,11 @@ function EventCreate() {
         </Box>
         <Center>
           <form action='submit' onSubmit={handleSubmit}>
-
             <Grid
               align='left'
               bg='white'
               padding='10px'
-              borderWidth='1px' 
+              borderWidth='1px'
               borderRadius='lg'
               borderColor='gray.500'
               w='100%'
@@ -100,18 +92,17 @@ function EventCreate() {
               gap={6}
             >
               <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
-                {formdata.imageURL ? <Image 
-                  src={formdata.imageURL} 
-                  alt="invalid url" 
+                {formdata.imageURL ? <Image
+                  src={formdata.imageURL}
+                  alt="invalid url"
                   objectFit="contain"
                   align='left'
-                /> : <Image 
-                  src="https://images.squarespace-cdn.com/content/v1/5715100cf8baf3c79d443859/1474644021472-6M4JHVDCPUSK4SOGDO6Y/ke17ZwdGBToddI8pDm48kFr-MCz83LG2ZqzGFu9uALUUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcFld4UtfH4YE_GYCkgGJoltUf3XSTmDyr_decxWmWcyKxz1JLteulDk500xDZnDHA/placeholder3.png?format=2500w" 
-                  alt="dinner party photo" 
+                /> : <Image
+                  src="https://images.squarespace-cdn.com/content/v1/5715100cf8baf3c79d443859/1474644021472-6M4JHVDCPUSK4SOGDO6Y/ke17ZwdGBToddI8pDm48kFr-MCz83LG2ZqzGFu9uALUUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcFld4UtfH4YE_GYCkgGJoltUf3XSTmDyr_decxWmWcyKxz1JLteulDk500xDZnDHA/placeholder3.png?format=2500w"
+                  alt="dinner party photo"
                   objectFit="contain"
                   align='left'
                 /> }
-                
               </GridItem>
               <GridItem rowSpan={5} colSpan={4} >
                 <Stack>
@@ -119,56 +110,56 @@ function EventCreate() {
                   <FormControl isRequired>
                     <InputGroup>
                       <InputLeftElement children={<AddIcon />} />
-                      <Input 
+                      <Input
                         type='text'
                         name='name'
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.name}
-                        placeholder='Event Name' 
-                        aria-label='event name' 
+                        placeholder='Event Name'
+                        aria-label='event name'
                       />
                     </InputGroup>
                   </FormControl>
                   <FormControl >
                     <InputGroup>
                       <InputLeftElement children={<ViewIcon />} />
-                      <Input 
+                      <Input
                         type='text'
                         name='imageURL'
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.imageURL}
-                        placeholder='Image url (preview shown to the left)' 
-                        aria-label='image url' 
+                        placeholder='Image url (preview shown to the left)'
+                        aria-label='image url'
                       />
                     </InputGroup>
                   </FormControl>
                   <FormControl isRequired>
                     <InputGroup>
                       <InputLeftElement children={<CalendarIcon />} />
-                      <Input 
+                      <Input
                         type='datetime-local'
                         name='startDateTime'
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.startDateTime}
-                        min={now} 
-                        aria-label='date-time selector' 
+                        min={now}
+                        aria-label='date-time selector'
                       />
                     </InputGroup>
                   </FormControl>
                   <FormControl isRequired>
                     <InputGroup>
                       <InputLeftElement children={<TimeIcon />} />
-                      <Input 
+                      <Input
                         type='number'
                         name='duration'
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.duration}
                         placeholder='Duration'
-                        aria-label='duration' 
+                        aria-label='duration'
                       />
                       <InputRightAddon children='hours' />
                     </InputGroup>
@@ -176,19 +167,19 @@ function EventCreate() {
                   <FormControl isRequired>
                     <InputGroup>
                       <InputLeftElement children={<SettingsIcon />} />
-                      <Input 
+                      <Input
                         type='number'
                         name='capacity'
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.capacity}
                         placeholder='Capacity'
-                        aria-label='capacity' 
+                        aria-label='capacity'
                       />
                       <InputRightAddon children='attendees' />
                     </InputGroup>
                   </FormControl>
-                </Stack>    
+                </Stack>
               </GridItem>
               <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='gray.500' borderWidth='1px'>
                 {viewport ?
@@ -197,8 +188,8 @@ function EventCreate() {
                     height="100%"
                     width="100%"
                     mapStyle='mapbox://styles/mapbox/streets-v11'
-                    latitude={viewport.latitude}
-                    longitude={viewport.longitude}
+                    latitude={formdata.latitude ? Number(formdata.latitude) : 51}
+                    longitude={formdata.longitude ? Number(formdata.longitude) : -0.6}
                     zoom={5}
                   >
                     <Marker latitude={viewport.latitude} longitude={viewport.longitude}>🎯
@@ -213,7 +204,7 @@ function EventCreate() {
                   <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Event description</Heading>
                   <InputGroup>
                     <InputLeftElement  />
-                    <Textarea 
+                    <Textarea
                       type='text'
                       children={<ChatIcon />}
                       size='lg'
@@ -222,40 +213,40 @@ function EventCreate() {
                       onChange={handleChange}
                       value={formdata.description}
                       placeholder='Make it sound appealing!'
-                      aria-label='description' 
+                      aria-label='description'
                     />
                   </InputGroup>
                 </FormControl>
               </GridItem>
               <GridItem rowSpan={2} colSpan={4} >
-                <Button onClick={findMyLocation}>
-                Find My Location
+                <Button onClick={findLocation}>
+                Use My Location
                 </Button>
                 <FormControl isRequired>
                   <InputGroup>
                     <InputLeftElement children={<ArrowForwardIcon />} />
-                    <Input 
+                    <Input
                       type='number'
                       name='latitude'
                       onFocus={handleFocus}
                       onChange={handleChange}
                       value={formdata.latitude}
                       placeholder='Latitude'
-                      aria-label='latitude' 
+                      aria-label='latitude'
                     />
                   </InputGroup>
                 </FormControl>
                 <FormControl isRequired>
                   <InputGroup>
                     <InputLeftElement children={<ArrowUpIcon />} />
-                    <Input 
+                    <Input
                       type='number'
                       name='longitude'
                       onFocus={handleFocus}
                       onChange={handleChange}
                       value={formdata.longitude}
                       placeholder='Longitude'
-                      aria-label='longitude' 
+                      aria-label='longitude'
                     />
                   </InputGroup>
                 </FormControl>
@@ -264,8 +255,8 @@ function EventCreate() {
               </GridItem>
               <GridItem>
                 <Button
-                  type='submit' 
-                  variant='solid' 
+                  type='submit'
+                  variant='solid'
                   bg='pink.800'
                   color='white'
                   boxShadow='sm'
@@ -276,27 +267,9 @@ function EventCreate() {
               </GridItem>
             </Grid>
           </form>
-
         </Center>
       </Container>
     </ChakraProvider>
-
   )
 }
 export default EventCreate
- 
-// const eventsSchema = new mongoose.Schema({
-//   name: { type: String, required: true, maxlength: 25 },
-//   imageURL: { type: String, required: false },
-//   latitude: { type: String, required: true },
-//   longitude: { type: String, required: true },
-//   startDateTime: { type: String, required: true },
-//   duration: { type: Number, required: false },
-//   types: [{ type: String }],
-//   description: { type: String, required: false, maxlength: 500 },
-//   capacity: { type: Number, required: true },
-//   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true  },
-//   attendees: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
-//   attendeeRequests: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
-//   comments: [commentSchema]
-// })
