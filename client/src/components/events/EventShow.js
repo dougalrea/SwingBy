@@ -110,18 +110,18 @@ function EventShow() {
                           </ListItem>
                         </List>
                       </GridItem>
-                      <GridItem align='right'>
-                        <Button
-                          onClick={handleEditClick}
-                          variant='solid' 
-                          bg='pink.800'
-                          color='white'
-                          boxShadow='sm'
-                          _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
-                      Edit Profile
-                        </Button>
-                      </GridItem>
                       <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                        <GridItem align='right'>
+                          <Button
+                            onClick={handleEditClick}
+                            variant='solid' 
+                            bg='pink.800'
+                            color='white'
+                            boxShadow='sm'
+                            _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
+                      Edit Profile
+                          </Button>
+                        </GridItem>
                         <Heading as='h3' align='center' color='pink.800'>
                   Comments
                         </Heading>

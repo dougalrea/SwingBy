@@ -48,11 +48,10 @@ function ProfileUpdate() {
     event.preventDefault()
     try {
       await editUser(id, formdata)
-      history.push(`/person/${id}`)
+      history.push(`/people/${id}`)
     } catch (err) {
       setError(true)
     }
-    window.alert(`Submitting ${JSON.stringify(formdata, null, 2)}`)
   }
 
   const handleFocus = () => {
