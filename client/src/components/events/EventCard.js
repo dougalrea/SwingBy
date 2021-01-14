@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box, Heading, Image, Stack, Badge, Text, ChakraProvider, Spacer, Avatar } from '@chakra-ui/react'
-import { StarIcon } from '@chakra-ui/icons'
 import { Link } from 'react-router-dom'
 import { extendTheme } from '@chakra-ui/react'
 
@@ -34,23 +33,17 @@ function EventCard({ _id, owner, startDateTime, name, capacity, duration, attend
               </Badge>
               <Badge colorScheme='green' rounded='full' ps={2}>{startDateTime.slice(15, 21) + ' pm'}</Badge>
             </Stack>
-            <Heading as='h2' fontSize='36px' mt={3} fontWeight='bold' letterSpacing='wide'>{name.toUpperCase()}</Heading>
+            <Heading my={5} as='h2' fontSize='36px' fontWeight='bold' letterSpacing='wide'>{name.toUpperCase()}</Heading>
             <Box justify='space-around' as='span'>
               <Stack isInline align='center'>
-                {Array(3)
-                  .fill('')
-                  .map((_, i)=> (
-                    <StarIcon mt={1} color='gold' key={i} />
-                  ))}
-                <StarIcon color='white'/>
                 <Spacer />
-                <Text m={1}>🎟 {capacity - attendees.length + 1} Tickets left</Text>
+                <Text m={1}>🎟 {capacity - attendees.length + 1} TICKETS LEFT</Text>
               </Stack>
             </Box>
             <Box>
               <Stack isInline align='center'>
                 <Spacer />
-                <Text m={1}>Duration: {duration} Hours</Text>
+                <Text m={1}>🕐 DURATION: {duration} HOURS</Text>
               </Stack>
             </Box>
           </Box>

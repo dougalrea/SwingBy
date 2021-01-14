@@ -16,7 +16,7 @@ import useForm from '../utils/useForm'
 const theme = extendTheme({
   fonts: {
     heading: 'Dancing Script',
-    body: 'Raleway'
+    body: 'Lato'
   }
 })
 
@@ -48,11 +48,11 @@ function ProfileUpdate() {
     event.preventDefault()
     try {
       await editUser(id, formdata)
-      history.push(`/person/${id}`)
+      history.push(`/people/${id}`)
     } catch (err) {
       setError(true)
     }
-    window.alert(`Submitting ${JSON.stringify(formdata, null, 2)}`)
+
   }
 
   const handleFocus = () => {
@@ -61,6 +61,7 @@ function ProfileUpdate() {
 
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <Container maxW='75vw'>
         <Box 
           mt={5}
@@ -79,17 +80,21 @@ function ProfileUpdate() {
               borderRadius='lg'
               borderColor='gray.500'
               w='100%'
-              h='80vh'
-              templateRows="repeat(4, 1fr)"
+              h='90vh'
+              templateRows="repeat(1, 1fr)"
               templateColumns="repeat(8, 1fr)"
               gap={6}
             >
-              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+              <GridItem rowSpan={5} colSpan={4}>
                 {formdata.profilePicture ? <Image 
+                  h='300px'
                   src={formdata.profilePicture} 
                   alt="invalid url" 
                   objectFit="contain"
-                  align='left'
+                  align='center'
+                  boxShadow='md'
+                  m={5}
+                  p={5}
                 /> : <Image 
                   src="https://www.drnitinborse.com/wp-content/uploads/2018/02/user-icon.png" 
                   alt="user-icon" 
@@ -162,6 +167,15 @@ function ProfileUpdate() {
                       <option>Socialist</option>
                       <option>Anarchist</option>
                       <option>Communist</option>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>🚬  Does Smoke</FormLabel>
+                    <Select placeholder='Smoke?' name='isSmoker' onFocus={handleFocus} onChange={handleChange} value={formdata.isSmoker}>
+                      <option>Yes</option>
+                      <option>No</option> 
+  
                     </Select>
                   </FormControl>
 

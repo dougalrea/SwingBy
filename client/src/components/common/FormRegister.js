@@ -16,6 +16,7 @@ import { EmailIcon, LockIcon } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
 import { registerUser } from '../../lib/api'
+import { setToken } from '../../lib/auth'
 
 
 function FormRegister() {
@@ -30,7 +31,8 @@ function FormRegister() {
   const handleRegister = async event => {
     event.preventDefault()
     try {
-      await registerUser(formdata)
+      const { data } = await registerUser(formdata)
+      setToken(data.token)
       history.push('/events')
     } catch (err) {
       setError(true)
