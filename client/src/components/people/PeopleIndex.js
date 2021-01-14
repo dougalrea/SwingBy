@@ -48,10 +48,10 @@ function PeopleIndex() {
                   <Image border='1px' borderColor='pink.800' bg='white' p={5} roundedTop='20px' src={person.profilePicture} alt={person.firstName} />
                   <Box p={5}>
                     <Stack isInline align='baseline'>
-                      <Badge colorScheme='purple' rounded='full' px={2}>{person.alias}</Badge>
-                      <Badge m={1} colorScheme='green' rounded='full' px={2}>Age: {person.age}</Badge>
+                      <Badge colorScheme='purple' p={1} rounded='full' px={2}>{person.alias}</Badge>
+                      <Badge m={1} colorScheme='green' p={1} rounded='full' px={2}>Age: {person.age}</Badge>
                     </Stack>
-                    <Heading as='h2' fontSize='36px' my={2} fontWeight='bold' letterSpacing='wide'>{person.firstName.toUpperCase()}</Heading>
+                    <Heading as='h2' fontSize='36px' my={2} fontWeight='bold' letterSpacing='wide'>{person.firstName}</Heading>
                     <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>Bio: {person.bio}
                     </Text>
                     <Box justify='space-around' as='span'>

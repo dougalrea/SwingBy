@@ -19,7 +19,7 @@ import { EmailIcon, LockIcon } from '@chakra-ui/icons'
 
 import useForm from '../utils/useForm'
 import { loginUser } from '../../lib/api'
-import { setToken, getPayload } from '../../lib/auth'
+import { setToken } from '../../lib/auth'
 
 function FormLogIn() {
 
@@ -37,8 +37,7 @@ function FormLogIn() {
     try {
       const { data } = await loginUser(formdata)
       setToken(data.token)
-      const payload = getPayload()
-      history.push(`/people/${payload.sub}`)
+      history.push('/events')
     } catch (err) {
       setError(true)
     }

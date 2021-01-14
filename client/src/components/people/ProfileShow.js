@@ -3,13 +3,12 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { getOnePerson } from '../../lib/api'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useHistory } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
   FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Wrap, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea, Radio, RadioGroup } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon, EditIcon } from '@chakra-ui/icons'
-import ReactMapGL, { Marker } from 'react-map-gl'
 
 import { followPerson, unfollowPerson, createPersonReview, editPersonReview } from '../../lib/api'
 import { getPayload } from '../../lib/auth'
@@ -29,6 +28,7 @@ function ProfileShow() {
   const [hasReviewed, setHasReviewed] = React.useState(false)
 
   const { id } = useParams()
+  const history = useHistory()
 
   React.useEffect(() => {
     const getData = async () => {
@@ -58,6 +58,10 @@ function ProfileShow() {
     }
     getData()
   }, [id])
+
+  const handleEditClick = () => {
+    history.push(`/people/${person._id}/edit`)
+  }
 
   const handleFollow = async () => {
     try {
@@ -173,15 +177,12 @@ function ProfileShow() {
                   <List spacing={2}>
                     <ListItem mt={2}>
                       <Text>Age: {person.age}</Text>
-                      
                     </ListItem>
                     <ListItem>
                       <Text>Gender: {person.gender}</Text>
-                      
                     </ListItem>
                     <ListItem>
                       <Text>Height: {person.height}</Text>
-                      
                     </ListItem>
                     <ListItem>
                       <Text>Interested in: {person.sexualOrientation}</Text>
@@ -221,6 +222,19 @@ function ProfileShow() {
                   </List>
                 </GridItem>
                 <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                  <GridItem align='right'>
+                    <Button
+                      onClick={handleEditClick}
+                      alignSelf='center'
+                      align='right'
+                      variant='solid' 
+                      bg='pink.800'
+                      color='white'
+                      boxShadow='sm'
+                      _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
+                      Edit Profile
+                    </Button>
+                  </GridItem>
                   <Heading as='h3' align='center' color='pink.800'>
                   Reviews:
                   </Heading>

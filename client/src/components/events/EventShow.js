@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { getOneEvent } from '../../lib/api'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useHistory } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
   FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, Wrap, WrapItem, Icon, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea } from '@chakra-ui/react'
 import {
@@ -36,7 +36,7 @@ function EventShow() {
   const [event, setEvent] = React.useState(null)
   const [hoveringAttending, setHoveringAttending] = React.useState(false)
   const [viewport, setViewport] = React.useState(null)
-
+  const history = useHistory()
   const { id } = useParams()
 
   React.useEffect(() => {
@@ -93,6 +93,10 @@ function EventShow() {
   const isAttending = event ? event.attendees.some(attendee => {
     return attendee._id === getPayload().sub
   }) : null
+
+  const handleEditClick = () => {
+    history.push(`/events/${event._id}/edit`)
+  }
 
   return (
     <>
@@ -155,7 +159,18 @@ function EventShow() {
                           </ListItem>
                         </List>
                       </GridItem>
-                      <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='scroll'>
+                      <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                        <GridItem align='right'>
+                          <Button
+                            onClick={handleEditClick}
+                            variant='solid' 
+                            bg='pink.800'
+                            color='white'
+                            boxShadow='sm'
+                            _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
+                      Edit Profile
+                          </Button>
+                        </GridItem>
                         <Heading as='h3' align='center' color='pink.800'>
                   Comments
                         </Heading>

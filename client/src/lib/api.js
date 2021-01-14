@@ -76,8 +76,8 @@ export function unfollowPerson(id) {
   return axios.delete(`${baseUrl}/people/${id}/followers`, headers())
 }
 
-export function editUser(id) {
-  return axios.put(`${baseUrl}/people/${id}`, headers())
+export function editUser(id, formdata) {
+  return axios.put(`${baseUrl}/people/${id}`,formdata, headers())
 }
 
 export function deleteUser(id) {
