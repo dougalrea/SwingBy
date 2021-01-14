@@ -10,7 +10,7 @@ export function logoutUser() {
   window.localStorage.removeItem('token')
 }
 
-function getPayload() {
+export function getPayload() {
   const token = getToken()
   if (!token) return false
   const parts = token.split('.')
@@ -29,4 +29,10 @@ export function isOwner(userId) {
   const payload = getPayload()
   if (!payload) return false
   return userId === payload.sub
+}
+
+export function getUserId() {
+  const payload = getPayload()
+  if (!payload) return false
+  return payload.sub
 }

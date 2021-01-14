@@ -8,6 +8,13 @@ import { extendTheme } from '@chakra-ui/react'
 import ReactMapGL, { Marker, Popup } from 'react-map-gl'
 import { Link } from 'react-router-dom'
 
+const theme = extendTheme({
+  fonts: {
+    heading: 'Dancing Script',
+    body: 'Raleway'
+  }
+})
+
 function EventsIndex() {
   const [events, setEvents] = React.useState(null)
   const [viewport, setViewport] = React.useState({
@@ -29,14 +36,8 @@ function EventsIndex() {
     getData()
   }, [])
 
-
-
-  const theme = extendTheme({
-    fonts: {
-      heading: 'Dancing Script',
-      body: 'Raleway'
-    }
-  })
+  const filteredSortedEvents = events ? events.filter(event => !event.hasExpired)
+    .sort((a, b) => a - b) : null
 
   return (
     <ChakraProvider theme={theme}>
