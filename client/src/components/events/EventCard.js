@@ -9,7 +9,7 @@ function EventCard({ _id, owner, startDateTime, name, capacity, duration, attend
   const theme = extendTheme({
     fonts: {
       heading: 'Dancing Script',
-      body: 'Raleway'
+      body: 'system-ui, sans-serif'
     }
   })
 

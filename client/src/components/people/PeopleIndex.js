@@ -24,7 +24,7 @@ function PeopleIndex() {
   const theme = extendTheme({
     fonts: {
       heading: 'Dancing Script',
-      body: 'Raleway'
+      body: 'system-ui, sans-serif'
     }
   })
 

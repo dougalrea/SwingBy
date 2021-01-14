@@ -14,7 +14,7 @@ import ReactMapGL, { Marker } from 'react-map-gl'
 const theme = extendTheme({
   fonts: {
     heading: 'Dancing Script',
-    body: 'Raleway'
+    body: 'system-ui, sans-serif'
   }
 })
 
@@ -78,7 +78,7 @@ function EventShow() {
                     >
                       <GridItem rowSpan={4} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                         <Image 
-                          src="https://www.wtso.com/blog/wp-content/uploads/2018/07/shutterstock_492006757.jpg" 
+                          src={event.imageURL} 
                           alt="dinner party photo" 
                           objectFit="contain"
                           align='left'
@@ -176,6 +176,12 @@ function EventShow() {
                         <Text fontSize='lg' lineHeight='3ch'>
                           {event.description}
                         </Text>
+                      </GridItem>
+                      <GridItem rowSpan={3} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                        <Heading as='h3' color='pink.800'>
+                    Leave a comment
+                        </Heading>
+
                       </GridItem>
                     </Grid>
                   </TabPanel>
