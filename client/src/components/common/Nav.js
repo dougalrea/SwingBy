@@ -19,6 +19,8 @@ import {
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 
+import { getPayload } from '../../lib/auth'
+
 function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = React.useRef()
@@ -30,7 +32,8 @@ function Nav() {
         pos="fixed"
         ref={btnRef}
         m={1}
-        colorScheme="teal"
+        color='white'
+        bg='pink.800'
       >
         <HamburgerIcon /> 
       </Button>
@@ -55,7 +58,8 @@ function Nav() {
                     <AccordionIcon />
                   </AccordionButton>
                   <AccordionPanel>
-                    <Link to='/people/:id'>
+                  
+                    <Link to={`/people/${getPayload().sub}`}>
                       <Button
                         variant="ghost"
                         isFullWidth

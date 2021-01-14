@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { getOnePerson } from '../../lib/api'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
   FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Wrap, Button, Tabs, TabPanels, TabPanel, TabList, Tab } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
@@ -10,6 +10,9 @@ import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
 import { useHistory } from 'react-router-dom'
+
+import { followPerson, unfollowPerson } from '../../lib/api'
+import { getPayload } from '../../lib/auth'
 
 const theme = extendTheme({
   fonts: {
@@ -23,11 +26,6 @@ function ProfileShow() {
   const [person, setPerson] = React.useState(null)
   const { id } = useParams()
   const history = useHistory()
-
-  const [following, setFollowing] = React.useState(false)
-  const handleFollow = () => {
-    setFollowing(true)
-  }
 
   React.useEffect(() => {
     const getData = async () => {
@@ -44,6 +42,23 @@ function ProfileShow() {
   const handleEditClick = () => {
     history.push(`/people/${person._id}/edit`)
   }
+
+  const handleFollow = async () => {
+    const { data } = await followPerson(id)
+    console.log(data)
+    setPerson(data)
+  }
+
+  const handleUnFollow = async () => {
+    const { data } = await unfollowPerson(id)
+    console.log(data)
+    setPerson(data)
+  }
+
+  const isFollowing = person ? person.followedBy.some(follower => {
+    return follower._id === getPayload().sub
+  }) : null
+  
 
   return (
     <>
@@ -71,7 +86,7 @@ function ProfileShow() {
                 templateColumns="repeat(12, 1fr)"
                 gap={6}
               >
-                <GridItem rowSpan={6} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden' >
                   <Image 
                     src={person.profilePicture} 
                     alt="profile picture" 
@@ -80,7 +95,7 @@ function ProfileShow() {
                     borderRadius='3xl'
                   />
                 </GridItem>
-                <GridItem rowSpan={4} colSpan={4} borderRadius='lg' borderColor='red.500' >
+                <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500'>
                   <Flex>
                     <Heading as='h2' color='pink.800'>
                       {`${person.firstName} ${person.lastName}`}
@@ -166,56 +181,85 @@ function ProfileShow() {
                   <List mt={5} spacing={5}>
                     {person.reviews.map(review => {
                       return (
+                        
                         <ListItem key={review._id} borderColor='gray.200' borderWidth='1px' borderRadius='lg' p={2}>
-                          <Flex>
-                            <Avatar size='lg' name={review.owner.firstName} src={review.owner.profilePicture} />
-                            <Flex flexDirection='column'  ml={3}>
-                              <Flex>
-                                <Heading as='h5' size='sm' ml={2}>
-                                  {`${review.owner.firstName} ${review.owner.lastName}`} 
-                                </Heading>
-                                <Spacer />
-                                <Heading as='h5' size='sm'>{`
+                          <Link to={`/people/${review.owner._id}`} >
+                            <Flex>
+                              <Avatar size='lg' name={review.owner.firstName} src={review.owner.profilePicture} />
+                              <Flex flexDirection='column'  ml={3}>
+                                <Flex>
+                                  <Heading as='h5' size='sm' ml={2}>
+                                    {`${review.owner.firstName} ${review.owner.lastName}`} 
+                                  </Heading>
+                                  <Spacer />
+                                  <Heading as='h5' size='sm'>{`
                                   ${Number(review.rating)}`}
-                                </Heading>
-                                {!!Number(review.owner.avgRating) &&
+                                  </Heading>
+                                  {!!Number(review.owner.avgRating) &&
                                         <StarIcon ml={1} color='pink.800'/>
-                                }
+                                  }
+                                </Flex>
+                                <Box w='18vw'>
+                                  <Text w='100%'>
+                                    {review.text}
+                                  </Text>
+                                </Box>
+
                               </Flex>
-                              <Box w='18vw'>
-                                <Text w='100%'>
-                                  {review.text}
-                                </Text>
-                              </Box>
 
                             </Flex>
-                          </Flex>
+                          </Link>
+
                         </ListItem>
+
+                        
                       )
                     })}
                   </List>
                 </GridItem>
-                <GridItem rowSpan={1} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
-                  <Flex>
-                    <Button
-                      onClick={handleFollow}
-                      alignSelf='center'
-                      align='right'
-                      variant='solid' 
-                      bg='pink.800'
-                      color='white'
-                      boxShadow='sm'
-                      _hover={{ boxShadow: 'md', bg: 'pink.700' }}
-                    >
-                      {following ? <CheckCircleIcon mr={3}/> : <PlusSquareIcon mr={3}/>} Follow
-                    </Button>
+                <GridItem rowSpan={2} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                  <Heading as='h3' color='pink.800'>Followers</Heading>
+                  <Flex mt={2}>
+                    {isFollowing ? 
+                      <Button
+                        onClick={handleUnFollow}
+                        alignSelf='center'
+                        align='right'
+                        variant='solid' 
+                        bg='pink.800'
+                        color='white'
+                        boxShadow='sm'
+                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                      >
+                        <CheckCircleIcon mr={3}/> Unfollow
+                      </Button> 
+                      :
+                      <Button
+                        onClick={handleFollow}
+                        alignSelf='center'
+                        align='right'
+                        variant='solid' 
+                        bg='pink.800'
+                        color='white'
+                        boxShadow='sm'
+                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                      >
+                        <PlusSquareIcon mr={3}/> Follow
+                      </Button> 
+                    }
                     <Stack align='center' ml={5} direction='row'>
-                      {person.followedBy.map(follower => {
-                        return (
-                          <Avatar size='sm' key={follower._id} src={follower.profilePicture} />
-                        )
-                      })}
-                      <Heading as='h3' color='pink.800'>Already Following</Heading>
+                      <Wrap>
+                        {person.followedBy.reverse().slice(0, 12).map(follower => {
+                          return (
+                            <WrapItem key={follower._id} >
+                              <Avatar size='sm' src={follower.profilePicture} />
+                            </WrapItem>
+                          )
+                        })}
+                        {person.followedBy.length > 12 && <Text>
+                              And {`${person.followedBy.length - 12} others`}
+                        </Text>}
+                      </Wrap>
                     </Stack>
                   </Flex>
                 </GridItem>

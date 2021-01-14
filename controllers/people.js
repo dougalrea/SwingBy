@@ -106,13 +106,16 @@ async function personFollow(req, res, next) {
   const { id } = req.params
   try {
     const personToFollow = await User.findById(id)
-      .populate('eventsHostOf')
-      .populate('eventsAttendeeOf')
-      .populate('following')
     if (!personToFollow) throw new Error(notFound)
     personToFollow.followedBy.addToSet(req.currentUser._id)
     await personToFollow.save()
-    return res.status(202).json(personToFollow)
+    const populatedPerson = await User.findById(id)
+      .populate('eventsHostOf')
+      .populate('eventsAttendeeOf')
+      .populate('following')
+      .populate('reviews.owner')
+      .populate('followedBy')
+    return res.status(202).json(populatedPerson)
   } catch (err) {
     next(err)
   }
@@ -125,6 +128,8 @@ async function personUnfollow(req, res, next) {
       .populate('eventsHostOf')
       .populate('eventsAttendeeOf')
       .populate('following')
+      .populate('reviews.owner')
+      .populate('followedBy')
     personToUnfollow.followedBy.pull(req.currentUser._id)
     await personToUnfollow.save()
     return res.status(202).json(personToUnfollow)
