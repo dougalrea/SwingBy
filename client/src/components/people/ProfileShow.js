@@ -107,21 +107,15 @@ function ProfileShow() {
                     }
                     </Heading>
                   </Flex>
-
-                  
-                
                   <List spacing={2}>
                     <ListItem mt={2}>
                       <Text>Age: {person.age}</Text>
-                      
                     </ListItem>
                     <ListItem>
                       <Text>Gender: {person.gender}</Text>
-                      
                     </ListItem>
                     <ListItem>
                       <Text>Height: {person.height}</Text>
-                      
                     </ListItem>
                     <ListItem>
                       <Text>Interested in: {person.sexualOrientation}</Text>

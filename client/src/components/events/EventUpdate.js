@@ -114,7 +114,7 @@ function EventUpdate() {
               </GridItem>
               <GridItem rowSpan={5} colSpan={4} >
                 <Stack>
-                  <Heading size='lg' color='pink.800' as='h3'>Provide details for your event</Heading>
+                  <Heading size='lg' color='pink.800' as='h3'>Update your event details</Heading>
                   <FormControl isRequired>
                     <InputGroup>
                       <InputLeftElement children={<AddIcon />} />

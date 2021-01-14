@@ -52,7 +52,10 @@ function ProfileUpdate() {
     } catch (err) {
       setError(true)
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> development
   }
 
   const handleFocus = () => {
