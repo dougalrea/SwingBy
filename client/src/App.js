@@ -8,6 +8,7 @@ import ProfileShow from './components/people/ProfileShow'
 import EventsIndex from './components/events/EventsIndex'
 import EventShow from './components/events/EventShow'
 import EventCreate from './components/events/EventCreate'
+import profileUpdate from './components/people/ProfileUpdate'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Nav />
       <Switch>
         <Route exact path="/" component={SignUpLogIn} />
+        <Route path="/people/:id/edit" component={profileUpdate} />
         <Route path="/people/:id" component={ProfileShow} />
         <Route path="/people" component={PeopleIndex} />
         <Route path="/events/create" component={EventCreate} />

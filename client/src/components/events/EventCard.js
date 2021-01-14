@@ -44,7 +44,7 @@ function EventCard({ _id, owner, startDateTime, name, capacity, duration, attend
                   ))}
                 <StarIcon color='white'/>
                 <Spacer />
-                <Text m={1}>{capacity - attendees.length + 1} Tickets left</Text>
+                <Text m={1}>🎟 {capacity - attendees.length + 1} Tickets left</Text>
               </Stack>
             </Box>
             <Box>

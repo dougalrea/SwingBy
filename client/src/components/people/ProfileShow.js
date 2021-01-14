@@ -9,6 +9,7 @@ import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
+import { useHistory } from 'react-router-dom'
 
 const theme = extendTheme({
   fonts: {
@@ -21,6 +22,7 @@ const theme = extendTheme({
 function ProfileShow() {
   const [person, setPerson] = React.useState(null)
   const { id } = useParams()
+  const history = useHistory()
 
   const [following, setFollowing] = React.useState(false)
   const handleFollow = () => {
@@ -38,6 +40,10 @@ function ProfileShow() {
     }
     getData()
   }, [id])
+
+  const handleEditClick = () => {
+    history.push(`/people/${person._id}/edit`)
+  }
 
   return (
     <>
@@ -141,6 +147,19 @@ function ProfileShow() {
                   </List>
                 </GridItem>
                 <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                  <GridItem align='right'>
+                    <Button
+                      onClick={handleEditClick}
+                      alignSelf='center'
+                      align='right'
+                      variant='solid' 
+                      bg='pink.800'
+                      color='white'
+                      boxShadow='sm'
+                      _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
+                      Edit Profile
+                    </Button>
+                  </GridItem>
                   <Heading as='h3' align='center' color='pink.800'>
                   Reviews:
                   </Heading>

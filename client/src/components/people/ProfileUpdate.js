@@ -1,0 +1,216 @@
+/* eslint-disable react/no-children-prop */
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable no-unused-vars */
+import React from 'react'
+import { editUser, getOnePerson } from '../../lib/api'
+import { useParams } from 'react-router-dom'
+import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
+  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, InputGroup, InputLeftElement, TabList, Tab, InputRightAddon, Textarea, Select } from '@chakra-ui/react'
+import { extendTheme } from '@chakra-ui/react'
+import Fonts from '../../styles/Fonts'
+import { CalendarIcon, ChatIcon, CheckCircleIcon, ArrowUpIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import ReactMapGL, { Marker } from 'react-map-gl'
+import { useHistory } from 'react-router-dom'
+import useForm from '../utils/useForm'
+
+const theme = extendTheme({
+  fonts: {
+    heading: 'Dancing Script',
+    body: 'Raleway'
+  }
+})
+
+function ProfileUpdate() {
+  const history = useHistory()
+  const [error, setError] = React.useState(false)
+  const { formdata, handleChange } = useForm({
+    bio: '',
+    alias: '',
+    profilePicture: '',
+    gender: '',
+    sexualOrientation: '',
+    height: '',
+    politics: '',
+    foodPreferences: []
+  })
+
+  const handleSubmit = async event => {
+    event.preventDefault()
+    try {
+      await editUser(formdata)
+      history.push('/person/:id')
+    } catch (err) {
+      setError(true)
+    }
+    window.alert(`Submitting ${JSON.stringify(formdata, null, 2)}`)
+  }
+  const handleFocus = () => {
+    setError(false)
+  }
+
+  return (
+    <ChakraProvider theme={theme}>
+      <Container maxW='75vw'>
+        <Box 
+          mt={5}
+          align='left'
+        >
+          <Heading ml={3} align='left' as='h1' fontSize='48px' color='pink.800'>SwingBy</Heading>
+        </Box>
+        <Center>
+          <form action='submit' onSubmit={handleSubmit}>
+
+            <Grid
+              align='left'
+              bg='white'
+              padding='10px'
+              borderWidth='1px' 
+              borderRadius='lg'
+              borderColor='gray.500'
+              w='100%'
+              h='80vh'
+              templateRows="repeat(4, 1fr)"
+              templateColumns="repeat(8, 1fr)"
+              gap={6}
+            >
+              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                {formdata.profilePicture ? <Image 
+                  src={formdata.profilePicture} 
+                  alt="invalid url" 
+                  objectFit="contain"
+                  align='left'
+                /> : <Image 
+                  src="https://www.drnitinborse.com/wp-content/uploads/2018/02/user-icon.png" 
+                  alt="user-icon" 
+                  objectFit="contain"
+                  align='left'
+                /> }
+                
+              </GridItem>
+              <GridItem rowSpan={5} colSpan={4} >
+                <Stack>
+                  <Heading size='lg' color='pink.800' as='h3'>Update Profile</Heading>
+
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement children={<AddIcon />} />
+                      <Input 
+                        type='text'
+                        name='alias'
+                        onFocus={handleFocus}
+                        onChange={handleChange}
+                        value={formdata.alias}
+                        placeholder='Nickname' 
+                        aria-label='user alias' 
+                      />
+                    </InputGroup>
+                  </FormControl>
+
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement children={<ViewIcon />} />
+                      <Input 
+                        type='text'
+                        name='profilePicture'
+                        onFocus={handleFocus}
+                        onChange={handleChange}
+                        value={formdata.profilePicture}
+                        placeholder='Profile Picture (preview shown to the left)' 
+                        aria-label='Profile Picture' 
+                      />
+                    </InputGroup>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>👦 Gender</FormLabel>
+                    <Select placeholder='Select Gender' name='gender' onFocus={handleFocus} onChange={handleChange} value={formdata.gender}>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Trans man</option>
+                      <option>Trans woman</option>
+                      <option>Intersex</option>
+                      <option>Prefer not to say</option>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>🍆 Sexual Orientation</FormLabel>
+                    <Select placeholder='Select Sexual Orientation' name='sexualOrientation' onFocus={handleFocus} onChange={handleChange} value={formdata.sexualOrientation}>
+                      <option>Men</option>
+                      <option>Women</option> 
+                      <option>Everyone</option> 
+                    </Select>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>🧠 Politics</FormLabel>
+                    <Select placeholder='Select Political Beliefs' name='politics' onFocus={handleFocus} onChange={handleChange} value={formdata.politics}>
+                      <option>Liberal</option>
+                      <option>Conservative</option>
+                      <option>Fascist</option>
+                      <option>Socialist</option>
+                      <option>Anarchist</option>
+                      <option>Communist</option>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>🍔 Food Preferences</FormLabel>
+                    <Select placeholder='Select Favourite Foods' name='foodPreferences' onFocus={handleFocus} onChange={handleChange} value={formdata.foodPreferences}>
+                      <option>Vegetarian</option>
+                      <option>Gluten free</option>
+                      <option>Dairy free</option>
+                      <option>Omnivore</option>
+                      <option>Nut allergy</option>
+                      <option>Pescatarian</option>
+                      <option>Vegan</option>
+                      <option>Macrobiotic</option>
+                    </Select>
+                  </FormControl>
+                </Stack>    
+              </GridItem>
+              
+              <GridItem rowSpan={2} colSpan={8} >
+                <FormControl isRequired>
+                  <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Update Bio</Heading>
+                  <InputGroup>
+                    <InputLeftElement  />
+                    <Textarea 
+                      type='text'
+                      children={<ChatIcon />}
+                      size='lg'
+                      name='bio'
+                      onFocus={handleFocus}
+                      onChange={handleChange}
+                      value={formdata.bio}
+                      placeholder='Tell us a little about yourself...'
+                      aria-label='bio' 
+                    />
+                  </InputGroup>
+                </FormControl>
+              </GridItem>
+              <GridItem colStart={8} colEnd={8} rowStart={8} rowEnd={8}>
+                <Button
+                  onClick={handleSubmit}
+                  type='submit' 
+                  variant='solid' 
+                  size='lg'
+                  bg='pink.800'
+                  color='white'
+                  boxShadow='sm'
+                  _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                >
+            Submit
+                </Button>
+              </GridItem>
+            </Grid>
+          </form>
+
+        </Center>
+      </Container>
+    </ChakraProvider>
+
+  )
+}
+export default ProfileUpdate
+ 
