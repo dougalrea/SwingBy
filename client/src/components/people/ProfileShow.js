@@ -8,7 +8,6 @@ import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon } from '@chakra-ui/icons'
-import ReactMapGL, { Marker } from 'react-map-gl'
 import { useHistory } from 'react-router-dom'
 
 import { followPerson, unfollowPerson } from '../../lib/api'

@@ -7,7 +7,8 @@ export default function useForm(initialState) {
 
   const handleChange = event => {
     const value = event.target.value
-    setFormdata({ ...formdata, [event.target.name]: value })
+    const nextState = { ...formdata, [event.target.name]: value }
+    setFormdata(nextState)
     setErrors({ ...errors, [event.target.name]: '' })
   }
 

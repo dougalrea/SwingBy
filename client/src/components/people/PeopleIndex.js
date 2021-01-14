@@ -51,7 +51,7 @@ function PeopleIndex() {
                       <Badge colorScheme='purple' rounded='full' px={2}>{person.alias}</Badge>
                       <Badge m={1} colorScheme='green' rounded='full' px={2}>Age: {person.age}</Badge>
                     </Stack>
-                    <Heading as='h2' fontSize='36px' my={2} fontWeight='bold' letterSpacing='wide'>{person.firstName.toUpperCase()}</Heading>
+                    <Heading as='h2' fontSize='36px' my={2} fontWeight='bold' letterSpacing='wide'>{person.firstName}</Heading>
                     <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>Bio: {person.bio}
                     </Text>
                     <Box justify='space-around' as='span'>

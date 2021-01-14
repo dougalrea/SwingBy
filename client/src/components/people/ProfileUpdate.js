@@ -22,8 +22,9 @@ const theme = extendTheme({
 
 function ProfileUpdate() {
   const history = useHistory()
+  const { id } = useParams()
   const [error, setError] = React.useState(false)
-  const { formdata, handleChange } = useForm({
+  const { formdata, handleChange, setFormdata } = useForm({
     bio: '',
     alias: '',
     profilePicture: '',
@@ -34,16 +35,26 @@ function ProfileUpdate() {
     foodPreferences: []
   })
 
+  React.useEffect(() => {
+    const getData = async () => {
+      const { data } = await getOnePerson(id)
+      setFormdata(data)
+    }
+    getData()
+  }, [id, setFormdata])
+  
+
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      await editUser(formdata)
-      history.push('/person/:id')
+      await editUser(id, formdata)
+      history.push(`/person/${id}`)
     } catch (err) {
       setError(true)
     }
     window.alert(`Submitting ${JSON.stringify(formdata, null, 2)}`)
   }
+
   const handleFocus = () => {
     setError(false)
   }

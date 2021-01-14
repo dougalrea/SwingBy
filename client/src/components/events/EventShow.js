@@ -10,6 +10,7 @@ import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
+import { useHistory } from 'react-router-dom'
 
 const theme = extendTheme({
   fonts: {
@@ -21,7 +22,7 @@ const theme = extendTheme({
 function EventShow() {
   const [event, setEvent] = React.useState(null)
   const [viewport, setViewport] = React.useState(null)
-
+  const history = useHistory()
   const { id } = useParams()
 
   React.useEffect(() => {
@@ -43,6 +44,10 @@ function EventShow() {
 
   event ?
     console.log(`latitude: ${event.latitude}, longitude: ${event.longitude}`) : ''
+
+  const handleEditClick = () => {
+    history.push(`/events/${event._id}/edit`)
+  }
 
   return (
     <>
@@ -104,6 +109,17 @@ function EventShow() {
                             {event.types}
                           </ListItem>
                         </List>
+                      </GridItem>
+                      <GridItem align='right'>
+                        <Button
+                          onClick={handleEditClick}
+                          variant='solid' 
+                          bg='pink.800'
+                          color='white'
+                          boxShadow='sm'
+                          _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
+                      Edit Profile
+                        </Button>
                       </GridItem>
                       <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                         <Heading as='h3' align='center' color='pink.800'>
