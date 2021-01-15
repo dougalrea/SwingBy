@@ -77,6 +77,7 @@ function EventUpdate() {
   const now = new Date().toISOString().split(':').slice(0, 2).join(':')
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <Container maxW='85vw' maxH='110vh' >
         <Box
           mt={15}
