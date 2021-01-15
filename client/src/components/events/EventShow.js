@@ -159,7 +159,8 @@ function EventShow() {
                             <ListItem>
                               <Flex>
                                 <Heading as='h5' size='sm'>
-                                  {event.owner.avgRating.toPrecision(2)}
+                                  {(event.owner.avgRating) ?
+                                    (event.owner.avgRating.toPrecision(2)) : ' Not Rated' }
                                 </Heading>
                                 <StarIcon ml={3} color='pink.800'/>
                               </Flex>
