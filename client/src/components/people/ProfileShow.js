@@ -13,6 +13,7 @@ import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, Plu
 import { followPerson, unfollowPerson, createPersonReview, editPersonReview } from '../../lib/api'
 import { getPayload } from '../../lib/auth'
 import useForm from '../utils/useForm'
+import {} from '../'
 
 const theme = extendTheme({
   fonts: {
@@ -20,7 +21,6 @@ const theme = extendTheme({
     body: 'system-ui, sans-serif'
   }
 })
-
 
 function ProfileShow() {
   const [error, setError] = React.useState(false)
@@ -122,9 +122,6 @@ function ProfileShow() {
       console.log(err)
     }
   }
-
-  console.log(hasReviewed)
-
 
   return (
     <>

@@ -16,6 +16,8 @@ async function eventsCreate(req, res, next) {
   try {
     const newEventData = { ...req.body, owner: req.currentUser._id }
     const newEvent = await Event.create(newEventData)
+    newEvent.attendees.push(req.currentUser._id)
+    await newEvent.save()
     return res.status(201).json(newEvent)
   } catch (err) {
     next(err)

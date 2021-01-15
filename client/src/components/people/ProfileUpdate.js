@@ -47,21 +47,19 @@ function ProfileUpdate() {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      await editUser(id, formdata)
+      const { data } = await editUser(id, formdata)
+      console.log(data)
       history.push(`/people/${id}`)
     } catch (err) {
       setError(true)
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> development
   }
 
   const handleFocus = () => {
     setError(false)
   }
 
+  console.log(formdata)
   return (
     <ChakraProvider theme={theme}>
       <Fonts />
