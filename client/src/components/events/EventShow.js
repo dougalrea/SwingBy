@@ -168,7 +168,7 @@ function EventShow() {
                             color='white'
                             boxShadow='sm'
                             _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
-                      Edit Profile
+                      Edit Event
                           </Button>
                         </GridItem>
                         <Heading as='h3' align='center' color='pink.800'>
