@@ -33,17 +33,17 @@ function EventCard({ _id, owner, startDateTime, name, capacity, duration, attend
               </Badge>
               <Badge colorScheme='green' rounded='full' p={1} ps={2}>{startDateTime.slice(15, 21) + ' pm'}</Badge>
             </Stack>
-            <Heading my={5} as='h2' fontSize='36px' fontWeight='bold' letterSpacing='wide'>{name.toUpperCase()}</Heading>
-            <Box justify='space-around' as='span'>
+            <Heading my={5} as='h2' fontSize='36px' mt={3} fontWeight='bold' letterSpacing='wide'>{name.toUpperCase()}</Heading>
+            <Box my={5} justify='space-around' as='span'>
               <Stack isInline align='center'>
                 <Spacer />
-                <Text m={1}>🎟 {capacity - attendees.length + 1} TICKETS LEFT</Text>
+                <Text m={1}>🎟 {capacity - attendees.length} Spaces Left</Text>
               </Stack>
             </Box>
             <Box>
               <Stack isInline align='center'>
                 <Spacer />
-                <Text m={1}>🕐 DURATION: {duration} HOURS</Text>
+                <Text m={1}>🕐 Duration: {duration} Hours</Text>
               </Stack>
             </Box>
           </Box>

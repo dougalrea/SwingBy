@@ -3,14 +3,27 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { getOneEvent } from '../../lib/api'
-import { useParams } from 'react-router-dom'
+import { useParams, Link, useHistory } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, Tabs, TabPanels, TabPanel, TabList, Tab } from '@chakra-ui/react'
+  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, Wrap, WrapItem, Icon, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea } from '@chakra-ui/react'
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  ButtonGroup
+} from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon } from '@chakra-ui/icons'
+import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon, EditIcon, CloseIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
-import { useHistory } from 'react-router-dom'
+import useForm from '../utils/useForm'
+import { createEventComment, attendEvent, unattendEvent } from '../../lib/api'
+import { getPayload } from '../../lib/auth'
 
 const theme = extendTheme({
   fonts: {
@@ -21,6 +34,7 @@ const theme = extendTheme({
 
 function EventShow() {
   const [event, setEvent] = React.useState(null)
+  const [hoveringAttending, setHoveringAttending] = React.useState(false)
   const [viewport, setViewport] = React.useState(null)
   const history = useHistory()
   const { id } = useParams()
@@ -42,8 +56,43 @@ function EventShow() {
     getData()
   }, [id])
 
-  event ?
-    console.log(`latitude: ${event.latitude}, longitude: ${event.longitude}`) : ''
+  const { formdata, handleChange } = useForm({
+    text: ''
+  })
+
+  const handleComment = async (e) => {
+    e.preventDefault()
+    try {
+      const { data } = await createEventComment(id, formdata)
+      console.log(data)
+      setEvent(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  
+  const handleAttend = async () => {
+    try {
+      const { data } = await attendEvent(id)
+      setEvent(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleUnattend = async () => {
+    try {
+      const { data } = await unattendEvent(id)
+      setEvent(data)
+      setHoveringAttending(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const isAttending = event ? event.attendees.some(attendee => {
+    return attendee._id === getPayload().sub
+  }) : null
 
   const handleEditClick = () => {
     history.push(`/events/${event._id}/edit`)
@@ -53,7 +102,7 @@ function EventShow() {
     <>
       <ChakraProvider theme={theme}>
         {event ? 
-          <Container maxW='85vw' maxH='110vh' borderRadius='lg' borderWidth='1px' borderColor='red.500'>
+          <Container maxW='85vw' maxH='110vh' borderRadius='lg' borderColor='red.500'>
             <Box 
               mt={5}
               align='left'
@@ -79,7 +128,7 @@ function EventShow() {
                       h='90vh'
                       templateRows="repeat(12, 1fr)"
                       templateColumns="repeat(12, 1fr)"
-                      gap={6}
+                      gap={4}
                     >
                       <GridItem rowSpan={4} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                         <Image 
@@ -98,7 +147,7 @@ function EventShow() {
                           </ListItem>
                           <ListItem>
                             <ListIcon as={TimeIcon} color='pink.800' />
-                            {event.startDateTime.split(' ').slice(4, 5)}
+                            {event.startDateTime.split(' ').slice(4, 5).join('').slice(0, 5)}
                           </ListItem>
                           <ListItem>
                             <ListIcon as={ArrowRightIcon} color='pink.800' />
@@ -119,33 +168,36 @@ function EventShow() {
                             color='white'
                             boxShadow='sm'
                             _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
-                      Edit Profile
+                      Edit Event
                           </Button>
                         </GridItem>
                         <Heading as='h3' align='center' color='pink.800'>
                   Comments
                         </Heading>
-                        <List mt={5} spacing={5}>
+                        <List mt={5} spacing={5} overflowY='scroll'>
                           {event.comments.map(comment => {
                             return (
                               <ListItem key={comment._id} borderColor='gray.200' borderWidth='1px' borderRadius='lg' p={2}>
-                                <Flex>
-                                  <Avatar size='lg' name={comment.owner.firstName} src={comment.owner.profilePicture} />
-                                  <Flex flexDirection='column'  ml={3}>
-                                    <Flex>
-                                      <Heading as='h5' size='sm'>
-                                        {`${comment.owner.firstName} ${comment.owner.lastName} ${Number(comment.owner.avgRating) ?
-                                          (comment.owner.avgRating.toPrecision(2)) : ' Not Rated'}`}
-                                      </Heading>
-                                      {!!Number(comment.owner.avgRating) &&
-                                        <StarIcon ml={3} color='pink.800'/>
-                                      }
+                                <Link to={`/people/${comment.owner._id}`}>
+                                  <Flex>
+                                    
+                                    <Avatar size='lg' name={comment.owner.firstName} src={comment.owner.profilePicture} />
+                                    <Flex flexDirection='column'  ml={3}>
+                                      <Flex>
+                                        <Heading as='h5' size='sm'>
+                                          {`${comment.owner.firstName} ${comment.owner.lastName} ${Number(comment.owner.avgRating) ?
+                                            (comment.owner.avgRating.toPrecision(2)) : '(Not yet rated)'}`}
+                                        </Heading>
+                                        {!!Number(comment.owner.avgRating) &&
+                                          <StarIcon ml={3} color='pink.800'/>
+                                        }
+                                      </Flex>
+                                      <Text>
+                                        {comment.text}
+                                      </Text>
                                     </Flex>
-                                    <Text>
-                                      {comment.text}
-                                    </Text>
                                   </Flex>
-                                </Flex>
+                                </Link>
                               </ListItem>
                             )
                           })}
@@ -159,8 +211,7 @@ function EventShow() {
                             <ListItem>
                               <Flex>
                                 <Heading as='h5' size='sm'>
-                                  {(event.owner.avgRating) ?
-                                    (event.owner.avgRating.toPrecision(2)) : ' Not Rated' }
+                                  {typeof(event.owner.avgRating) === 'number' ? event.owner.avgRating.toPrecision(2) : '(Not yet rated)'}
                                 </Heading>
                                 <StarIcon ml={3} color='pink.800'/>
                               </Flex>
@@ -171,34 +222,150 @@ function EventShow() {
                               </Text>
                             </ListItem>
                           </List>
-                          <Spacer />
-                          <Button
-                            alignSelf='center'
-                            align='right'
-                            variant='solid' 
-                            bg='pink.800'
-                            color='white'
-                            boxShadow='sm'
-                            _hover={{ boxShadow: 'md', bg: 'pink.700' }}
-                          >
-                            <EmailIcon mr={3}/> Request invitation
-                          </Button>
-                          <Spacer />
                         </Flex>
                       </GridItem>
+
+                      <GridItem rowSpan={1} h='45px' colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                        <Flex>
+                          <Heading as='h3' color='red.800' mr={3}>Attendees:</Heading>
+                          <Stack align='center' ml={5} direction='row'>
+                            <Wrap h='43px' overflow='scroll'>
+                              {event.attendees.map(attendee => (
+                                <WrapItem key={attendee._id}>
+                                  <Link to={`/people/${attendee._id}`}>
+                                    <Avatar size='sm' mr={3} src={attendee.profilePicture}/>
+                                  </Link>
+                                </WrapItem>
+                              ))}
+                            </Wrap>
+                          </Stack>
+                          <Spacer />
+                          {isAttending ?
+                            <Popover>
+                              {({ isOpen, onClose }) => (
+                                <>
+                                  <PopoverTrigger>
+                                    <Button
+                                      onMouseEnter={() => setHoveringAttending(true)}
+                                      onMouseLeave={() => setHoveringAttending(false)}
+                                      alignSelf='center'
+                                      align='right'
+                                      variant='solid' 
+                                      bg='pink.800'
+                                      color='white'
+                                      boxShadow='sm'
+                                      _hover={isOpen ? { boxShadow: 'sm', bg: 'pink.800' } :
+                                        { boxShadow: 'md', bg: 'pink.700' }}
+                                      _active={{ bg: 'pink.700' }}
+                                    >
+                                      {hoveringAttending || isOpen ?
+                                        <span><CloseIcon mr={3}/>Unattend</span>
+                                        :
+                                        <span><CheckCircleIcon mr={3}/>Attending</span>
+                                      }
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent>
+                                    <PopoverArrow />
+                                    <PopoverBody textAlign='center'>
+                                      Are you sure you want to unattend?
+                                    </PopoverBody>
+                                    <PopoverFooter
+                                      border='0'
+                                      d='flex'
+                                      justifyContent='center'
+                                      pt={0}
+                                    >
+                                      <ButtonGroup size='sm'>
+                                        <Button
+                                          onClick={onClose}
+                                          bg='pink.800'
+                                          color='white'
+                                          boxShadow='sm'
+                                          _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                                          _active={{ bg: 'pink.700' }}
+                                        >
+                                          No
+                                        </Button>
+                                        <Button
+                                          onClick={handleUnattend}
+                                          bg='pink.800'
+                                          color='white'
+                                          boxShadow='sm'
+                                          _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                                          _active={{ bg: 'pink.700' }}
+                                        >
+                                          Yes
+                                        </Button>
+                                      </ButtonGroup>
+                                    </PopoverFooter>
+                                  </PopoverContent>
+                                </>
+                              )}
+                            </Popover>
+                            :
+                            <Button
+                              onClick={handleAttend}
+                              alignSelf='center'
+                              align='right'
+                              variant='solid' 
+                              bg='pink.800'
+                              color='white'
+                              boxShadow='sm'
+                              _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                              _active={{ bg: 'pink.700' }}
+                            >
+                              <EmailIcon mr={3}/> Attend
+                            </Button>
+                          }
+                        </Flex>
+                      </GridItem>
+
                       <GridItem rowSpan={3} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
                         <Heading as='h3' color='pink.800'>
                     Event description
                         </Heading>
-                        <Text fontSize='lg' lineHeight='3ch'>
+                        <Text fontSize='lg' lineHeight='26px'>
                           {event.description}
                         </Text>
                       </GridItem>
-                      <GridItem rowSpan={3} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
-                        <Heading as='h3' color='pink.800'>
-                    Leave a comment
-                        </Heading>
-
+                      <GridItem mt={3} rowSpan={3} colSpan={8} borderColor='gray.200' borderRadius='lg'>
+                        <form action='submit' onSubmit={handleComment} >
+                          <Flex>
+                            <Heading as='h3' color='pink.800'>
+                        Leave a comment
+                            </Heading>
+                            <Spacer />
+                            <Button
+                              type='submit'
+                              alignSelf='center'
+                              align='right'
+                              variant='solid' 
+                              bg='pink.800'
+                              color='white'
+                              boxShadow='sm'
+                              _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                            >
+                              <EditIcon mr={3}/>Post
+                            </Button>                         
+                          </Flex>                                        
+                          <FormControl isRequired>
+                            <InputGroup>
+                              <InputLeftElement  children={<ChatIcon />}/>
+                              <Textarea
+                                type='text'
+                                pl={8}
+                                size='lg'
+                                name='text'
+                                // onFocus={handleFocus}
+                                onChange={handleChange}
+                                value={formdata.text}
+                                placeholder={'Think of something witty! Remember, you\'re being rated...'}
+                                aria-label='description'
+                              />
+                            </InputGroup>
+                          </FormControl>
+                        </form>
                       </GridItem>
                     </Grid>
                   </TabPanel>

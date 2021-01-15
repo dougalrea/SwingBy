@@ -7,7 +7,8 @@ import { secret } from '../config/environment.js'
 async function registerUser(req, res, next) {
   try {
     const newUser = await User.create(req.body)
-    return res.status(201).json({ message: `Welcome ${newUser.name}` })
+    const token = jwt.sign({ sub: newUser._id }, secret, { expiresIn: '14 days' })
+    return res.status(201).json({ message: `Welcome ${newUser.email}`, token })
   } catch (err) {
     next(err)
   }
@@ -20,7 +21,7 @@ async function loginUser(req, res, next) {
       throw new Error(unauthorized)
     }
     const token = jwt.sign({ sub: userToLogin._id }, secret, { expiresIn: '14 days' })
-    return res.status(202).json({ message: `Welcome back ${userToLogin.firstName}`, token })
+    return res.status(202).json({ message: `Welcome back ${userToLogin.email}`, token })
   } catch (err) {
     next(err)
   }

@@ -7,6 +7,14 @@ import Fonts from '../../styles/Fonts'
 import { extendTheme } from '@chakra-ui/react'
 import ReactMapGL, { Marker, Popup } from 'react-map-gl'
 import { Link } from 'react-router-dom'
+import { getPayload } from '../../lib/auth'
+
+const theme = extendTheme({
+  fonts: {
+    heading: 'Dancing Script',
+    body: 'system-ui, sans-serif'
+  }
+})
 
 function EventsIndex() {
   const [events, setEvents] = React.useState(null)
@@ -29,14 +37,27 @@ function EventsIndex() {
     getData()
   }, [])
 
+  const availableEvents = events ? events.filter(event => {
+    return !event.hasExpired && event.attendees.length < event.capacity && event.owner._id !== getPayload().sub
+  }).sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()) : null
 
+  const previousHostedEvents = events ? events.filter(event => {
+    return event.hasExpired && event.owner._id === getPayload().sub
+  }).sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime()) : null
 
-  const theme = extendTheme({
-    fonts: {
-      heading: 'Dancing Script',
-      body: 'system-ui, sans-serif'
-    }
-  })
+  const upcomingHostingEvents = events ? events.filter(event => {
+    return !event.hasExpired && event.owner._id === getPayload().sub
+  }).sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()) : null
+
+  const previousAttendedEvents = events ? events.filter(event => {
+    return event.hasExpired && event.attendees.some(attendee => attendee._id === getPayload().sub) &&
+      event.owner._id !== getPayload().sub
+  }).sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime()) : null
+
+  const upcomingAttendingEvents = events ? events.filter(event => {
+    return !event.hasExpired && event.attendees.some(attendee => attendee._id === getPayload().sub) &&
+      event.owner._id !== getPayload().sub
+  }).sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()) : null
 
   return (
     <ChakraProvider theme={theme}>
@@ -49,17 +70,19 @@ function EventsIndex() {
       >
         SwingBy
       </Heading>
-      {events ? 
+      {availableEvents ? 
         <Box m={50}>
-          <Tabs>
+          <Tabs variant='enclosed' align='center' isFitted>
             <TabList>
               <Tab>Event List</Tab>
               <Tab>Map View</Tab>
+              <Tab>Events Hosting</Tab>
+              <Tab>Events Attending</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
                 <Wrap justify='center'>
-                  {events.map(event => (
+                  {availableEvents.map(event => (
                     <EventCard key={event._id} {...event}/>
                   ))}
                 </Wrap>
@@ -81,16 +104,23 @@ function EventsIndex() {
                   latitude={viewport.latitude}
                   longitude={viewport.longitude}
                   zoom={viewport.zoom}
-                  onViewportChange={viewport => setViewport(viewport)}
+                  onViewportChange={viewport => {
+                    setViewport(viewport)
+                    setPopupData(null)
+                  }}
                 >
-                  {events &&
-                    events.map(event => (
+                  {availableEvents &&
+                    availableEvents.map(event => (
                       <Marker
                         key={event._id}
                         latitude={Number(event.latitude)}
                         longitude={Number(event.longitude)}
                       >
-                        <span onClick={() => setPopupData(event)}>
+                        <span onClick={() => {
+                          setPopupData(event)
+                          console.log(popupData)
+                        }}
+                        >
                           🎯
                         </span>
                       </Marker>
@@ -100,13 +130,13 @@ function EventsIndex() {
                     <Popup
                       latitude={Number(popupData.latitude)}
                       longitude={Number(popupData.longitude)}
-                      onClose={() => setPopupData(null)}
+                      closeButton={false}
                     >
                       <div style={{ width: '100px' }}>
                         <img src={popupData.imageURL} style={{ width: '100%', height: 'auto' }}/>
                       </div>
                       <p className="event-name">
-                        <Link to={`/events/${popupData._id}`}>
+                        <Link  to={`/events/${popupData._id}`}>
                           {popupData.name.toUpperCase()}
                         </Link>
                       </p>
@@ -128,6 +158,62 @@ function EventsIndex() {
                     </Popup>
                   }
                 </ReactMapGL>
+              </TabPanel>
+              <TabPanel>
+                <Tabs variant='soft-rounded' align='center' defaultIndex={1}>
+                  <TabList>
+                    <Tab _selected={{ color: 'red.700', bg: 'red.300', borderColor: 'red.700' }}>
+                      Previous
+                    </Tab>
+                    <Tab _selected={{ color: 'green.700', bg: 'green.300', borderColor: 'green.700' }}>
+                      Upcoming
+                    </Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <Wrap justify='center'>
+                        {previousHostedEvents.map(event => (
+                          <EventCard key={event._id} {...event}/>
+                        ))}
+                      </Wrap>
+                    </TabPanel>
+                    <TabPanel>
+                      <Wrap justify='center'>
+                        {upcomingHostingEvents.map(event => (
+                          <EventCard key={event._id} {...event}/>
+                        ))}
+                      </Wrap>
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
+              </TabPanel>
+              <TabPanel>
+                <Tabs variant='soft-rounded' align='center' defaultIndex={1}>
+                  <TabList>
+                    <Tab _selected={{ color: 'red.700', bg: 'red.300', borderColor: 'red.700' }}>
+                      Previous
+                    </Tab>
+                    <Tab _selected={{ color: 'green.700', bg: 'green.300', borderColor: 'green.700' }}>
+                      Upcoming
+                    </Tab>
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <Wrap justify='center'>
+                        {previousAttendedEvents.map(event => (
+                          <EventCard key={event._id} {...event}/>
+                        ))}
+                      </Wrap>
+                    </TabPanel>
+                    <TabPanel>
+                      <Wrap justify='center'>
+                        {upcomingAttendingEvents.map(event => (
+                          <EventCard key={event._id} {...event}/>
+                        ))}
+                      </Wrap>
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
               </TabPanel>
             </TabPanels>
           </Tabs>

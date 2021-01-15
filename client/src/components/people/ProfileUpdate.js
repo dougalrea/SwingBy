@@ -16,7 +16,7 @@ import useForm from '../utils/useForm'
 const theme = extendTheme({
   fonts: {
     heading: 'Dancing Script',
-    body: 'Lato'
+    body: 'system-ui, sans-serif'
   }
 })
 
@@ -47,7 +47,8 @@ function ProfileUpdate() {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      await editUser(id, formdata)
+      const { data } = await editUser(id, formdata)
+      console.log(data)
       history.push(`/people/${id}`)
     } catch (err) {
       setError(true)
@@ -58,10 +59,11 @@ function ProfileUpdate() {
     setError(false)
   }
 
+  console.log(formdata)
   return (
     <ChakraProvider theme={theme}>
       <Fonts />
-      <Container maxW='75vw'>
+      <Container maxW='70vw'>
         <Box 
           mt={5}
           align='left'
@@ -73,16 +75,16 @@ function ProfileUpdate() {
 
             <Grid
               align='left'
-              bg='white'
-              padding='10px'
+              bg='whit'
+              padding='5px'
               borderWidth='1px' 
-              borderRadius='lg'
+              borderRadius='md'
               borderColor='gray.500'
               w='100%'
-              h='90vh'
-              templateRows="repeat(1, 1fr)"
+              h='80vh'
+              templateRows="repeat(4, 1fr)"
               templateColumns="repeat(8, 1fr)"
-              gap={6}
+              gap={1}
             >
               <GridItem rowSpan={5} colSpan={4}>
                 {formdata.profilePicture ? <Image 
@@ -92,7 +94,7 @@ function ProfileUpdate() {
                   objectFit="contain"
                   align='center'
                   boxShadow='md'
-                  m={5}
+                  mb={5}
                   p={5}
                 /> : <Image 
                   src="https://www.drnitinborse.com/wp-content/uploads/2018/02/user-icon.png" 
@@ -111,15 +113,32 @@ function ProfileUpdate() {
                       <InputLeftElement children={<AddIcon />} />
                       <Input 
                         type='text'
-                        name='alias'
+                        name='firstName'
                         onFocus={handleFocus}
                         onChange={handleChange}
-                        value={formdata.alias}
-                        placeholder='Nickname' 
-                        aria-label='user alias' 
+                        value={formdata.firstName}
+                        placeholder='Name' 
+                        aria-label='name' 
                       />
                     </InputGroup>
                   </FormControl>
+                
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement children={<AddIcon />} />
+                      <Input 
+                        type='text'
+                        name='lastname'
+                        onFocus={handleFocus}
+                        onChange={handleChange}
+                        value={formdata.lastName}
+                        placeholder='Lastname' 
+                        aria-label='lastname' 
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  
+                  
 
                   <FormControl>
                     <InputGroup>
@@ -136,26 +155,33 @@ function ProfileUpdate() {
                     </InputGroup>
                   </FormControl>
 
-                  <FormControl>
-                    <FormLabel>👦 Gender</FormLabel>
-                    <Select placeholder='Select Gender' name='gender' onFocus={handleFocus} onChange={handleChange} value={formdata.gender}>
-                      <option>Male</option>
-                      <option>Female</option>
-                      <option>Trans man</option>
-                      <option>Trans woman</option>
-                      <option>Intersex</option>
-                      <option>Prefer not to say</option>
-                    </Select>
-                  </FormControl>
-
-                  <FormControl>
-                    <FormLabel>🍆 Sexual Orientation</FormLabel>
-                    <Select placeholder='Select Sexual Orientation' name='sexualOrientation' onFocus={handleFocus} onChange={handleChange} value={formdata.sexualOrientation}>
-                      <option>Men</option>
-                      <option>Women</option> 
-                      <option>Everyone</option> 
-                    </Select>
-                  </FormControl>
+                  
+                  <Box>
+                    <FormControl>
+                      <FormLabel>👦 Gender</FormLabel>
+                      <Select placeholder='Select Gender' name='gender' onFocus={handleFocus} onChange={handleChange} value={formdata.gender}>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Trans man</option>
+                        <option>Trans woman</option>
+                        <option>Intersex</option>
+                        <option>Prefer not to say</option>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  
+                  
+                  <Box>
+                    <FormControl>
+                      <FormLabel>🍆 Sexual Orientation</FormLabel>
+                      <Select placeholder='Select Sexual Orientation' name='sexualOrientation' onFocus={handleFocus} onChange={handleChange} value={formdata.sexualOrientation}>
+                        <option>Men</option>
+                        <option>Women</option> 
+                        <option>Everyone</option> 
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  
 
                   <FormControl>
                     <FormLabel>🧠 Politics</FormLabel>
@@ -194,12 +220,14 @@ function ProfileUpdate() {
                 </Stack>    
               </GridItem>
               
-              <GridItem rowSpan={2} colSpan={8} >
+              <GridItem rowSpan={4} colSpan={8} >
                 <FormControl isRequired>
                   <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Update Bio</Heading>
                   <InputGroup>
                     <InputLeftElement  />
                     <Textarea 
+                      width='400px'
+                      height='250px'
                       type='text'
                       children={<ChatIcon />}
                       size='lg'
@@ -213,7 +241,7 @@ function ProfileUpdate() {
                   </InputGroup>
                 </FormControl>
               </GridItem>
-              <GridItem colStart={8} colEnd={8} rowStart={8} rowEnd={8}>
+              <GridItem colStart={8} colEnd={8} rowSpan={3}>
                 <Button
                   onClick={handleSubmit}
                   type='submit' 

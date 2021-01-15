@@ -16,6 +16,8 @@ async function eventsCreate(req, res, next) {
   try {
     const newEventData = { ...req.body, owner: req.currentUser._id }
     const newEvent = await Event.create(newEventData)
+    newEvent.attendees.push(req.currentUser._id)
+    await newEvent.save()
     return res.status(201).json(newEvent)
   } catch (err) {
     next(err)
@@ -69,9 +71,13 @@ async function eventCommentCreate(req, res, next) {
     const event = await Event.findById(id)
     if (!event) throw new Error(notFound)
     const newComment = { ...req.body, owner: req.currentUser._id }
-    event.comments.push(newComment)
+    event.comments.unshift(newComment)
     await event.save()
-    return res.status(201).json(event)
+    const populatedEvent = await Event.findById(id)
+      .populate('owner')
+      .populate('attendees')
+      .populate('comments.owner')
+    return res.status(201).json(populatedEvent)
   } catch (err) {
     next(err)
   }
@@ -114,7 +120,7 @@ async function eventAttend(req, res, next) {
   try {
     const eventToAttend = await Event.findById(id)
     if (!eventToAttend) throw new Error(notFound)
-    eventToAttend.attendees.addToSet(req.currentUser._id)
+    eventToAttend.attendees.unshift(req.currentUser._id)
     await eventToAttend.save()
     eventToAttend.populate('attendees')
     const populatedEvent = await Event.findById(eventToAttend._id)
