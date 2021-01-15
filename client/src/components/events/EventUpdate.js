@@ -77,9 +77,10 @@ function EventUpdate() {
   const now = new Date().toISOString().split(':').slice(0, 2).join(':')
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <Container maxW='85vw' maxH='110vh' >
         <Box
-          mt={5}
+          mt={15}
           align='left'
         >
           <Heading ml={3} align='left' as='h1' fontSize='48px' color='pink.800'>SwingBy</Heading>
@@ -94,25 +95,28 @@ function EventUpdate() {
               borderRadius='lg'
               borderColor='gray.500'
               w='100%'
-              h='90vh'
-              templateRows="repeat(12, 1fr)"
+              h='80vh'
+              templateRows="repeat(7, 1fr)"
               templateColumns="repeat(12, 1fr)"
-              gap={6}
+              gap={1}
             >
-              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+              <GridItem m={1} rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                 {formdata.imageURL ? <Image
+                  boxShadow='md'
                   src={formdata.imageURL}
                   alt="invalid url"
                   objectFit="contain"
+                  p={5}
                   align='left'
                 /> : <Image
                   src="https://images.squarespace-cdn.com/content/v1/5715100cf8baf3c79d443859/1474644021472-6M4JHVDCPUSK4SOGDO6Y/ke17ZwdGBToddI8pDm48kFr-MCz83LG2ZqzGFu9uALUUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcFld4UtfH4YE_GYCkgGJoltUf3XSTmDyr_decxWmWcyKxz1JLteulDk500xDZnDHA/placeholder3.png?format=2500w"
                   alt="dinner party photo"
                   objectFit="contain"
+                  boxShadow='md'
                   align='left'
                 /> }
               </GridItem>
-              <GridItem rowSpan={5} colSpan={4} >
+              <GridItem m={1} rowSpan={5} colSpan={4} >
                 <Stack>
                   <Heading size='lg' color='pink.800' as='h3'>Update your event details</Heading>
                   <FormControl isRequired>
@@ -159,6 +163,20 @@ function EventUpdate() {
                   </FormControl>
                   <FormControl isRequired>
                     <InputGroup>
+                      <InputLeftElement children={<AddIcon />} />
+                      <Input
+                        type='text'
+                        name='types'
+                        onFocus={handleFocus}
+                        onChange={handleChange}
+                        value={formdata.types}
+                        placeholder='Event Type'
+                        aria-label='event type'
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl isRequired>
+                    <InputGroup>
                       <InputLeftElement children={<TimeIcon />} />
                       <Input
                         type='number'
@@ -171,6 +189,7 @@ function EventUpdate() {
                       />
                       <InputRightAddon children='hours' />
                     </InputGroup>
+
                   </FormControl>
                   <FormControl isRequired>
                     <InputGroup>
@@ -184,12 +203,12 @@ function EventUpdate() {
                         placeholder='Capacity'
                         aria-label='capacity'
                       />
-                      <InputRightAddon children='attendees' />
+                      <InputRightAddon children='capacity' />
                     </InputGroup>
                   </FormControl>
                 </Stack>
               </GridItem>
-              <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='gray.500' borderWidth='1px'>
+              <GridItem m={1} rowSpan={5} colSpan={4} borderRadius='lg' borderColor='gray.500' borderWidth='1px'>
                 {viewport ?
                   <ReactMapGL
                     mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
@@ -207,9 +226,9 @@ function EventUpdate() {
                   <h1>Finding your location...</h1>
                 }
               </GridItem>
-              <GridItem rowSpan={2} colSpan={8} >
+              <GridItem rowSpan={4} colSpan={8} >
                 <FormControl isRequired>
-                  <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Event description</Heading>
+                  <Heading size='lg' mt={6} ml={4} h='40px' color='pink.800' as='h3'>Event description</Heading>
                   <InputGroup>
                     <InputLeftElement  />
                     <Textarea
@@ -226,7 +245,7 @@ function EventUpdate() {
                   </InputGroup>
                 </FormControl>
               </GridItem>
-              <GridItem rowSpan={2} colSpan={4} >
+              <GridItem mt={7} rowSpan={2} colSpan={4} >
                 <Button onClick={findLocation}>
                 Use My Location
                 </Button>
@@ -261,7 +280,7 @@ function EventUpdate() {
               </GridItem>
               <GridItem rowSpan={3} colSpan={8}>
               </GridItem>
-              <GridItem>
+              <GridItem align='right'>
                 <Button
                   type='submit'
                   variant='solid'

@@ -52,7 +52,7 @@ function PeopleIndex() {
                       <Badge m={1} colorScheme='green' p={1} rounded='full' px={2}>Age: {person.age}</Badge>
                     </Stack>
                     <Heading as='h2' fontSize='36px' my={2} fontWeight='bold' letterSpacing='wide'>{person.firstName}</Heading>
-                    <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>Bio: {person.bio}
+                    <Text isTruncated fontSize='sm' fontWeight='light' letterSpacing='wide'>{person.bio}
                     </Text>
                     <Box justify='space-around' as='span'>
                       <Stack isInline align='center'>

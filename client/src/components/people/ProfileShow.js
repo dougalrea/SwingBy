@@ -122,9 +122,6 @@ function ProfileShow() {
     }
   }
 
-  console.log(hasReviewed)
-
-
   return (
     <>
       <ChakraProvider theme={theme}>
@@ -189,7 +186,7 @@ function ProfileShow() {
                     }
                     </Heading>
                   </Flex>
-                  <List spacing={2}>
+                  <List spacing={0}>
                     <ListItem mt={2}>
                       <Text>Age: {person.age}</Text>
                     </ListItem>
@@ -201,6 +198,15 @@ function ProfileShow() {
                     </ListItem>
                     <ListItem>
                       <Text>Interested in: {person.sexualOrientation}</Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text>Politics: {person.politics}</Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text>Smoker? {person.isSmoker ? 'Yes' : 'No'}</Text>
+                    </ListItem>
+                    <ListItem>
+                      <Text>Food Preferences: {person.foodPreferences}</Text>
                     </ListItem>
                     <ListItem>
                       <Flex direction='column'>
@@ -226,13 +232,6 @@ function ProfileShow() {
                           </WrapItem>
                         </Wrap>
                       </Flex>
-                    </ListItem>
-                    <ListItem>
-                      <Text>Smoker? {person.isSmoker ? 'Yes' : 'No'}</Text>
-                      
-                    </ListItem>
-                    <ListItem>
-                      <Text>Food Preferences: {person.foodPreferences}</Text>
                     </ListItem>
                   </List>
                 </GridItem>

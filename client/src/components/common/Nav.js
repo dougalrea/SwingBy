@@ -101,30 +101,6 @@ function Nav() {
                           <ArrowRightIcon mr={3}/>Create Event
                         </Button>
                       </Link>
-                      <Link to='/events/:id'>
-                        <Button
-                          variant="ghost"
-                          isFullWidth
-                          height="26px"
-                          justifyContent="flex-start"
-                          borderRadius="0"
-                          pl="0"
-                        >
-                          <ArrowRightIcon mr={3}/>Events Hosting
-                        </Button>
-                      </Link>
-                      <Link>
-                        <Button
-                          variant="ghost"
-                          isFullWidth
-                          height="26px"
-                          justifyContent="flex-start"
-                          borderRadius="0"
-                          pl="0"
-                        >
-                          <ArrowRightIcon mr={3}/>Events Attending
-                        </Button>
-                      </Link>
                     </AccordionPanel>
                   </AccordionItem>
                   <AccordionItem>
