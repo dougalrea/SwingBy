@@ -37,13 +37,13 @@ function EventCard({ _id, owner, startDateTime, name, capacity, duration, attend
             <Box my={5} justify='space-around' as='span'>
               <Stack isInline align='center'>
                 <Spacer />
-                <Text m={1}>🎟 {capacity - attendees.length} SPACES LEFT</Text>
+                <Text m={1}>🎟 {capacity - attendees.length} Spaces Left</Text>
               </Stack>
             </Box>
             <Box>
               <Stack isInline align='center'>
                 <Spacer />
-                <Text m={1}>🕐 DURATION: {duration} HOURS</Text>
+                <Text m={1}>🕐 Duration: {duration} Hours</Text>
               </Stack>
             </Box>
           </Box>
