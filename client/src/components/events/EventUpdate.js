@@ -47,8 +47,8 @@ function EventUpdate() {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      await editEvent(formdata)
-      history.push(`/events/${event._id}`)
+      await editEvent(id, formdata)
+      history.push(`/events/${id}`)
     } catch (err) {
       setError(true)
     }
