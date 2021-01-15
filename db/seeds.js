@@ -66,10 +66,10 @@ async function seedDatabase() {
     for (let i = 0; i < userReviewData.length; i++) {
       const review = userReviewData[i]
       let owner = arrayItemAtRandomIndex(users)
-      let potentialEvents = events.filter(event => event.attendees.includes(owner._id))
+      let potentialEvents = events.filter(event => event.attendees.includes(owner._id) && event.hasExpired)
       while (!potentialEvents.length) {
         owner = arrayItemAtRandomIndex(users)
-        potentialEvents = events.filter(event => event.attendees.includes(owner._id))
+        potentialEvents = events.filter(event => event.attendees.includes(owner._id) && event.hasExpired)
       }
       const event = arrayItemAtRandomIndex(potentialEvents)
       const otherAttendees = event.attendees.filter(attendee => attendee !== owner._id)

@@ -52,6 +52,7 @@ function Nav() {
           color='white'
           boxShadow='sm'
           _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+          _active={{ bg: 'pink.700' }}
         >
           <HamburgerIcon /> 
         </Button>

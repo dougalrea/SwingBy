@@ -104,6 +104,7 @@ function ProfileUpdate() {
               </GridItem>
               <GridItem rowSpan={5} colSpan={4} >
                 <Stack>
+                  
                   <Heading size='lg' color='pink.800' as='h3'>Update Profile</Heading>
 
                   <FormControl>
@@ -229,7 +230,7 @@ function ProfileUpdate() {
               </GridItem>
             </Grid>
           </form>
-
+          {error ? <Text>Something went wrong there... sorry about that</Text> : ''}
         </Center>
       </Container>
     </ChakraProvider>

@@ -21,7 +21,7 @@ function randomCapacity() {
 function generateEvents() {
   const events = []
 
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 100; i++) {
     const name = faker.internet.domainWord()
     const imageURL = `${faker.image.nature()}?random=${Math.round(Math.random() * 1000)}`
     const latitude = Math.random() * 0.235503 + 51.386897

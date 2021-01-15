@@ -11,7 +11,7 @@ import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon, EditIcon } from '@chakra-ui/icons'
 
 import { followPerson, unfollowPerson, createPersonReview, editPersonReview } from '../../lib/api'
-import { getPayload } from '../../lib/auth'
+import { getPayload, isOwner } from '../../lib/auth'
 import useForm from '../utils/useForm'
 
 const theme = extendTheme({
@@ -20,7 +20,6 @@ const theme = extendTheme({
     body: 'system-ui, sans-serif'
   }
 })
-
 
 function ProfileShow() {
   const [error, setError] = React.useState(false)
@@ -132,12 +131,28 @@ function ProfileShow() {
         <Fonts />
         {person ? 
           <Container maxW='85vw' maxH='110vh'>
-            <Box 
-              mt={5}
-              align='left'
-            >
-              <Heading ml={3} align='left' as='h1' fontSize='48px' color='pink.800'>SwingBy</Heading>
-            </Box>
+            <Flex>
+              <Box 
+                mt={5}
+                align='left'
+              >
+                <Heading ml={3} align='left' as='h1' fontSize='48px' color='pink.800'>SwingBy</Heading>
+              </Box>
+              <Spacer />
+              {id === getPayload().sub &&
+                <Button
+                  onClick={handleEditClick}
+                  mt={8}
+                  alignSelf='center'
+                  variant='solid' 
+                  bg='pink.800'
+                  color='white'
+                  boxShadow='sm'
+                  _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                >
+                  Edit Profile
+                </Button>}
+            </Flex>           
             <Center>
               <Grid
                 align='left'
@@ -152,7 +167,7 @@ function ProfileShow() {
                 templateColumns="repeat(12, 1fr)"
                 gap={4}
               >
-                <GridItem rowSpan={5} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden' >
+                <GridItem rowSpan={4} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden' >
                   <Image 
                     src={person.profilePicture} 
                     alt="profile picture" 
@@ -190,7 +205,7 @@ function ProfileShow() {
                     <ListItem>
                       <Flex direction='column'>
                         <Text>Interests: </Text>
-                        <Wrap>
+                        <Wrap maxH={12}>
                           <WrapItem>
                             <Badge colorScheme='blue'>{person.interests[0]}</Badge>
                           </WrapItem>
@@ -223,17 +238,7 @@ function ProfileShow() {
                 </GridItem>
                 <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
                   <GridItem align='right'>
-                    <Button
-                      onClick={handleEditClick}
-                      alignSelf='center'
-                      align='right'
-                      variant='solid' 
-                      bg='pink.800'
-                      color='white'
-                      boxShadow='sm'
-                      _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
-                      Edit Profile
-                    </Button>
+                    
                   </GridItem>
                   <Heading as='h3' align='center' color='pink.800'>
                   Reviews:
@@ -270,52 +275,75 @@ function ProfileShow() {
                     })}
                   </List>
                 </GridItem>
-                <GridItem rowSpan={2} colSpan={8} p={3} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
-                  <Heading as='h3' color='pink.800'>Followers</Heading>
-                  <Flex >
-                    {isFollowing ? 
-                      <Button
-                        onClick={handleUnFollow}
-                        alignSelf='center'
-                        align='right'
-                        variant='solid' 
-                        bg='pink.800'
-                        color='white'
-                        boxShadow='sm'
-                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
-                      >
-                        <CheckCircleIcon mr={3}/> Unfollow
-                      </Button> 
-                      :
-                      <Button
-                        onClick={handleFollow}
-                        alignSelf='center'
-                        align='right'
-                        variant='solid' 
-                        bg='pink.800'
-                        color='white'
-                        boxShadow='sm'
-                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
-                      >
-                        <PlusSquareIcon mr={3}/> Follow
-                      </Button> 
-                    }
-                    <Stack align='center' ml={5} direction='row'>
-                      <Wrap>
-                        {person.followedBy.slice(0, 12).map(follower => {
-                          return (
-                            <WrapItem key={follower._id} >
-                              <Avatar size='sm' src={follower.profilePicture} />
-                            </WrapItem>
-                          )
-                        })}
-                        {person.followedBy.length > 12 && <Text>
-                              And {`${person.followedBy.length - 12} others`}
-                        </Text>}
-                      </Wrap>
-                    </Stack>
-                  </Flex>
-                </GridItem>
+                {isOwner(id) ?
+                  <GridItem rowSpan={3} colSpan={4} p={3} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                    <Flex >
+                      <Heading as='h3' color='pink.800'>Following</Heading>
+                      <Stack align='center' ml={5} direction='row'>
+                        <Wrap h='170px' overflow='scroll'>
+                          {person.following.map(follow => {
+                            return (
+                              <WrapItem key={follow._id}>
+                                <Link to={`/people/${follow._id}`}>
+                                  <Avatar size='sm' src={follow.profilePicture} />
+                                </Link>
+                              </WrapItem>
+                            )
+                          })}
+                        </Wrap>
+                      </Stack>
+                    </Flex>
+                  </GridItem>
+                  :
+                  <GridItem rowSpan={3} colSpan={4} p={3} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
+                    <Flex>
+                      <Flex direction='column'>
+                        <Heading as='h3' color='pink.800' mb={3}>Followers</Heading>
+                        {isFollowing ? 
+                          <Button
+                            onClick={handleUnFollow}
+                            alignSelf='center'
+                            align='right'
+                            variant='solid' 
+                            bg='pink.800'
+                            color='white'
+                            boxShadow='sm'
+                            _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                          >
+                            <CheckCircleIcon mr={3}/> Unfollow
+                          </Button> 
+                          :
+                          <Button
+                            onClick={handleFollow}
+                            alignSelf='center'
+                            align='right'
+                            variant='solid' 
+                            bg='pink.800'
+                            color='white'
+                            boxShadow='sm'
+                            _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                          >
+                            <PlusSquareIcon mr={3}/> Follow
+                          </Button> 
+                        }
+                      </Flex>
+                      <Stack align='center' ml={5} direction='row'>
+                        <Wrap>
+                          {person.followedBy.slice(0, 12).map(follower => {
+                            return (
+                              <WrapItem key={follower._id} >
+                                <Avatar size='sm' src={follower.profilePicture} />
+                              </WrapItem>
+                            )
+                          })}
+                          {person.followedBy.length > 12 && <Text ml={1}>
+                                And {`${person.followedBy.length - 12} others`}
+                          </Text>}
+                        </Wrap>
+                      </Stack>
+                    </Flex>
+                  </GridItem>
+                }
                 <GridItem p={3} rowSpan={3} colSpan={8} borderColor='gray.200' borderWidth='1px' borderRadius='lg'>
                   <Heading as='h3' color='pink.800'>
                     Bio
@@ -324,95 +352,97 @@ function ProfileShow() {
                     {person.bio}
                   </Text>
                 </GridItem>
-                <GridItem rowSpan={3} colSpan={8} borderColor='gray.200' borderRadius='lg'>
-                  <form action='submit' onSubmit={handleReview} >
-                    <Flex>
-                      <Heading as='h3' ml={3} color='pink.800'>
-                  Review {person.firstName}
-                      </Heading>
-                      <Spacer />
-                      <RadioGroup 
-                        spacing={2} 
-                        mt={2} 
-                        name='rating' 
-                        value={formdata.rating}>
-                        <Stack direction="row">
-                          <Radio 
-                            isDisabled={error} 
-                            isRequired 
-                            isChecked={false} 
-                            name='rating' 
-                            value='1' 
-                            onChange={handleChange}
-                          >1<StarIcon mb={1} color='pink.800'/>
-                          </Radio>
-                          <Radio 
-                            isDisabled={error} 
-                            isChecked={false} 
-                            name='rating' value='2' 
-                            onChange={handleChange}
-                          >2<StarIcon mb={1} color='pink.800'/>
-                          </Radio>
-                          <Radio
-                            isDisabled={error} 
-                            isChecked={false} 
-                            name='rating' 
-                            value='3' 
-                            onChange={handleChange}
-                          >3<StarIcon mb={1} color='pink.800'/>
-                          </Radio>
-                          <Radio 
-                            isDisabled={error} 
-                            isChecked={false} 
-                            name='rating' 
-                            value='4' 
-                            onChange={handleChange}
-                          >4<StarIcon mb={1} color='pink.800'/>
-                          </Radio>
-                          <Radio 
-                            isDisabled={error} 
-                            isChecked={false} 
-                            name='rating' 
-                            value='5' 
-                            onChange={handleChange}
-                          >5<StarIcon mb={1} color='pink.800'/>
-                          </Radio>
-                        </Stack>
-                      </RadioGroup>
-                      <Spacer />
-                      <Button
-                        isDisabled={error}
-                        type='submit'
-                        alignSelf='center'
-                        align='right'
-                        variant='solid' 
-                        bg='pink.800'
-                        color='white'
-                        boxShadow='sm'
-                        _hover={{ boxShadow: 'md', bg: 'pink.700' }}
-                      >
-                        <EditIcon mr={3}/>Post
-                      </Button>                         
-                    </Flex>                                        
-                    <FormControl isRequired>
-                      <InputGroup>
-                        <InputLeftElement children={<ChatIcon />}/>
-                        <Textarea
+                {!isOwner(id) &&
+                  <GridItem rowSpan={3} colSpan={8} borderColor='gray.200' borderRadius='lg'>
+                    <form action='submit' onSubmit={handleReview} >
+                      <Flex>
+                        <Heading as='h3' ml={3} color='pink.800'>
+                    Review {person.firstName}
+                        </Heading>
+                        <Spacer />
+                        <RadioGroup 
+                          spacing={2} 
+                          mt={2} 
+                          name='rating' 
+                          value={formdata.rating}>
+                          <Stack direction="row">
+                            <Radio 
+                              isDisabled={error} 
+                              isRequired 
+                              isChecked={false} 
+                              name='rating' 
+                              value='1' 
+                              onChange={handleChange}
+                            >1<StarIcon mb={1} color='pink.800'/>
+                            </Radio>
+                            <Radio 
+                              isDisabled={error} 
+                              isChecked={false} 
+                              name='rating' value='2' 
+                              onChange={handleChange}
+                            >2<StarIcon mb={1} color='pink.800'/>
+                            </Radio>
+                            <Radio
+                              isDisabled={error} 
+                              isChecked={false} 
+                              name='rating' 
+                              value='3' 
+                              onChange={handleChange}
+                            >3<StarIcon mb={1} color='pink.800'/>
+                            </Radio>
+                            <Radio 
+                              isDisabled={error} 
+                              isChecked={false} 
+                              name='rating' 
+                              value='4' 
+                              onChange={handleChange}
+                            >4<StarIcon mb={1} color='pink.800'/>
+                            </Radio>
+                            <Radio 
+                              isDisabled={error} 
+                              isChecked={false} 
+                              name='rating' 
+                              value='5' 
+                              onChange={handleChange}
+                            >5<StarIcon mb={1} color='pink.800'/>
+                            </Radio>
+                          </Stack>
+                        </RadioGroup>
+                        <Spacer />
+                        <Button
                           isDisabled={error}
-                          isRequired
-                          type='text'
-                          pl={8}
-                          size='lg'
-                          name='text'
-                          onChange={handleChange}
-                          value={error ? 'You must have already attended an event with this person in order to leave a review!' : formdata.text}
-                          placeholder={hasReviewed ? 'You can\'t review a person twice! Any changes you post will edit your existing review' : 'Think of something witty! Remember, you\'re being rated...'}
-                          aria-label='review text'
-                        />
-                      </InputGroup>
-                    </FormControl>
-                  </form>
-                </GridItem>
+                          type='submit'
+                          alignSelf='center'
+                          align='right'
+                          variant='solid' 
+                          bg='pink.800'
+                          color='white'
+                          boxShadow='sm'
+                          _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                        >
+                          <EditIcon mr={3}/>Post
+                        </Button>                         
+                      </Flex>                                        
+                      <FormControl isRequired>
+                        <InputGroup>
+                          <InputLeftElement children={<ChatIcon />}/>
+                          <Textarea
+                            isDisabled={error}
+                            isRequired
+                            type='text'
+                            pl={8}
+                            size='lg'
+                            name='text'
+                            onChange={handleChange}
+                            value={error ? 'You must have already attended an event with this person in order to leave a review!' : formdata.text}
+                            placeholder={hasReviewed ? 'You can\'t review a person twice! Any changes you post will edit your existing review' : 'Think of something witty! Remember, you\'re being rated...'}
+                            aria-label='review text'
+                          />
+                        </InputGroup>
+                      </FormControl>
+                    </form>
+                  </GridItem>
+                }
               </Grid>
             </Center>
           </Container>

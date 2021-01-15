@@ -91,7 +91,11 @@ async function eventCommentDelete(req, res, next) {
     if (!commentToDelete.owner.equals(req.currentUser._id)) throw new Error(forbidden)
     await commentToDelete.remove()
     await event.save()
-    return res.sendStatus(204).json(event)
+    const populatedEvent = await Event.findById(id)
+      .populate('owner')
+      .populate('attendees')
+      .populate('comments.owner')
+    return res.status(201).json(populatedEvent)
   } catch (err) {
     next(err)
   }

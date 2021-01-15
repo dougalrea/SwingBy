@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-unused-vars */
 import React from 'react'
-import { getOneEvent } from '../../lib/api'
+import { deleteEventComment, getOneEvent } from '../../lib/api'
 import { useParams, Link, useHistory } from 'react-router-dom'
 import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
   FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, Wrap, WrapItem, Icon, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea } from '@chakra-ui/react'
@@ -56,7 +56,7 @@ function EventShow() {
     getData()
   }, [id])
 
-  const { formdata, handleChange } = useForm({
+  const { formdata, handleChange, setFormdata } = useForm({
     text: ''
   })
 
@@ -64,7 +64,9 @@ function EventShow() {
     e.preventDefault()
     try {
       const { data } = await createEventComment(id, formdata)
-      console.log(data)
+      setFormdata({
+        text: ''
+      })
       setEvent(data)
     } catch (err) {
       console.log(err)
@@ -85,6 +87,16 @@ function EventShow() {
       const { data } = await unattendEvent(id)
       setEvent(data)
       setHoveringAttending(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const { data } = await deleteEventComment(id, commentId)
+      console.log(data)
+      setEvent(data)
     } catch (err) {
       console.log(err)
     }
@@ -159,9 +171,9 @@ function EventShow() {
                           </ListItem>
                         </List>
                       </GridItem>
-                      <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='hidden'>
+                      <GridItem rowSpan={12} colSpan={4} borderRadius='lg' borderColor='red.500' overflow='scroll'>
                         <GridItem align='right'>
-                          <Button
+                          {event.owner._id === getPayload().sub ? <Button
                             onClick={handleEditClick}
                             variant='solid' 
                             bg='pink.800'
@@ -169,7 +181,7 @@ function EventShow() {
                             boxShadow='sm'
                             _hover={{ boxShadow: 'md', bg: 'pink.700' }}>
                       Edit Event
-                          </Button>
+                          </Button> : ''}
                         </GridItem>
                         <Heading as='h3' align='center' color='pink.800'>
                   Comments
@@ -178,21 +190,42 @@ function EventShow() {
                           {event.comments.map(comment => {
                             return (
                               <ListItem key={comment._id} borderColor='gray.200' borderWidth='1px' borderRadius='lg' p={2}>
-                                <Link to={`/people/${comment.owner._id}`}>
+                                <Link to={comment.owner._id !== getPayload().sub && `/people/${comment.owner._id}`}>
                                   <Flex>
-                                    
                                     <Avatar size='lg' name={comment.owner.firstName} src={comment.owner.profilePicture} />
-                                    <Flex flexDirection='column'  ml={3}>
-                                      <Flex>
-                                        <Heading as='h5' size='sm'>
-                                          {`${comment.owner.firstName} ${comment.owner.lastName} ${Number(comment.owner.avgRating) ?
-                                            (comment.owner.avgRating.toPrecision(2)) : '(Not yet rated)'}`}
+                                    <Flex flexDirection='column' w='100%'  ml={3}>
+                                      <Flex flexDirection='row' w='100%'>
+                                        <Heading as='h5' size='sm' color='pink.800'>
+                                          {`${comment.owner.firstName} ${comment.owner.lastName}`}
                                         </Heading>
-                                        {!!Number(comment.owner.avgRating) &&
-                                          <StarIcon ml={3} color='pink.800'/>
-                                        }
+                                        <Spacer />
+                                        {Number(comment.owner.avgRating) ? 
+                                          <Heading as='h5' size='sm' color='pink.800'>
+                                            {(comment.owner.avgRating.toPrecision(2))}
+                                            <StarIcon ml={1} mb={1} color='pink.800'/>
+                                          </Heading>
+                                          : 
+                                          <Text color='pink.800'>
+                                          (Not yet rated)
+                                          </Text>}
+                                        <Spacer />
+                                        {comment.owner._id === getPayload().sub &&
+                                            <Button
+                                              maxH={4}
+                                              size='sm'
+                                              onClick={() => handleCommentDelete(comment._id)}
+                                              alignSelf='center'
+                                              align='right'
+                                              variant='solid' 
+                                              bg='pink.800'
+                                              color='white'
+                                              boxShadow='sm'
+                                              _hover={{ boxShadow: 'md', bg: 'pink.700' }}
+                                              _active={{ bg: 'pink.700' }}
+                                            >Delete
+                                            </Button>}
                                       </Flex>
-                                      <Text>
+                                      <Text >
                                         {comment.text}
                                       </Text>
                                     </Flex>
@@ -233,7 +266,7 @@ function EventShow() {
                               {event.attendees.map(attendee => (
                                 <WrapItem key={attendee._id}>
                                   <Link to={`/people/${attendee._id}`}>
-                                    <Avatar size='sm' mr={3} src={attendee.profilePicture}/>
+                                    <Avatar size='sm' mr={2} mt={2} src={attendee.profilePicture}/>
                                   </Link>
                                 </WrapItem>
                               ))}
@@ -306,7 +339,6 @@ function EventShow() {
                             :
                             <Button
                               onClick={handleAttend}
-                              alignSelf='center'
                               align='right'
                               variant='solid' 
                               bg='pink.800'

@@ -8,14 +8,12 @@ import { extendTheme } from '@chakra-ui/react'
 import ReactMapGL, { Marker, Popup } from 'react-map-gl'
 import { Link } from 'react-router-dom'
 import { getPayload } from '../../lib/auth'
-
 const theme = extendTheme({
   fonts: {
     heading: 'Dancing Script',
     body: 'system-ui, sans-serif'
   }
 })
-
 function EventsIndex() {
   const [events, setEvents] = React.useState(null)
   const [viewport, setViewport] = React.useState({
@@ -24,7 +22,6 @@ function EventsIndex() {
     zoom: 9
   })
   const [popupData, setPopupData] = React.useState(null)
-
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -36,29 +33,23 @@ function EventsIndex() {
     }
     getData()
   }, [])
-
   const availableEvents = events ? events.filter(event => {
     return !event.hasExpired && event.attendees.length < event.capacity && event.owner._id !== getPayload().sub
   }).sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()) : null
-
   const previousHostedEvents = events ? events.filter(event => {
     return event.hasExpired && event.owner._id === getPayload().sub
   }).sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime()) : null
-
   const upcomingHostingEvents = events ? events.filter(event => {
     return !event.hasExpired && event.owner._id === getPayload().sub
   }).sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()) : null
-
   const previousAttendedEvents = events ? events.filter(event => {
     return event.hasExpired && event.attendees.some(attendee => attendee._id === getPayload().sub) &&
       event.owner._id !== getPayload().sub
   }).sort((a, b) => new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime()) : null
-
   const upcomingAttendingEvents = events ? events.filter(event => {
     return !event.hasExpired && event.attendees.some(attendee => attendee._id === getPayload().sub) &&
       event.owner._id !== getPayload().sub
   }).sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()) : null
-
   return (
     <ChakraProvider theme={theme}>
       <Fonts />
@@ -227,5 +218,4 @@ function EventsIndex() {
     </ChakraProvider>
   )
 }
-
 export default EventsIndex
