@@ -12,7 +12,7 @@ import {
   Divider,
   FormHelperText
 } from '@chakra-ui/react'
-import { EmailIcon, LockIcon } from '@chakra-ui/icons'
+import { EmailIcon, LockIcon, AtSignIcon } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
 import { registerUser } from '../../lib/api'
@@ -67,7 +67,7 @@ function FormRegister() {
         </FormControl>
         <FormControl isRequired>
           <InputGroup>
-            <InputLeftElement children={<LockIcon />} />
+            <InputLeftElement children={<AtSignIcon />} />
             <Input 
               type='password'
               name='password'
