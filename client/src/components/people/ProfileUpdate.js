@@ -86,7 +86,7 @@ function ProfileUpdate() {
               templateColumns="repeat(8, 1fr)"
               gap={1}
             >
-              <GridItem rowSpan={5} colSpan={4}>
+              <GridItem rowSpan={3} colSpan={2}>
                 {formdata.profilePicture ? <Image 
                   h='300px'
                   src={formdata.profilePicture} 
@@ -129,18 +129,16 @@ function ProfileUpdate() {
                       <InputLeftElement children={<AddIcon />} />
                       <Input 
                         type='text'
-                        name='lastname'
+                        name='lastName'
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.lastName}
-                        placeholder='Lastname' 
-                        aria-label='lastname' 
+                        placeholder='Surname' 
+                        aria-label='lastName' 
                       />
                     </InputGroup>
                   </FormControl>
                   
-                  
-
                   <FormControl>
                     <InputGroup>
                       <InputLeftElement children={<ViewIcon />} />
@@ -197,8 +195,8 @@ function ProfileUpdate() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel>🚬  Does Smoke</FormLabel>
-                    <Select placeholder='Smoke?' name='isSmoker' onFocus={handleFocus} onChange={handleChange} value={formdata.isSmoker}>
+                    <FormLabel>Fancy a cig?</FormLabel>
+                    <Select placeholder='🚬' name='isSmoker' onFocus={handleFocus} onChange={handleChange} value={formdata.isSmoker}>
                       <option>Yes</option>
                       <option>No</option> 
   
@@ -207,7 +205,7 @@ function ProfileUpdate() {
 
                   <FormControl>
                     <FormLabel>🍔 Food Preferences</FormLabel>
-                    <Select placeholder='Select Favourite Foods' name='foodPreferences' onFocus={handleFocus} onChange={handleChange} value={formdata.foodPreferences}>
+                    <Select placeholder='What do you eat?' name='foodPreferences' onFocus={handleFocus} onChange={handleChange} value={formdata.foodPreferences}>
                       <option>Vegetarian</option>
                       <option>Gluten free</option>
                       <option>Dairy free</option>
