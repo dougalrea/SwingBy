@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
 import { getAllEvents } from '../../lib/api'
 import { ChakraProvider, Heading, Wrap, Box, Tabs, TabList, TabPanels, Tab, TabPanel, Spinner, Badge } from '@chakra-ui/react'

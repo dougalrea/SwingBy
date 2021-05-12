@@ -1,14 +1,12 @@
 /* eslint-disable react/no-children-prop */
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable no-unused-vars */
+
 import React from 'react'
 import { editEvent, getOneEvent } from '../../lib/api'
 import { useParams } from 'react-router-dom'
-import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, InputGroup, InputLeftElement, TabList, Tab, InputRightAddon, Textarea } from '@chakra-ui/react'
+import { Box, Heading, Image, Stack, FormControl, Input, ChakraProvider, Center, Container, Grid, GridItem, Button, InputGroup, InputLeftElement, InputRightAddon, Textarea } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { CalendarIcon, ChatIcon, CheckCircleIcon, ArrowUpIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { CalendarIcon, ChatIcon, ArrowUpIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
 import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
@@ -73,6 +71,8 @@ function EventUpdate() {
     }
     )
   }
+
+  console.log(error)
 
   const now = new Date().toISOString().split(':').slice(0, 2).join(':')
   return (

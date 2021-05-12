@@ -1,14 +1,12 @@
-/* eslint-disable prefer-const */
 /* eslint-disable react/no-children-prop */
-/* eslint-disable no-unused-vars */
+
 import React from 'react'
 import { getOnePerson } from '../../lib/api'
 import { useParams, Link, useHistory } from 'react-router-dom'
-import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Wrap, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea, Radio, RadioGroup } from '@chakra-ui/react'
+import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl, ChakraProvider, Center, Avatar, Container, Grid, GridItem, List, ListItem, WrapItem, Wrap, Button, InputGroup, InputLeftElement, Textarea, Radio, RadioGroup } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, PlusSquareIcon, StarIcon, TimeIcon, EditIcon } from '@chakra-ui/icons'
+import { ChatIcon, CheckCircleIcon, PlusSquareIcon, StarIcon, EditIcon } from '@chakra-ui/icons'
 
 import { followPerson, unfollowPerson, createPersonReview, editPersonReview } from '../../lib/api'
 import { getPayload, isOwner } from '../../lib/auth'
@@ -84,7 +82,7 @@ function ProfileShow() {
     return follower._id === getPayload().sub
   }) : null
 
-  let { formdata, handleChange, setFormdata } = useForm({
+  const { formdata, handleChange, setFormdata } = useForm({
     text: '',
     rating: ''
   })

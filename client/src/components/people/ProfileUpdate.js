@@ -1,15 +1,13 @@
 /* eslint-disable react/no-children-prop */
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable no-unused-vars */
+
 import React from 'react'
 import { editUser, getOnePerson } from '../../lib/api'
 import { useParams } from 'react-router-dom'
-import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, WrapItem, Icon, Button, InputGroup, InputLeftElement, TabList, Tab, InputRightAddon, Textarea, Select } from '@chakra-ui/react'
+import { Box, Heading, Text, Image, Stack, FormControl,
+  FormLabel, Input, ChakraProvider, Center, Container, Grid, GridItem, Button, InputGroup, InputLeftElement, Textarea, Select } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
-import { CalendarIcon, ChatIcon, CheckCircleIcon, ArrowUpIcon, EmailIcon, StarIcon, TimeIcon, AddIcon, ViewIcon, SettingsIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import ReactMapGL, { Marker } from 'react-map-gl'
+import { ChatIcon, AddIcon, ViewIcon } from '@chakra-ui/icons'
 import { useHistory } from 'react-router-dom'
 import useForm from '../utils/useForm'
 

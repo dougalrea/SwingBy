@@ -1,24 +1,19 @@
 /* eslint-disable react/no-children-prop */
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable no-unused-vars */
+
 import React from 'react'
 import { deleteEventComment, getOneEvent } from '../../lib/api'
 import { useParams, Link, useHistory } from 'react-router-dom'
-import { Box, Heading, Text, Image, Flex, Spacer, Stack, Badge, FormControl,
-  FormLabel, FormHelperText, Input, ChakraProvider, Divider, Center, Avatar, Container, Grid, GridItem, AspectRatio, ListIcon, List, ListItem, Wrap, WrapItem, Icon, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea } from '@chakra-ui/react'
+import { Box, Heading, Text, Image, Flex, Spacer, Stack, FormControl, ChakraProvider, Center, Avatar, Container, Grid, GridItem, ListIcon, List, ListItem, Wrap, WrapItem, Button, Tabs, TabPanels, TabPanel, TabList, Tab, InputGroup, InputLeftElement, Textarea } from '@chakra-ui/react'
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
   PopoverFooter,
   PopoverArrow,
-  PopoverCloseButton,
   ButtonGroup
 } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
-import Fonts from '../../styles/Fonts'
 import { ArrowRightIcon, CalendarIcon, ChatIcon, CheckCircleIcon, EmailIcon, StarIcon, TimeIcon, EditIcon, CloseIcon } from '@chakra-ui/icons'
 import ReactMapGL, { Marker } from 'react-map-gl'
 import useForm from '../utils/useForm'
