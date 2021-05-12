@@ -25,14 +25,21 @@ function ProfileUpdate() {
   const { id } = useParams()
   const [error, setError] = React.useState(false)
   const { formdata, handleChange, setFormdata } = useForm({
+    email: '',
+    firstName: '',
+    lastName: '',
     bio: '',
     alias: '',
     profilePicture: '',
+    age: '',
     gender: '',
     sexualOrientation: '',
     height: '',
     politics: '',
-    foodPreferences: []
+    isOpenToDrugs: '',
+    isSmoker: '',
+    interests: [],
+    foodPreferences: ''
   })
 
   React.useEffect(() => {
