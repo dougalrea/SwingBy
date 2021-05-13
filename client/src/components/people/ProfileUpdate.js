@@ -238,7 +238,7 @@ function ProfileUpdate() {
                 </Stack>    
               </GridItem>
               
-              <GridItem rowStart={5} rowEnd={8} colStart={1} colEnd={4} >
+              <GridItem rowStart={6} rowEnd={9} colStart={1} colEnd={4} >
                 <FormControl isRequired>
                   <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Update Bio</Heading>
                   <InputGroup>
