@@ -224,13 +224,13 @@ function ProfileUpdate() {
                 </Stack>    
               </GridItem>
               
-              <GridItem rowSpan={4} colSpan={8} >
+              <GridItem rowSpan={4} colSpan={3} >
                 <FormControl isRequired>
                   <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Update Bio</Heading>
                   <InputGroup>
                     <InputLeftElement  />
                     <Textarea 
-                      width='400px'
+                      width='300px'
                       height='250px'
                       type='text'
                       children={<ChatIcon />}
