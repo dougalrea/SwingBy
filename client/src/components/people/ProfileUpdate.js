@@ -91,7 +91,7 @@ function ProfileUpdate() {
               templateColumns="repeat(8, 1fr)"
               gap={2}
             >
-              <GridItem rowStart={1} rowEnd={3} colStart={1} colEnd={4}>
+              <GridItem rowStart={1} rowEnd={3} colStart={1} colEnd={4} overflow='hidden'>
                 {formdata.profilePicture ? <Image 
                   src={formdata.profilePicture} 
                   alt="invalid url" 
@@ -101,7 +101,6 @@ function ProfileUpdate() {
                 /> : <Image 
                   src="https://www.drnitinborse.com/wp-content/uploads/2018/02/user-icon.png" 
                   alt="user-icon" 
-                  objectFit="contain"
                   align='left'
                 /> }
                 
@@ -259,7 +258,7 @@ function ProfileUpdate() {
                   </InputGroup>
                 </FormControl>
               </GridItem>
-              <GridItem rowStart={8} rowEnd={8} colStart={7} colEnd={9}>
+              <GridItem rowStart={8} rowEnd={8} colStart={8} colEnd={9}>
                 <Button
                   onClick={handleSubmit}
                   type='submit' 
