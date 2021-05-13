@@ -91,7 +91,7 @@ function ProfileUpdate() {
               templateColumns="repeat(8, 1fr)"
               gap={2}
             >
-              <GridItem rowStart={1} rowEnd={3} colStart={1} colEnd={2}>
+              <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={3}>
                 {formdata.profilePicture ? <Image 
                   h='300px'
                   src={formdata.profilePicture} 
@@ -109,7 +109,7 @@ function ProfileUpdate() {
                 /> }
                 
               </GridItem>
-              <GridItem rowStart={1} rowEnd={4} colStart={3} colEnd={6}>
+              <GridItem rowStart={1} rowEnd={4} colStart={4} colEnd={7}>
                 <Stack>
                   
                   <Heading size='lg' color='pink.800' as='h3'>Update Profile</Heading>
@@ -153,7 +153,7 @@ function ProfileUpdate() {
                         onFocus={handleFocus}
                         onChange={handleChange}
                         value={formdata.profilePicture}
-                        placeholder='Profile Picture (preview shown to the left)' 
+                        placeholder='Profile Picture (enter a url!)' 
                         aria-label='Profile Picture' 
                       />
                     </InputGroup>
@@ -206,10 +206,8 @@ function ProfileUpdate() {
                       mt={2} 
                       name='rating' 
                       value={formdata.isSmoker}>
-                      <Stack direction="row" color='gray.800'>
+                      <Stack direction="column" color='gray.800'>
                         <Radio
-                          ml={3}
-                          isRequired 
                           isChecked={false} 
                           name='isSmoker' 
                           value='true' 
@@ -217,7 +215,6 @@ function ProfileUpdate() {
                         >Yeah why not
                         </Radio>
                         <Radio 
-                        // isDisabled={error} 
                           isChecked={false} 
                           name='isSmoker'
                           value='false' 
@@ -244,7 +241,7 @@ function ProfileUpdate() {
                 </Stack>    
               </GridItem>
               
-              <GridItem rowSpan={4} colSpan={3} >
+              <GridItem rowStart={3} rowEnd={6} colStart={1} colEnd={3} >
                 <FormControl isRequired>
                   <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Update Bio</Heading>
                   <InputGroup>
@@ -265,7 +262,7 @@ function ProfileUpdate() {
                   </InputGroup>
                 </FormControl>
               </GridItem>
-              <GridItem rowStart={8} rowEnd={8} colSpan={2}>
+              <GridItem rowStart={8} rowEnd={8} colStart={6} colEnd={8}>
                 <Button
                   onClick={handleSubmit}
                   type='submit' 
