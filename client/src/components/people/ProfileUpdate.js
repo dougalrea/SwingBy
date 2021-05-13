@@ -4,7 +4,7 @@ import React from 'react'
 import { editUser, getOnePerson } from '../../lib/api'
 import { useParams } from 'react-router-dom'
 import { Box, Heading, Text, Image, Stack, FormControl,
-  FormLabel, Input, ChakraProvider, Center, Container, Grid, GridItem, Button, InputGroup, InputLeftElement, Textarea, Select } from '@chakra-ui/react'
+  FormLabel, Input, ChakraProvider, Center, Container, Grid, GridItem, Button, InputGroup, InputLeftElement, Textarea, Select, RadioGroup, Radio } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import Fonts from '../../styles/Fonts'
 import { ChatIcon, AddIcon, ViewIcon } from '@chakra-ui/icons'
@@ -87,11 +87,11 @@ function ProfileUpdate() {
               borderColor='gray.500'
               w='100%'
               h='80vh'
-              templateRows="repeat(4, 1fr)"
+              templateRows="repeat(8, 1fr)"
               templateColumns="repeat(8, 1fr)"
-              gap={1}
+              gap={2}
             >
-              <GridItem rowSpan={3} colSpan={2}>
+              <GridItem rowStart={1} rowEnd={3} colStart={1} colEnd={2}>
                 {formdata.profilePicture ? <Image 
                   h='300px'
                   src={formdata.profilePicture} 
@@ -109,7 +109,7 @@ function ProfileUpdate() {
                 /> }
                 
               </GridItem>
-              <GridItem rowSpan={5} colSpan={4} >
+              <GridItem rowStart={1} rowEnd={4} colStart={3} colEnd={6}>
                 <Stack>
                   
                   <Heading size='lg' color='pink.800' as='h3'>Update Profile</Heading>
@@ -200,12 +200,32 @@ function ProfileUpdate() {
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel>Fancy a cig?</FormLabel>
-                    <Select placeholder='🚬' name='isSmoker' onFocus={handleFocus} onChange={handleChange} value={formdata.isSmoker}>
-                      <option>Yes</option>
-                      <option>No</option> 
-  
-                    </Select>
+                    <FormLabel>🚬 Fancy a cig?</FormLabel>
+                    <RadioGroup
+                      spacing={2} 
+                      mt={2} 
+                      name='rating' 
+                      value={formdata.isSmoker}>
+                      <Stack direction="row" color='gray.800'>
+                        <Radio
+                          ml={3}
+                          isRequired 
+                          isChecked={false} 
+                          name='isSmoker' 
+                          value='true' 
+                          onChange={handleChange}
+                        >Yeah why not
+                        </Radio>
+                        <Radio 
+                        // isDisabled={error} 
+                          isChecked={false} 
+                          name='isSmoker'
+                          value='false' 
+                          onChange={handleChange}
+                        >Ew gross no thanks
+                        </Radio>
+                      </Stack>
+                    </RadioGroup>
                   </FormControl>
 
                   <FormControl>
@@ -245,7 +265,7 @@ function ProfileUpdate() {
                   </InputGroup>
                 </FormControl>
               </GridItem>
-              <GridItem colStart={8} colEnd={8} rowSpan={3}>
+              <GridItem rowStart={8} rowEnd={8} colSpan={2}>
                 <Button
                   onClick={handleSubmit}
                   type='submit' 
