@@ -205,14 +205,14 @@ function ProfileUpdate() {
                       value={formdata.isSmoker}>
                       <Stack direction="column" color='gray.800'>
                         <Radio
-                          isChecked={false} 
+                          isChecked={formdata.isSmoker} 
                           name='isSmoker' 
                           value='true' 
                           onChange={handleChange}
                         >Yeah why not
                         </Radio>
                         <Radio 
-                          isChecked={false} 
+                          isChecked={!formdata.isSmoker} 
                           name='isSmoker'
                           value='false' 
                           onChange={handleChange}
