@@ -91,16 +91,13 @@ function ProfileUpdate() {
               templateColumns="repeat(8, 1fr)"
               gap={2}
             >
-              <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={3}>
+              <GridItem rowStart={1} rowEnd={3} colStart={1} colEnd={4}>
                 {formdata.profilePicture ? <Image 
-                  h='300px'
                   src={formdata.profilePicture} 
                   alt="invalid url" 
                   objectFit="contain"
                   align='center'
                   boxShadow='md'
-                  mb={5}
-                  p={5}
                 /> : <Image 
                   src="https://www.drnitinborse.com/wp-content/uploads/2018/02/user-icon.png" 
                   alt="user-icon" 
@@ -109,7 +106,7 @@ function ProfileUpdate() {
                 /> }
                 
               </GridItem>
-              <GridItem rowStart={1} rowEnd={4} colStart={4} colEnd={7}>
+              <GridItem rowStart={1} rowEnd={4} colStart={3} colEnd={7}>
                 <Stack>
                   
                   <Heading size='lg' color='pink.800' as='h3'>Update Profile</Heading>
@@ -241,7 +238,7 @@ function ProfileUpdate() {
                 </Stack>    
               </GridItem>
               
-              <GridItem rowStart={3} rowEnd={6} colStart={1} colEnd={3} >
+              <GridItem rowStart={3} rowEnd={6} colStart={1} colEnd={4} >
                 <FormControl isRequired>
                   <Heading size='lg' ml={4} h='40px' color='pink.800' as='h3'>Update Bio</Heading>
                   <InputGroup>
@@ -262,7 +259,7 @@ function ProfileUpdate() {
                   </InputGroup>
                 </FormControl>
               </GridItem>
-              <GridItem rowStart={8} rowEnd={8} colStart={6} colEnd={8}>
+              <GridItem rowStart={8} rowEnd={8} colStart={7} colEnd={9}>
                 <Button
                   onClick={handleSubmit}
                   type='submit' 
