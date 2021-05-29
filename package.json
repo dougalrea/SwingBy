@@ -23,6 +23,7 @@
   },
   "scripts": {
     "dev": "npx nodemon",
+    "dev-fullstack": "npx nodemon && cd client && react-scripts start",
     "seed": "node db/seeds.js",
     "start": "node index.js",
     "build": "cd client && yarn && yarn build"
