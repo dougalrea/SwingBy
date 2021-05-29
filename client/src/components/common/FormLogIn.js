@@ -60,7 +60,7 @@ function FormLogIn() {
               onChange={handleChange}
               onFocus={handleFocus}
               value={formdata.email}
-              placeholder='demo@account.com' 
+              placeholder='hello@email.com' 
               aria-label='Email' />
           </InputGroup>
         </FormControl>
@@ -73,7 +73,7 @@ function FormLogIn() {
               onChange={handleChange}
               onFocus={handleFocus}
               value={formdata.password}
-              placeholder='GetMeInvolved' 
+              placeholder='yeet' 
               aria-label='Password' />
           </InputGroup>
           
