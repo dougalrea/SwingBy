@@ -28,13 +28,14 @@ function EventCreate() {
     capacity: '',
     duration: '',
     description: '',
-    types: ''
+    types: ['really fun', 'original theme', 'slightly uncomfortable']
   })
 
   const handleSubmit = async event => {
     event.preventDefault()
     try {
       const objectToSave = { ...formdata, startDateTime: String(new Date(formdata.startDateTime)) }
+      console.log(objectToSave)
       const { data } = await createEvent(objectToSave)
       history.push(`/events/${data._id}`)
     } catch (err) {
@@ -61,7 +62,6 @@ function EventCreate() {
     }
     )
   }
-  console.log(error)
 
   const now = new Date().toISOString().split(':').slice(0, 2).join(':')
   return (
