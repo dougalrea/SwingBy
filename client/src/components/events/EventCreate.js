@@ -34,7 +34,7 @@ function EventCreate() {
   const handleSubmit = async event => {
     event.preventDefault()
     try {
-      const objectToSave = { ...formdata, startDateTime: String(new Date(formdata.startDateTime)) }
+      const objectToSave = { ...formdata, startDateTime: String(new Date(formdata.startDateTime)), latitude: String(formdata.latitude), longitude: String(formdata.longitude), capacity: parseInt(formdata.capacity), duration: parseInt(formdata.duration) }
       console.log(objectToSave)
       const { data } = await createEvent(objectToSave)
       history.push(`/events/${data._id}`)
