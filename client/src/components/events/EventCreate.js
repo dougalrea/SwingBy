@@ -261,6 +261,7 @@ function EventCreate() {
                 >
             Submit
                 </Button>
+                {error ? 'something went wrong - sorry about that!' : ''}
               </GridItem>
             </Grid>
           </form>
